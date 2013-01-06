@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<testsuites>
+  <testsuite name="Chrome 23.0" package="undefined" timestamp="2013-01-06T19:33:01" id="0" hostname="ca-meyer" tests="10" errors="0" failures="0" time="0.02">
+    <properties>
+      <property name="browser.fullName" value="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11"/>
+    </properties>
+    <testcase name="should support one diverging flow without a condition" time="0.004" classname="Chrome 23.0.Exclusive Gateway"/>
+    <testcase name="should not support a single diverging flow with a condition" time="0.002" classname="Chrome 23.0.Exclusive Gateway"/>
+    <testcase name="should not support multiple diverging flows without conditions" time="0.001" classname="Chrome 23.0.Exclusive Gateway"/>
+    <testcase name="should support two diverging flows with conditions" time="0.005" classname="Chrome 23.0.Exclusive Gateway"/>
+    <testcase name="should not support the default flow if there are no conditional flows" time="0.001" classname="Chrome 23.0.Sequenceflow"/>
+    <testcase name="should support the default flow if there is one conditional flow" time="0.001" classname="Chrome 23.0.Sequenceflow"/>
+    <testcase name="should support the default flow in combination with multiple conditional flows" time="0.001" classname="Chrome 23.0.Sequenceflow"/>
+    <testcase name="should support the default flow in combination with multiple conditional and unconditional flows" time="0.001" classname="Chrome 23.0.Sequenceflow"/>
+    <testcase name="should support multiple conditional flows" time="0.003" classname="Chrome 23.0.Sequenceflow"/>
+    <testcase name="should handle user tasks as wait states" time="0.001" classname="Chrome 23.0.Usertask"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
