@@ -714,9 +714,9 @@ var CAM = {};
 
         } else if(element.nodeName == "userTask") {
           activityDefinition = transformUserTask(element, scopeActivity, sequenceFlows);
+          
         } else if(element.nodeName == "task") {
           activityDefinition = transformTask(element, scopeActivity, sequenceFlows);
-        }
 
         } else if(element.nodeName == "parallelGateway") {
           activityDefinition = transformParallelGateway(element, scopeActivity, sequenceFlows);
