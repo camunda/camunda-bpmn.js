@@ -22,7 +22,7 @@ describe('Execution Listener', function() {
     CAM.parseListeners.splice(0,CAM.parseListeners.length);
   });  
 
-  it('should invoke the execution listeners on activity start', function() {
+  it('should invoke the execution listeners on start end and take', function() {
 
     CAM.parseListeners.push(function(activityDefinition){
       
