@@ -138,6 +138,17 @@ var CAM = {};
     ActivityExecution.prototype.start = function() {   
       this.startDate = new Date();
 
+      // if the activity is async, we do not execute it right away 
+      // but simpley return. Execution can be continued using the 
+      // continue() function
+      if(!!this.activityDefinition.properties.asyncCallback) {
+        this.activityDefinition.properties.asyncCallback(this);
+      } else {
+        this.continue();
+      }
+    };
+
+    ActivityExecution.prototype.continue = function() {
       // invoke listeners on activity start
       this.invokeListeners(LISTENER_START);      
 
@@ -193,7 +204,7 @@ var CAM = {};
       if(!!type.signal) {
         type.signal(this);
       } else {
-        end();
+        this.end();
       }
     };
 
@@ -397,12 +408,24 @@ var CAM = {};
     }
   };
 
+  /**
+   * implementation of the parallel gateway
+   */
+  var parallelGateway = {
+    "execute" : function(activityExecution) {
+      var outgoingTransitions = activityExecution.activityDefinition.transitions;
+
+      activityExecution.takeAll(outgoingTransitions);
+    }
+  };
+
   // register activity types
   CAM.activityTypes["startEvent"] = startEvent;
   CAM.activityTypes["endEvent"] = endEvent;
   CAM.activityTypes["exclusiveGateway"] = exclusiveGateway;
   CAM.activityTypes["userTask"] = userTask;
   CAM.activityTypes["process"] = process; 
+  CAM.activityTypes["parallelGateway"] = parallelGateway; 
 
 })(CAM);
 
@@ -585,6 +608,19 @@ var CAM = {};
       return activity;
     };
 
+    /** transform <parallelGateway ... /> elements */
+    function transformParallelGateway(element, scopeActivity, sequenceFlows) {
+      var activity = createActivityDefinition(element, scopeActivity, sequenceFlows);      
+
+      // count incoming sequence flows
+      var incomingFlows = 0;
+      for (activity in sequenceFlows) {
+        
+      }
+
+      return activity;
+    };
+
     /** transform <exclusiveGateway ... /> elements */
     function transformExclusiveGateway(element, scopeActivity, sequenceFlows) {
       var activity = createActivityDefinition(element, scopeActivity);  
@@ -650,7 +686,10 @@ var CAM = {};
         } else if(element.nodeName == "userTask") {
           activityDefinition = transformUserTask(element, scopeActivity, sequenceFlows);
 
-        }       
+        } else if(element.nodeName == "parallelGateway") {
+          activityDefinition = transformParallelGateway(element, scopeActivity, sequenceFlows);
+
+        }        
 
         if(!!activityDefinition) {
           invokeParseListeners(activityDefinition, element, scopeActivity, scopeElement);
