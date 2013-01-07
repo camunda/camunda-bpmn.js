@@ -85,7 +85,7 @@ describe('Sequenceflow', function() {
     processInstance = execution.getActivityInstance(); 
     expect(processInstance.activities.length).toBe(2);
     expect(processInstance.activities[0].activityId).toBe("theStart");
-    expect(processInstance.activities[1].activityId).toBe("theEnd1");    
+    expect(processInstance.activities[1].activityId).toBe("theEnd1");  
 
   });
 
