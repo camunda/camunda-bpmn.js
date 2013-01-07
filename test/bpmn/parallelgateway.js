@@ -64,12 +64,13 @@ describe('Parallel Gateway', function() {
         '<startEvent id="theStart" />'+
         '<parallelGateway id="fork" />'+    
         '<parallelGateway id="join" />'+
+
         '<endEvent id="end" />'+
         
         '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="fork" />'+
         '<sequenceFlow id="flow2" sourceRef="fork" targetRef="join" />'+        
         '<sequenceFlow id="flow3" sourceRef="fork" targetRef="join" />'+
-        '<sequenceFlow id="flow4" sourceRef="fork" targetRef="end" />'+
+        '<sequenceFlow id="flow4" sourceRef="join" targetRef="end" />'+
                     
       '</process>'+
     
@@ -87,7 +88,7 @@ describe('Parallel Gateway', function() {
     expect(processInstance.activities[1].activityId).toBe("fork");
     expect(processInstance.activities[2].activityId).toBe("join");    
     expect(processInstance.activities[3].activityId).toBe("join");    
-    expect(processInstance.activities[4].activityId).toBe("end");    
+    expect(processInstance.activities[4].activityId).toBe("end");   
  
   });
 

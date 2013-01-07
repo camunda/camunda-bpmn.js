@@ -427,7 +427,28 @@ var CAM = {};
     "execute" : function(activityExecution) {
       var outgoingTransitions = activityExecution.activityDefinition.transitions;
 
-      activityExecution.takeAll(outgoingTransitions);
+      // join 
+      var executionsToJoin = [];      
+      var parent = activityExecution.parentExecution;
+      for(var i=0; i<parent.activityExecutions.length; i++) {
+        var sibling = parent.activityExecutions[i];
+        if(sibling.activityDefinition == activityExecution.activityDefinition && !sibling.isEnded) {
+          executionsToJoin.push(sibling);
+        }
+      }
+
+      if(executionsToJoin.length == activityExecution.activityDefinition.properties.cardinality) {
+        // end all joined executions but this one,
+        for(var i=0; i<executionsToJoin.length; i++) {
+          var joinedExecution = executionsToJoin[i];
+          if(joinedExecution != activityExecution) {
+            joinedExecution.end(false);
+          }
+        }
+        // continue with this execution
+        activityExecution.takeAll(outgoingTransitions);  
+      }
+
     }
   };
 
@@ -640,9 +661,16 @@ var CAM = {};
 
       // count incoming sequence flows
       var incomingFlows = 0;
-      for (activity in sequenceFlows) {
-        
+      for (var prop in sequenceFlows) {
+        var flows = sequenceFlows[prop];
+        for(var i=0; i<flows.length; i++) {         
+          if(flows[i].to == activity.id) {
+            incomingFlows++;
+          }
+        }
       }
+      // set the number of sequenceflows to be joined in the parallel gateway
+      activity.properties.cardinality = incomingFlows;
 
       return activity;
     };
@@ -714,7 +742,7 @@ var CAM = {};
 
         } else if(element.nodeName == "userTask") {
           activityDefinition = transformUserTask(element, scopeActivity, sequenceFlows);
-          
+
         } else if(element.nodeName == "task") {
           activityDefinition = transformTask(element, scopeActivity, sequenceFlows);
 
