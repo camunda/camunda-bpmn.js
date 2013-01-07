@@ -348,9 +348,21 @@ var CAM = {};
     }
   };
 
+  var intermediateThrowEvent = {
+    "execute" : function(activityExecution) {
+      leave(activityExecution);
+    }
+  };
+
   var endEvent = {
     "execute" : function(activityExecution) {
       activityExecution.end(true);
+    }
+  };
+
+  var task = {
+    "execute" : function(activityExecution) {
+      leave(activityExecution);
     }
   };
 
@@ -399,8 +411,10 @@ var CAM = {};
 
   // register activity types
   CAM.activityTypes["startEvent"] = startEvent;
+  CAM.activityTypes["intermediateThrowEvent"] = intermediateThrowEvent;
   CAM.activityTypes["endEvent"] = endEvent;
   CAM.activityTypes["exclusiveGateway"] = exclusiveGateway;
+  CAM.activityTypes["task"] = task;
   CAM.activityTypes["userTask"] = userTask;
   CAM.activityTypes["process"] = process; 
 
@@ -573,8 +587,20 @@ var CAM = {};
       return activity;
     };
 
+    /** transform <intermediateThrowEvent ... /> elements */
+    function transformIntermediateThrowEvent(element, scopeActivity, sequenceFlows) {
+      var activity = createActivityDefinition(element, scopeActivity, sequenceFlows);      
+      return activity;
+    };
+
     /** transform <endEvent ... /> elements */
     function transformEndEvent(element, scopeActivity, sequenceFlows) {
+      var activity = createActivityDefinition(element, scopeActivity, sequenceFlows);      
+      return activity;
+    };
+
+    /** transform <task ... /> elements */
+    function transformTask(element, scopeActivity, sequenceFlows) {
       var activity = createActivityDefinition(element, scopeActivity, sequenceFlows);      
       return activity;
     };
@@ -641,6 +667,9 @@ var CAM = {};
         if(element.nodeName == "startEvent") {
           activityDefinition = transformStartEvent(element, scopeActivity, sequenceFlows);
 
+        } else if(element.nodeName == "intermediateThrowEvent") {
+          activityDefinition = transformIntermediateThrowEvent(element, scopeActivity, sequenceFlows);
+
         } else if(element.nodeName == "endEvent") {
           activityDefinition = transformEndEvent(element, scopeActivity, sequenceFlows);
 
@@ -649,8 +678,9 @@ var CAM = {};
 
         } else if(element.nodeName == "userTask") {
           activityDefinition = transformUserTask(element, scopeActivity, sequenceFlows);
-
-        }       
+        } else if(element.nodeName == "task") {
+          activityDefinition = transformTask(element, scopeActivity, sequenceFlows);
+        }
 
         if(!!activityDefinition) {
           invokeParseListeners(activityDefinition, element, scopeActivity, scopeElement);
