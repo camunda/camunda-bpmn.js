@@ -40,6 +40,10 @@ var CAM = {};
    */
   var activityTypes = { };
 
+  var LISTENER_START = "start";
+  var LISTENER_END = "end";
+  var LISTENER_TAKE = "take";
+
   // static utility functions ////////////////////////////////////
 
   var getActivitiesByType = function(activityDefinition, typeId) {
@@ -118,9 +122,26 @@ var CAM = {};
       this.activityExecutions.push(childExecutor);
       childExecutor.start();
     };
+
+    ActivityExecution.prototype.invokeListeners = function(type, transition) {      
+      var listeners = this.activityDefinition.listeners;
+      if(!!listeners) {
+        for(var i = 0; i < listeners.length; i++) {
+          var listener = listeners[i];
+          if(!!listener[type]) {
+            listener[type](this, transition);
+          }
+        }
+      }
+    };
    
     ActivityExecution.prototype.start = function() {   
       this.startDate = new Date();
+
+      // invoke listeners on activity start
+      this.invokeListeners(LISTENER_START);      
+
+      // execute activity type
       var activityType = getActivityType(this.activityDefinition);
       activityType.execute(this);      
     };
@@ -128,6 +149,9 @@ var CAM = {};
     ActivityExecution.prototype.end = function(notifyParent) {
       this.isEnded = true;
       this.endDate = new Date();
+
+      // invoke listeners on activity end
+      this.invokeListeners(LISTENER_END);      
       
       if(!!this.parentExecution) {
         // remove from parent
@@ -153,6 +177,10 @@ var CAM = {};
       }      
       // end this activity
       this.end(false);
+
+      // invoke listeners on sequence flow take      
+      this.invokeListeners(LISTENER_TAKE, transition);     
+
       // have the parent execute the next activity
       this.parentExecution.executeActivity(toActivity);
     };
@@ -221,6 +249,9 @@ var CAM = {};
   CAM.getActivityById = getActivityById;
   CAM.getActivityType = getActivityType;
 
+  CAM.LISTENER_START = LISTENER_START;
+  CAM.LISTENER_END = LISTENER_END;
+  CAM.LISTENER_TAKE = LISTENER_TAKE;
 
 })(CAM);
 
@@ -428,7 +459,8 @@ var CAM = {};
         "typeId" : "",
         "activities" : [],
         "transitions" : [],
-        "properties" : []
+        "properties" : [],
+        "listeners" : []
       };
 
       if(!!scope) {
