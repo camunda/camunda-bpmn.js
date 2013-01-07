@@ -84,8 +84,6 @@ var CAM = {};
       }
           
       this.activityDefinition = activityDefinition;    
-      // the activity instance controlled by this executor
-      this.activityInstance = null;
       // a list of child activity executions
       this.activityExecutions = [];
       // indicates whether the execution has been ended
@@ -389,6 +387,10 @@ var CAM = {};
  */
 (function(CAM){
 
+  /** the parse listeners are callbacks that are invoked by the transformer 
+    * when activity definitions are created */
+  var parseListeners = [];
+
   function getXmlObject(source) {
     // use the browser's DOM implemenation
     var xmlDoc;
@@ -403,7 +405,7 @@ var CAM = {};
     return xmlDoc;
   }
 
-  CAM.transform = function(source) {
+  var transform = function(source) {
     var doc = getXmlObject(source);    
     var definitions = doc.getElementsByTagName("definitions");
 
@@ -536,16 +538,19 @@ var CAM = {};
     /** transform <startEvent ... /> elements */
     function transformStartEvent(element, scopeActivity, sequenceFlows) {
       var activity = createActivityDefinition(element, scopeActivity, sequenceFlows);      
+      return activity;
     };
 
     /** transform <endEvent ... /> elements */
     function transformEndEvent(element, scopeActivity, sequenceFlows) {
       var activity = createActivityDefinition(element, scopeActivity, sequenceFlows);      
+      return activity;
     };
 
     /** transform <userTask ... /> elements */
     function transformUserTask(element, scopeActivity, sequenceFlows) {
       var activity = createActivityDefinition(element, scopeActivity, sequenceFlows);      
+      return activity;
     };
 
     /** transform <exclusiveGateway ... /> elements */
@@ -582,7 +587,16 @@ var CAM = {};
           }            
         }
       }
+      return activity;
     };
+
+    /** invokes all parse listeners */
+    function invokeParseListeners(activityDefinition, element, scopeActivity, scopeElement) {      
+      for(var i=0; i<parseListeners.length; i++) {
+        var parseListener = parseListeners[i];       
+        parseListener(activityDefinition, element, scopeActivity, scopeElement);
+      }
+    }
 
     /** transforms all activites inside a scope into ActivityDefinitions */
     function transformScope(scopeElement, scopeActivity, sequenceFlows) {
@@ -590,14 +604,24 @@ var CAM = {};
 
       do {
 
+        var activityDefinition = null;
+
         if(element.nodeName == "startEvent") {
-          transformStartEvent(element, scopeActivity, sequenceFlows);
+          activityDefinition = transformStartEvent(element, scopeActivity, sequenceFlows);
+
         } else if(element.nodeName == "endEvent") {
-          transformEndEvent(element, scopeActivity, sequenceFlows);
+          activityDefinition = transformEndEvent(element, scopeActivity, sequenceFlows);
+
         } else if(element.nodeName == "exclusiveGateway") {
-          transformExclusiveGateway(element, scopeActivity, sequenceFlows);
+          activityDefinition = transformExclusiveGateway(element, scopeActivity, sequenceFlows);
+
         } else if(element.nodeName == "userTask") {
-          transformUserTask(element, scopeActivity, sequenceFlows);
+          activityDefinition = transformUserTask(element, scopeActivity, sequenceFlows);
+
+        }       
+
+        if(!!activityDefinition) {
+          invokeParseListeners(activityDefinition, element, scopeActivity, scopeElement);
         }
 
       } while(element = element.nextSibling);
@@ -605,7 +629,10 @@ var CAM = {};
 
     /** transforms a <process ... /> element into an activity definition */
     function transformProcess(processElement) {     
+
       var activityDefinition = createActivityDefinition(processElement);
+      invokeParseListeners(activityDefinition, processElement);
+
       // build up a map for the sequence flows
       var transitions = createTransitions(processElement);
       // transform the activities
@@ -626,5 +653,9 @@ var CAM = {};
 
     return activityDefinitions;
   };
+
+  // expose public API
+  CAM.transform = transform;
+  CAM.parseListeners = parseListeners;
 
 })(CAM);
