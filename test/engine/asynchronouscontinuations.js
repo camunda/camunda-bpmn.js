@@ -27,7 +27,7 @@ describe('Asynchronous Continuations', function() {
     var interruptedExecution;
 
     CAM.parseListeners.push(function(activityDefinition){
-      activityDefinition.properties.asyncCallback = function(activityExecution) {
+      activityDefinition.asyncCallback = function(activityExecution) {
         interruptedExecution = activityExecution;
       };
     });

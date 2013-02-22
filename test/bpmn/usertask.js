@@ -28,7 +28,7 @@ describe('Usertask', function() {
           '<endEvent id="theEnd" />'+
           
           '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="userTask" />'+           
-          '<sequenceFlow id="flow1" sourceRef="userTask" targetRef="theEnd" />'+   
+          '<sequenceFlow id="flow2" sourceRef="userTask" targetRef="theEnd" />'+   
          
         '</process>'+
       

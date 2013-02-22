@@ -46,7 +46,7 @@ describe('Parse listerner', function() {
     
     '</definitions>')[0];
 
-    expect(activityIds).toEqual(["theProcess","theStart","decision","end"]);
+    expect(activityIds).toEqual(["theStart","decision","end","theProcess"]);
     
   });
 
@@ -78,7 +78,7 @@ describe('Parse listerner', function() {
     
     '</definitions>')[0];
 
-    expect(activityIds).toEqual(["theProcess","theProcess","theStart","theStart","decision","decision","end","end"]);
+    expect(activityIds).toEqual(["theStart","theStart","decision","decision","end","end","theProcess","theProcess"]);
 
   });
   
