@@ -97,6 +97,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   var sequenceFlowStyle = {
+    "fill" : regularStroke,
     "stroke-width": 2,
     "arrow-end": "block-midium-midium",
     "stroke-linecap": "square",
@@ -134,11 +135,56 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "sequenceFlow" : lang.mixin(lang.clone(generalStyle), sequenceFlowStyle)
   };
 
+  function renderLabel(elementRenderer, group, bounds) {
+    var baseElement = elementRenderer.baseElement;
+
+    if (!baseElement.name) {
+      return;
+    }
+
+    var name = baseElement.name.replace("&#xD;", "\n");
+
+    var words = name.split(" ");
+    var maxWidth = 100;
+
+    var tempText = "";
+    var font = { family: "Arial", size: "9pt", weight: "normal" };
+
+    var labelBounds = elementRenderer.getLabelBounds();
+    var pos = labelBounds ? {x: +labelBounds.x, y: labelBounds.y} : {x: +bounds.x, y: +bounds.y};
+
+    for (var i=0; i<words.length; i++) {
+      var text = group.createText({x:pos.x, y: pos.y, text: tempText + " " + words[i], align: "middle" })
+        .setFont(font) //set font
+        .setFill("black");
+
+      if (text.getTextWidth() > maxWidth) {
+        tempText += '\n' + words[i];
+      } else {
+        tempText += " " + words[i];
+      }
+      text.getParent().remove(text);
+    }
+
+    var textLines = tempText.substring(1).split("\n");
+    for (var i=0; i<textLines.length; i++) {
+      var text = group.createText({ x: pos.x, y: pos.y + i * 10, text: textLines[i], align: "middle" })
+        .setFont(font) //set font
+        .setFill("black");
+    }
+    return group;
+  }
+
   var processRenderer = {
     render : function(elementRenderer, gfxGroup) {
       var baseElement = elementRenderer.baseElement;
       var style = elementRenderer.getStyle();
       var bounds = elementRenderer.getBounds();
+
+      // no participant bounds
+      if (!bounds) {
+        return;
+      }
 
       var x = +bounds.x;
       var y = +bounds.y;
@@ -157,7 +203,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       text.setFill("black");
 
       text.setTransform([gfx.matrix.translate(15, height/2 +30), gfx.matrix.rotateg(-90) ]);
-
 
       var separator = processGroup.createLine({ x1: 30, y1: 0, x2: 30, y2: height});
       separator.setStroke(style.stroke);
@@ -186,7 +231,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       text.setFont({ family: "Arial", size: "9pt", weight: "normal", align: "middle"}) //set font
       text.setFill("black");
 
-      text.setTransform([gfx.matrix.translate(10, height/2 +30), gfx.matrix.rotateg(-90) ]);
+      text.setTransform([gfx.matrix.translate(10, height/2 + 30), gfx.matrix.rotateg(-90) ]);
     }
   };
 
@@ -200,6 +245,49 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
       var line = flowGroup.createPolyline(waypoints);
       line.setStroke(style.stroke);
+
+      var secondLastPoint = waypoints[waypoints.length-2];
+      var lastPoint = waypoints[waypoints.length-1];
+
+      var vector = {x:lastPoint.x - secondLastPoint.x, y: lastPoint.y - secondLastPoint.y};
+
+      var xsize = 6;
+      var ysize = 4;
+
+      var svgPath = "M" + lastPoint.x +
+        " " + lastPoint.y +
+        " L"+ (lastPoint.x - xsize) +
+        " " + (lastPoint.y + ysize) +
+        " L"+ (lastPoint.x - xsize) +
+        " " + (lastPoint.y - ysize) +
+        " Z";
+
+      var arrowGroup = flowGroup.createGroup();
+      var arrowPath = arrowGroup.createPath(svgPath);
+      var theta = Math.atan2(-vector.y, vector.x);
+
+      arrowPath.setStroke(style.stroke);
+      arrowPath.setFill(style.fill);
+
+      var sumx = 0;
+      var sumy = 0;
+      var count = 0;
+
+      for (var index in waypoints) {
+        var waypoint = waypoints[index];
+        var factor = 1;
+
+        if (index == 0 && waypoints.length > 2) {
+          factor = 20;
+        }
+
+        sumx += +waypoint.x * factor;
+        sumy += +waypoint.y * factor;
+        count+= factor;
+      }
+
+      arrowPath.setTransform([gfx.matrix.rotateAt(-theta, lastPoint)]);
+      renderLabel(elementRenderer, gfxGroup, {x: sumx / count, y: sumy / count});
     }
   };
 
@@ -277,9 +365,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         path.setTransform({xx: 0.25, yy: 0.25});
       }
 
-      taskGroup.createText({ x: width/2, y: height/2, text: elementRenderer.baseElement.name, align: "middle" })
-        .setFont({ family: "Arial", size: "9pt", weight: "normal" }) //set font
-        .setFill("black");
+      var text = renderLabel(elementRenderer, gfxGroup, {x: x + width /2 , y: y + height /2});
     }
   };
 
@@ -322,8 +408,9 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         path.setStroke(style.stroke);
       }
 
-      return circle;
+      renderLabel(elementRenderer, gfxGroup, {x : x + +bounds.width / 2, y : y + +bounds.width + rad});
 
+      return circle;
     }
   };
 
@@ -384,7 +471,18 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       if (bounds) {
         var diagramElement = query("#"+options.diagramElement)[0];
         diagramElement.style.position = "relative";
-        domConstruct.create("div", { id : currentElement.id, innerHTML : "Text", style: { position: "absolute" ,left: +bounds.x, top: +bounds.y} }, diagramElement);
+        domConstruct.create("div", {
+            id : currentElement.id,
+            innerHTML : "Text",
+            style: {
+              position: "absolute" ,
+              left: +bounds.x,
+              top: +bounds.y,
+              width : +bounds.width,
+              height : +bounds.height
+            }
+          },
+          diagramElement);
       }
 
 
@@ -408,28 +506,50 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
   };
 
+  function getBoundsFromChildren(diChildren) {
+    for (var index in diChildren) {
+      var diChild = diChildren[index];
+
+      if (/bounds/i.test(diChild.type)) {
+        return diChild;
+      }
+
+    }
+    return null;
+  };
+
+  BpmnElementRenderer.prototype.getLabelBounds = function () {
+    if (!this.baseElement.bpmndi) {
+      return null;
+    }
+
+    var diChildren = this.baseElement.bpmndi[0].children;
+
+    for (var index in diChildren) {
+      var diChild = diChildren[index];
+
+      if (/BPMNLabel/i.test(diChild.type)) {
+        return getBoundsFromChildren(diChild.children);
+      }
+
+    }
+    return null;
+  };
+
   BpmnElementRenderer.prototype.getBounds = function() {
     if (!this.baseElement.bpmndi) {
       return null;
     }
 
     var diChildren = this.baseElement.bpmndi[0].children;
-    var bounds = null;
 
-    for (var index in diChildren) {
-      var diChild = diChildren[index];
-
-      if (/bounds/i.test(diChild.type)) {
-        bounds = diChild;
-        break;
-      }
-
-    }
+    var bounds = getBoundsFromChildren(diChildren);
 
     if (!bounds) {
-      return null;
+      return;
     }
 
+    //FIXME move this
     var currentCanvasDimension = this.getSurface().getDimensions();
 
     var boundsWidth = +bounds.x + +bounds.width;

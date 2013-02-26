@@ -65,7 +65,7 @@ define([], function () {
       var attributes = element.attributes;
 
       // set the type
-      bpmnObject.type = element.tagName;
+      bpmnObject.type = element.localName;
 
       // copy all attributes from the xml element to the json object
       for(var i = 0; attributes != null && i < attributes.length; i++) {
