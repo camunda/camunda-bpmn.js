@@ -3,7 +3,7 @@
  *
  * This module provides the functionality for rendering a BPMN 2.0 Process Model in SVG
  */
-define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window", "dojo/query", "dojo/dom"], function (gfx, lang, domConstruct, win, query, dom) {
+define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window", "dojo/query", "dojo/dom", "dojo/dom-class"], function (gfx, lang, domConstruct, win, query, dom, domClass) {
   var eventDefinitionPaths = {
     "messagecatch":" M7 10  L7 20  L23 20  L23 10  z M7 10  L15 16  L23 10 ",
     "messagethrow":"M7 9  L15 15  L23 9  z M7 10  L7 20  L23 20  L23 10  L15 16  z",
@@ -471,18 +471,20 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       if (bounds) {
         var diagramElement = query("#"+options.diagramElement)[0];
         diagramElement.style.position = "relative";
-        domConstruct.create("div", {
-            id : currentElement.id,
-            innerHTML : "Text",
-            style: {
-              position: "absolute" ,
-              left: +bounds.x,
-              top: +bounds.y,
-              width : +bounds.width,
-              height : +bounds.height
-            }
-          },
-          diagramElement);
+
+        var overlayDiv = domConstruct.create("div", {
+          id : currentElement.id,
+          innerHTML : options.overlayHtml,
+          style: {
+            position: "absolute" ,
+            left: +bounds.x,
+            top: +bounds.y,
+            width : +bounds.width,
+            height : +bounds.height
+          }
+        },
+        diagramElement);
+        domClass.add(overlayDiv, "bpmnElement");
       }
 
 
@@ -491,7 +493,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         this.svgElement = delegate.render(this, gfxGroup);
       } else {
         console.log("Unable to render element of type ", this.baseElement.type);
-
       }
 
       // if the current element has child base elements, create the
