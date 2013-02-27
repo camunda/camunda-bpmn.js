@@ -477,10 +477,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
           innerHTML : options.overlayHtml,
           style: {
             position: "absolute" ,
-            left: +bounds.x,
-            top: +bounds.y,
-            width : +bounds.width,
-            height : +bounds.height
+            left: +bounds.x +"px",
+            top: +bounds.y + "px",
+            width : +bounds.width + "px",
+            height : +bounds.height + "px"
           }
         },
         diagramElement);
