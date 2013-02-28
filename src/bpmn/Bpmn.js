@@ -34,20 +34,31 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
     return this;
   },
 
-  Bpmn.prototype.zoom = function (factor) {
-    this.definitionRenderer.gfxGroup.setTransform({xx:factor, yy:factor});
-    var currentDimension = this.definitionRenderer.getSurface().getDimensions();
-    this.definitionRenderer.getSurface().setDimensions(+currentDimension.width*factor, +currentDimension.height*factor);
+    Bpmn.prototype.zoom = function (factor) {
+      var transform = this.definitionRenderer.gfxGroup.getTransform();
 
-    array.forEach(query(".bpmnElement"), function(element) {
-      element.style.left = element.style.left.split("px")[0] * factor + "px";
-      element.style.top = element.style.top.split("px")[0] * factor + "px";
-      element.style.width = element.style.width.split("px")[0] * factor + "px";
-      element.style.height = element.style.height.split("px")[0] * factor + "px";
-    });
+      var xx = 1;
+      var yy = 1;
 
-    return this;
-  };
+      if (!!transform) {
+        xx = transform.xx;
+        yy = transform.yy;
+
+      }
+
+      this.definitionRenderer.gfxGroup.setTransform({xx:factor, yy:factor});
+      var currentDimension = this.definitionRenderer.getSurface().getDimensions();
+      this.definitionRenderer.getSurface().setDimensions(+currentDimension.width/xx * factor, +currentDimension.height/xx * factor);
+
+      array.forEach(query(".bpmnElement"), function(element) {
+        element.style.left = element.style.left.split("px")[0]/xx * factor + "px";
+        element.style.top = element.style.top.split("px")[0]/yy * factor + "px";
+        element.style.width = element.style.width.split("px")[0]/xx * factor + "px";
+        element.style.height = element.style.height.split("px")[0]/yy * factor + "px";
+      });
+
+      return this;
+    };
 
   Bpmn.prototype.annotate = function (id, innerHTML, classesArray) {
     var element = query(".bpmnElement" + "#"+id)[0];

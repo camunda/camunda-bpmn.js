@@ -9,6 +9,12 @@
             -webkit-box-shadow: 0px 0px 35px 5px rgba(85, 255, 13, 1); /* WebKit */
             -moz-box-shadow: 0px 0px 35px 5px rgba(85, 255, 13, 1); /* Firefox */
             box-shadow: 0px 0px 35px 5px rgba(85, 255, 13, 1); /* Standard */
+            border-radius: 5px;
+        }
+
+        .bluebox {
+            background-color: blue;
+            color: white;
         }
     </style>
 </head>
@@ -35,8 +41,8 @@
                 diagramElement : "diagram",
                 overlayHtml : '<div style="position: relative; top:100%">Inner Div Html</div>'
             }).then(function (bpmn){
-                bpmn.zoom(1.3);
-                bpmn.annotate("reviewInvoice", '<p>New Text</p>', ["highlight"]);
+                bpmn.zoom(0.8);
+                bpmn.annotate("reviewInvoice", '<span class="bluebox"  style="position: relative; top:100%">New Text</span>', ["highlight"]);
             });
         });
     </script>

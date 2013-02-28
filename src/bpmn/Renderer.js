@@ -130,6 +130,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "userTask" : activityStyle,
     "serviceTask" : activityStyle,
     "manualTask" : activityStyle,
+    "task": activityStyle,
+    "subProcess" :  activityStyle,
     "process" : participantStyle,
     "lane" : laneStyle,
     "sequenceFlow" : lang.mixin(lang.clone(generalStyle), sequenceFlowStyle)
@@ -420,6 +422,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   RENDERER_DELEGATES["startEvent"] = eventRenderer;
   RENDERER_DELEGATES["endEvent"] = eventRenderer;
   RENDERER_DELEGATES["userTask"] = taskRenderer;
+  RENDERER_DELEGATES["task"] = taskRenderer;
+  RENDERER_DELEGATES["subProcess"] = taskRenderer;
   RENDERER_DELEGATES["serviceTask"] = taskRenderer;
   RENDERER_DELEGATES["manualTask"] = taskRenderer;
   RENDERER_DELEGATES["exclusiveGateway"] = gatewayRenderer;
@@ -557,6 +561,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     var boundsHeight = +bounds.y + +bounds.height;
     var padding = 50;
 
+    //FIXME, should never go lower in a axis
     if ( boundsWidth > currentCanvasDimension.width || boundsHeight >  currentCanvasDimension.height) {
       this.getSurface().setDimensions(boundsWidth + padding, boundsHeight + padding);
     }
