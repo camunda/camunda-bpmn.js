@@ -37,9 +37,9 @@
         });
 
         require(["bpmn/Bpmn", "dojo/domReady!"], function(Bpmn) {
-            new Bpmn().renderUrl("test/resources/test_invoice.bpmn", {
+            new Bpmn().renderUrl("test/resources/task_loop.bpmn", {
                 diagramElement : "diagram",
-                overlayHtml : '<div style="position: relative; top:100%">Inner Div Html</div>'
+                overlayHtml : '<div style="position: relative; top:100%"></div>'
             }).then(function (bpmn){
                 bpmn.zoom(0.8);
                 bpmn.annotate("reviewInvoice", '<span class="bluebox"  style="position: relative; top:100%">New Text</span>', ["highlight"]);

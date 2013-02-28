@@ -43,7 +43,6 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
       if (!!transform) {
         xx = transform.xx;
         yy = transform.yy;
-
       }
 
       this.definitionRenderer.gfxGroup.setTransform({xx:factor, yy:factor});
