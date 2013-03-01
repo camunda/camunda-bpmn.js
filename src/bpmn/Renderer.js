@@ -628,7 +628,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
         var overlayDiv = domConstruct.create("div", {
           id : currentElement.id,
-          innerHTML : options.overlayHtml,
+          innerHTML : options.overlayHtml ? options.overlayHtml : null,
           style: {
             position: "absolute" ,
             left: +bounds.x +"px",
