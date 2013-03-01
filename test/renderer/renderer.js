@@ -54,7 +54,7 @@ describe('Renderer tests', function() {
 		expect(circle.getAttribute("r")).toBe('15');
 
 
-		<!-- the second time around the start event coordinates are different -->
+		// the second time around the start event coordinates are different
 		var processDefinition2 = CAM.transform(
 		    '<?xml version="1.0" encoding="UTF-8"?>' +
 		    '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"   xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"  xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:signavio="http://www.signavio.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="Signavio Process Editor, http://www.signavio.com" exporterVersion="6.5.0" expressionLanguage="http://www.w3.org/1999/XPath" id="sid-c921f33b-76e6-41cc-a3b9-a995d90bc725" name="saassd" targetNamespace="http://www.signavio.com/bpmn20" typeLanguage="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">' +
