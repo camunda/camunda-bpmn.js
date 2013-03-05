@@ -439,6 +439,8 @@ define([], function () {
       }
 
       var participants = definitionsElement.getElementsByTagNameNS(NS_BPMN_SEMANTIC, "participant");
+      var processNames = {};
+
       if (participants.length != 0) {
         for (var index = 0; index < participants.length; index++) {
           var participant = participants[index];
@@ -446,12 +448,14 @@ define([], function () {
           var participantId = participants[index].getAttribute("id");
           // map participant shape to process shape for resolution in transform process
           bpmnDiElementIndex[processRef] = bpmnDiElementIndex[participantId];
+          processNames[processRef] = participant.getAttribute("name");
         }
       }
 
       var processes = definitionsElement.getElementsByTagNameNS(NS_BPMN_SEMANTIC, "process");
 
       for(var i =0; i <processes.length; i++) {
+        processes[i].setAttributeNS(NS_BPMN_SEMANTIC, "name" , processNames[processes[i].getAttribute("id")]);
         transformProcess(processes[i], bpmnDiElementIndex);
       }
 

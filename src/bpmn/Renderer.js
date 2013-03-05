@@ -229,9 +229,9 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
   var processRenderer = {
     render : function(elementRenderer, gfxGroup) {
-      var baseElement = elementRenderer.baseElement;
-      var style = elementRenderer.getStyle();
-      var bounds = elementRenderer.getBounds();
+      var baseElement = elementRenderer.renderElement;
+      var style = elementRenderer.getStyle(baseElement);
+      var bounds = elementRenderer.renderBounds;
 
       // no participant bounds
       if (!bounds) {
@@ -249,7 +249,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var rect = processGroup.createRect({ x: 0, y: 0, width: width, height: height});
       rect.setStroke(style.stroke);
 
-      var text = processGroup.createText({ x: 0, y: 0, text: elementRenderer.baseElement.name});
+      var text = processGroup.createText({ x: 0, y: 0, text: baseElement.name});
 
       text.setFont({ family: "Arial", size: "9pt", weight: "normal", align: "middle"}) //set font
       text.setFill("black");
@@ -619,8 +619,9 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     var elements = [].concat(this.baseElement);
 
     for (var index in elements) {
-      var currentElement = this.baseElement = elements[index];
-      var bounds = this.getBounds();
+      // TODO use this elements in all renderers, currently they are using the elementRenderer ref to get this stuff
+      var currentElement = this.renderElement = elements[index];
+      var bounds = this.renderBounds = this.getElementBounds(currentElement);
 
       if (bounds) {
         var diagramElement = query("#"+options.diagramElement)[0];
@@ -674,10 +675,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   BpmnElementRenderer.prototype.getLabelBounds = function () {
-    if (!this.baseElement.bpmndi) {
-      return null;
-    }
-
     var diChildren = this.baseElement.bpmndi[0].children;
 
     for (var index in diChildren) {
@@ -692,11 +689,34 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   BpmnElementRenderer.prototype.getBounds = function() {
-    if (!this.baseElement.bpmndi) {
+    if (this.baseElement instanceof Array) {
+      var outerBounds = {x:10000, y: 10000, width:1, height :1};
+
+      for (var index in this.baseElement) {
+        var boundsElement = this.baseElement[index];
+        var elementBounds = this.getElementBounds(boundsElement);
+
+        if (elementBounds) {
+          outerBounds.x = Math.min(+elementBounds.x, +outerBounds.x);
+          outerBounds.y = Math.min(+elementBounds.y, +outerBounds.y);
+          outerBounds.width = Math.max(+elementBounds.width, +outerBounds.width);
+          outerBounds.height = Math.max(+elementBounds.height, +outerBounds.height);
+        }
+
+      }
+      console.log(outerBounds);
+      return outerBounds;
+    } else {
+      return this.getElementBounds(this.baseElement);
+    }
+  };
+
+  BpmnElementRenderer.prototype.getElementBounds = function (baseElement) {
+    if (!baseElement.bpmndi) {
       return null;
     }
 
-    var diChildren = this.baseElement.bpmndi[0].children;
+    var diChildren = baseElement.bpmndi[0].children;
 
     var bounds = getBoundsFromChildren(diChildren);
 
@@ -734,7 +754,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     return waypoints;
   };
 
-  BpmnElementRenderer.prototype.getStyle = function () {
+  BpmnElementRenderer.prototype.getStyle = function (baseElement) {
+    if (baseElement) {
+      return styleMap[baseElement.type];
+    }
     return styleMap[this.baseElement.type];
   };
 

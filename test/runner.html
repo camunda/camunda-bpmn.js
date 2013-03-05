@@ -49,8 +49,15 @@
 
           "renderer/basic.js",
           "renderer/compatibility.js",
+          "renderer/zoom.js",
+
           "dojo/domReady!"
         ];
+
+        var testOnly = window.location.hash.substring(1);
+        if (!!testOnly) {
+          specs = [testOnly];
+        }
 
         require(specs, function() {
           execJasmine();
