@@ -16,7 +16,7 @@
          </extensionElements>
          <outgoing>sid-5AC1C777-0859-4E6F-9776-E0E784DBF8FE</outgoing>
       </task>
-      <eventBasedGateway eventGatewayType="Exclusive" gatewayDirection="Diverging" id="sid-393B1E06-252D-4FB9-B546-72235E90A20B" instantiate="false">
+      <eventBasedGateway name="event based" eventGatewayType="Exclusive" gatewayDirection="Diverging" id="sid-393B1E06-252D-4FB9-B546-72235E90A20B" instantiate="false">
          <extensionElements>
             <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
             <signavio:signavioMetaData metaKey="userstory" metaValue="[]"/>
@@ -195,7 +195,7 @@
             <signavio:signavioMetaData metaKey="userstory" metaValue="[]"/>
          </extensionElements>
       </sequenceFlow>
-      <sequenceFlow id="sid-BE9C8355-CD86-48AA-91F4-E19ACCB9D2F1" sourceRef="sid-393B1E06-252D-4FB9-B546-72235E90A20B" targetRef="sid-E2750FD7-02A4-49F0-B507-8B9AC116E27F">
+      <sequenceFlow name="flow" id="sid-BE9C8355-CD86-48AA-91F4-E19ACCB9D2F1" sourceRef="sid-393B1E06-252D-4FB9-B546-72235E90A20B" targetRef="sid-E2750FD7-02A4-49F0-B507-8B9AC116E27F">
          <extensionElements>
             <signavio:signavioMetaData metaKey="userstory" metaValue="[]"/>
          </extensionElements>

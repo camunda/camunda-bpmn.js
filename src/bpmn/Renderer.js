@@ -186,7 +186,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     var maxWidth = 100;
 
     for (var i=0; i<words.length; i++) {
-      var text = group.createText({text: tempText + " " + words[i], align: align ? align : "middle" })
+      var text = group.createText({text: tempText + " " + words[i], align: align ? align : "left" })
         .setFont(font) //set font
         .setFill("black");
 
@@ -201,7 +201,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     var textLines = tempText.substring(1).split("\n");
 
     for (var i=0; group!= undefined && i<textLines.length; i++) {
-      group.createText({ x: x, y: y + i * font.size , text: textLines[i], align: align ? align : "middle" })
+      group.createText({ x: x, y: y + i * font.size , text: textLines[i], align: align ? align : "left" })
         .setFont(font) //set font
         .setFill("black");
     }
@@ -209,7 +209,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     return textLines;
   }
 
-  function renderLabel(elementRenderer, group, bounds) {
+  function renderLabel(elementRenderer, group, bounds, align) {
     var baseElement = elementRenderer.baseElement;
 
     if (!baseElement.name) {
@@ -223,7 +223,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     var  x =  pos.x,
          y = pos.y;
 
-    wordWrap(baseElement.name, group, font, x, y);
+    wordWrap(baseElement.name, group, font, x, y, align);
     return group;
   }
 
@@ -341,7 +341,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         count+= factor;
       }
 
-      renderLabel(elementRenderer, gfxGroup, {x: sumx / count, y: sumy / count});
+      renderLabel(elementRenderer, gfxGroup, {x: sumx / count, y: sumy / count}, "middle");
     }
   };
 
@@ -401,7 +401,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
           break;
       }
 
-      renderLabel(elementRenderer, gfxGroup, {x: x + width/2, y: y + height + 10});
+      renderLabel(elementRenderer, gfxGroup, {x: x + width/2, y: y + height + 10}, "middle");
     }
   };
 
@@ -432,9 +432,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       if (taskDefinitionPaths[baseElement.type]) {
         var path = taskGroup.createPath(taskDefinitionPaths[baseElement.type]);
         path.setStroke({color : style.stroke, width: 1.5});
+        path.setTransform({dx: 5, dy:5});
       }
 
-      var text = renderLabel(elementRenderer, gfxGroup, {x: x + width /2 , y: y + height /2});
+      var text = renderLabel(elementRenderer, gfxGroup, {x: x + width /2 , y: y + height /2}, "middle");
     }
   };
 
@@ -498,7 +499,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         }
       }
 
-      renderLabel(elementRenderer, gfxGroup, {x : x + +bounds.width / 2, y : y + +bounds.width + rad});
+      renderLabel(elementRenderer, gfxGroup, {x : x + +bounds.width / 2, y : y + +bounds.width + rad}, "middle");
 
       return circle;
     }

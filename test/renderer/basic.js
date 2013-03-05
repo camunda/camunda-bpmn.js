@@ -42,6 +42,32 @@ return describe('Basic Renderer Functionality', function() {
     });
 
   });
+
+  it('should render basic event types', function() {
+    afterEach(function () {
+
+    });
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/event-based-events.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+      });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 5000);
+
+    runs(function () {
+      expect(bpmn.definitionRenderer).toBeDefined();
+      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle").length).toBe(12);
+    });
+
+  });
+
 });
 
 });
