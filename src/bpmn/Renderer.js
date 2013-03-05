@@ -699,12 +699,11 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         if (elementBounds) {
           outerBounds.x = Math.min(+elementBounds.x, +outerBounds.x);
           outerBounds.y = Math.min(+elementBounds.y, +outerBounds.y);
-          outerBounds.width = Math.max(+elementBounds.width, +outerBounds.width);
-          outerBounds.height = Math.max(+elementBounds.height, +outerBounds.height);
+          outerBounds.width = Math.max(+elementBounds.x + +elementBounds.width, +outerBounds.width);
+          outerBounds.height = Math.max(+elementBounds.y + +elementBounds.height, +outerBounds.height);
         }
 
       }
-      console.log(outerBounds);
       return outerBounds;
     } else {
       return this.getElementBounds(this.baseElement);
