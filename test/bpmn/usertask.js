@@ -13,11 +13,13 @@
 
 "use strict";
 
-describe('Usertask', function() {
+define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
+
+return describe('Usertask', function() {
 
   it('should handle user tasks as wait states', function() {
 
-    var processDefinition = CAM.transform('<?xml version="1.0" encoding="UTF-8"?>' +
+    var processDefinition = new Transformer().transform('<?xml version="1.0" encoding="UTF-8"?>' +
       '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
         'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
       
@@ -60,6 +62,6 @@ describe('Usertask', function() {
     expect(processInstance.activities[2].activityId).toBe("theEnd");    
 
   });
-
+});
 
 });

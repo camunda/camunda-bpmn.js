@@ -1,4 +1,4 @@
-define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "dojo/query", "dojo/_base/array", "dojo/dom-class"], function (Transformer, Renderer, request, Deferred, query, array, domClass) {
+define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "dojo/query", "dojo/_base/array", "dojo/dom-class", "dojo/dom-construct"], function (Transformer, Renderer, request, Deferred, query, array, domClass, domConstruct) {
   function Bpmn() {
   };
 
@@ -21,20 +21,31 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
     return deferred;
   };
 
-  Bpmn.prototype.render = function (bpmnXml, options) {
+  Bpmn.prototype.render = function(bpmnXml, options) {
     var processDefinition = new Transformer().transform(bpmnXml);
-    console.log(processDefinition);
 
     var definitionRenderer = new Renderer(processDefinition);
     definitionRenderer.render(options);
 
     this.definitionRenderer = definitionRenderer;
     this.bpmnXml = bpmnXml;
+    this.options = options;
+
+    // zoom the diagram to suite the bounds specified on options if any;
+    var bounds = definitionRenderer.getBounds(),
+        bwidth = parseFloat(bounds.width),
+        bheight = parseFloat(bounds.height);
+
+    var scale = Math.min(
+          (options.width || bwidth) / bwidth,
+          (options.height || bheight) / bheight);
+    
+    this.zoom(scale);
 
     return this;
   },
 
-    Bpmn.prototype.zoom = function (factor) {
+  Bpmn.prototype.zoom = function (factor) {
       var transform = this.definitionRenderer.gfxGroup.getTransform();
 
       var xx = 1;
@@ -43,7 +54,6 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
       if (!!transform) {
         xx = transform.xx;
         yy = transform.yy;
-
       }
 
       this.definitionRenderer.gfxGroup.setTransform({xx:factor, yy:factor});
@@ -69,6 +79,11 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
     element.innerHTML = innerHTML;
 
     domClass.add(element, classesArray.join(" "));
+  };
+
+  Bpmn.prototype.clear = function (id, innerHTML, classesArray) {
+    this.definitionRenderer.gfxGroup.destroy();
+    domConstruct.empty(query("#"+this.options.diagramElement)[0]);
   };
 
   return Bpmn;
