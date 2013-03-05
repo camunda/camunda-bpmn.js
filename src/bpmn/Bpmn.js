@@ -49,29 +49,29 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
   },
 
   Bpmn.prototype.zoom = function (factor) {
-      var transform = this.definitionRenderer.gfxGroup.getTransform();
+    var transform = this.definitionRenderer.gfxGroup.getTransform();
 
-      var xx = 1;
-      var yy = 1;
+    var xx = 1;
+    var yy = 1;
 
-      if (!!transform) {
-        xx = transform.xx;
-        yy = transform.yy;
-      }
+    if (!!transform) {
+      xx = transform.xx;
+      yy = transform.yy;
+    }
 
-      this.definitionRenderer.gfxGroup.setTransform({xx:factor, yy:factor});
-      var currentDimension = this.definitionRenderer.getSurface().getDimensions();
-      this.definitionRenderer.getSurface().setDimensions(+currentDimension.width/xx * factor, +currentDimension.height/xx * factor);
+    this.definitionRenderer.gfxGroup.setTransform({xx:factor, yy:factor});
+    var currentDimension = this.definitionRenderer.getSurface().getDimensions();
+    this.definitionRenderer.getSurface().setDimensions(+currentDimension.width/xx * factor, +currentDimension.height/xx * factor);
 
-      array.forEach(query(".bpmnElement"), function(element) {
-        element.style.left = element.style.left.split("px")[0]/xx * factor + "px";
-        element.style.top = element.style.top.split("px")[0]/yy * factor + "px";
-        element.style.width = element.style.width.split("px")[0]/xx * factor + "px";
-        element.style.height = element.style.height.split("px")[0]/yy * factor + "px";
-      });
+    array.forEach(query(".bpmnElement"), function(element) {
+      element.style.left = element.style.left.split("px")[0]/xx * factor + "px";
+      element.style.top = element.style.top.split("px")[0]/yy * factor + "px";
+      element.style.width = element.style.width.split("px")[0]/xx * factor + "px";
+      element.style.height = element.style.height.split("px")[0]/yy * factor + "px";
+    });
 
-      return this;
-    };
+    return this;
+  };
 
   Bpmn.prototype.annotate = function (id, innerHTML, classesArray) {
     var element = query(".bpmnElement" + "#"+id)[0];
@@ -81,10 +81,10 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
 
     element.innerHTML = innerHTML;
 
-    domClass.add(element, classesArray.join(" "));
+    domClass.add(element, (classesArray || []).join(" "));
   };
 
-  Bpmn.prototype.clear = function (id, innerHTML, classesArray) {
+  Bpmn.prototype.clear = function () {
     this.definitionRenderer.gfxGroup.destroy();
     domConstruct.empty(query("#"+this.options.diagramElement)[0]);
   };
