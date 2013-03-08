@@ -28,8 +28,8 @@ define(["bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], function(Bpmn,
         expect(bpmn.definitionRenderer).toBeDefined();
         expect(bpmn.definitionRenderer.getSurface()).toBeDefined();
 
-        expect(Math.ceil(bpmn.definitionRenderer.getSurface().getDimensions().width)).toBeCloseTo(104);
-        expect(Math.ceil(bpmn.definitionRenderer.getSurface().getDimensions().height)).toBeCloseTo(56);
+        expect(Math.ceil(bpmn.definitionRenderer.getSurface().getDimensions().width)).toBeCloseTo(100);
+        expect(Math.ceil(bpmn.definitionRenderer.getSurface().getDimensions().height)).toBeCloseTo(55);
       });
 
     });
