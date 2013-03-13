@@ -46,14 +46,14 @@ var CAM = {};
 
   // static utility functions ////////////////////////////////////
 
-  var getActivitiesByType = function(activityDefinition, typeId, recursive) {
+  var getActivitiesByType = function(activityDefinition, type, recursive) {
     var baseElements = [];
     for (var i = 0; i < activityDefinition.baseElements.length; i++) { 
       var childActivity = activityDefinition.baseElements[i];
-      if(!!childActivity.type && childActivity.type == typeId){
+      if(!!childActivity.type && childActivity.type == type){
         baseElements.push(childActivity);
         if(recursive) {
-          baseElements = baseElements.concat(getActivitiesByType(childActivity, typeId, recursive));
+          baseElements = baseElements.concat(getActivitiesByType(childActivity, type, recursive));
         }
       }        
     }
@@ -71,9 +71,9 @@ var CAM = {};
   };
 
   var getActivityType = function(activityDefinition) {
-    var typeId = activityDefinition.type;
-    if(!!typeId) {
-      return activityTypes[typeId];
+    var type = activityDefinition.type;
+    if(!!type) {
+      return activityTypes[type];
     } else {
       return null;
     }      
@@ -159,6 +159,9 @@ var CAM = {};
     ActivityExecution.prototype.start = function() {   
       this.startDate = new Date();
 
+      // invoke listeners on activity start
+      this.invokeListeners(LISTENER_START);  
+
       // if the activity is async, we do not execute it right away 
       // but simpley return. Execution can be continued using the 
       // continue() function
@@ -170,9 +173,7 @@ var CAM = {};
     };
 
     ActivityExecution.prototype.continue = function() {
-      // invoke listeners on activity start
-      this.invokeListeners(LISTENER_START);      
-
+   
       // execute activity type
       var activityType = getActivityType(this.activityDefinition);
       activityType.execute(this);      
@@ -409,6 +410,12 @@ var CAM = {};
     }
   };
 
+  var serviceTask = {
+    "execute" : function(activityExecution) {
+      leave(activityExecution);
+    }
+  };
+
   /**
    * implementation of the exclusive gateway
    */
@@ -483,15 +490,8 @@ var CAM = {};
   CAM.activityTypes["exclusiveGateway"] = exclusiveGateway;
   CAM.activityTypes["task"] = task;
   CAM.activityTypes["userTask"] = userTask;
+  CAM.activityTypes["serviceTask"] = serviceTask;
   CAM.activityTypes["process"] = process; 
   CAM.activityTypes["parallelGateway"] = parallelGateway;
 
 })(CAM);
-
-try {
-  define([], function () {
-    return CAM;
-  });
-}catch (e) {
-  // could not define CAM, maybe not in a requirejs env
-}

@@ -105,6 +105,7 @@ define([], function () {
 
       bpmnObject.outgoing = [];
       bpmnObject.listeners = [];
+      bpmnObject.properties = {};
 
       var attributes = element.attributes;
 
@@ -337,8 +338,10 @@ define([], function () {
 
         } else if(elementType == "subProcess") {
           bpmnObject = transformElementsContainer(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
-        } else if(!!element && element.nodeName != "sequenceFlow") {
+
+        } else if(!!element && element.nodeName != "sequenceFlow" && element.nodeType == 1 /* (nodeType=1 => element nodes only) */ ) {  
           bpmnObject = createBpmnObject(element, scopeActivity, bpmnDiElementIndex);
+
         }
 
         if(!!bpmnObject) {
