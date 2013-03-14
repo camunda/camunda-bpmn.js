@@ -1,7 +1,12 @@
 /**
  * The BPMN 2.0 SVG renderer module
  *
- * This module provides the functionality for rendering a BPMN 2.0 Process Model in SVG
+ * This module provides the functionality for rendering a BPMN 2.0 Process Model using DOJO GFX
+ * 
+ * @author: Andreas Drobisch
+ * @author: Jakob Freund
+ * @author: Daniel Meyer
+ * 
  */
 define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window", "dojo/query", "dojo/dom", "dojo/dom-class"], function (gfx, lang, domConstruct, win, query, dom, domClass) {
   var eventDefinitionPaths = {

@@ -17,7 +17,7 @@ var CAM = {};
 
 /**
  * The core process engine.
- *
+ * @author Daniel Meyer
  */
 (function(CAM) {
 
@@ -297,6 +297,8 @@ var CAM = {};
  * The BPMN 2.0 activity type module.
  *
  * This module provides the BPMN 2.0 specific runtime behavior
+ * 
+ * @author Daniel Meyer
  */
 (function(CAM) {
 
