@@ -11,8 +11,8 @@ camunda BPMN Javascript libraries for parsing, executing and rendering BPMN 2.0 
 Components
 ---------
  * Transformer - The Transformer Module is responsible for parsing a BPMN 2.0 Xml File and transforming it into a Java Script object model. The same object model can then be passed to the Executor and the Renderer.
-* Executor - The Executor module is a lightweight Process Engine completely written in Java Script.
-* Renderer - The Renderer module is capable of rendering BPMN 2.0 Diagram.
+ * Executor - The Executor module is a lightweight Process Engine completely written in Java Script.
+ * Renderer - The Renderer module is capable of rendering BPMN 2.0 Diagram.
 
 Getting Started
 ---------
