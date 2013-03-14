@@ -5,8 +5,11 @@
  * The BPMN 2.0 transformer module
  *
  * This module provides the functionality necessary to transform
- * a BPMN 2.0 XML file into a set of ActivityDefinitions that can be consumed
- * by the process engine.
+ * a BPMN 2.0 XML file into a Tree of Java Script objects that can be consumed
+ * by both the Executor (process engine) and the Renderer
+ * 
+ * @author Daniel Meyer
+ * @author Andreas Drobisch
  */
 define([], function () {
 
