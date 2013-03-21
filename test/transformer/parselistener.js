@@ -13,73 +13,76 @@
 
 "use strict";
 
-describe('Parse listerner', function() {
+define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
+  return describe('Parse listerner', function() {
 
-  var activityIds; 
+    var activityIds;
+    var transformer = new Transformer();
 
-  beforeEach(function() {
-    activityIds = [];    
-    CAM.parseListeners.splice(0,CAM.parseListeners.length);
-  });  
-
-  it('should invoke the parse listener for each activity created', function() {
-
-    CAM.parseListeners.push(function(activityDefinition){
-      activityIds.push(activityDefinition.id);    
+    beforeEach(function() {
+      activityIds = [];
+      transformer.parseListeners.splice(0,transformer.parseListeners.length);
     });
 
-    var processDefinition = CAM.transform(
-    '<?xml version="1.0" encoding="UTF-8"?>' +
-    '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
-      'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
-    
-      '<process id="theProcess" isExecutable="true">' +
-    
-        '<startEvent id="theStart" />'+
-        '<exclusiveGateway id="decision" />'+    
-        '<endEvent id="end" />'+
-        
-        '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="decision" />'+
-        '<sequenceFlow id="flow2" sourceRef="decision" targetRef="end" />'+
-      
-      '</process>'+
-    
-    '</definitions>')[0];
+    it('should invoke the parse listener for each activity created', function() {
 
-    expect(activityIds).toEqual(["theStart","decision","end","theProcess"]);
-    
+      transformer.parseListeners.push(function(activityDefinition){
+        activityIds.push(activityDefinition.id);
+      });
+
+      var processDefinition = transformer.transform(
+          '<?xml version="1.0" encoding="UTF-8"?>' +
+              '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
+              'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
+
+              '<process id="theProcess" isExecutable="true">' +
+
+              '<startEvent id="theStart" />'+
+              '<exclusiveGateway id="decision" />'+
+              '<endEvent id="end" />'+
+
+              '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="decision" />'+
+              '<sequenceFlow id="flow2" sourceRef="decision" targetRef="end" />'+
+
+              '</process>'+
+
+              '</definitions>')[0];
+
+      expect(activityIds).toEqual(["theStart","decision","end","theProcess"]);
+
+    });
+
+    it('should support multiple parse listeners', function() {
+
+      transformer.parseListeners.push(function(activityDefinition){
+        activityIds.push(activityDefinition.id);
+      });
+
+      transformer.parseListeners.push(function(activityDefinition){
+        activityIds.push(activityDefinition.id);
+      });
+
+      var processDefinition = transformer.transform(
+          '<?xml version="1.0" encoding="UTF-8"?>' +
+              '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
+              'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
+
+              '<process id="theProcess" isExecutable="true">' +
+
+              '<startEvent id="theStart" />'+
+              '<exclusiveGateway id="decision" />'+
+              '<endEvent id="end" />'+
+
+              '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="decision" />'+
+              '<sequenceFlow id="flow2" sourceRef="decision" targetRef="end" />'+
+
+              '</process>'+
+
+              '</definitions>')[0];
+
+      expect(activityIds).toEqual(["theStart","theStart","decision","decision","end","end","theProcess","theProcess"]);
+
+    });
+
   });
-
-  it('should support multiple parse listeners', function() {
-
-    CAM.parseListeners.push(function(activityDefinition){
-       activityIds.push(activityDefinition.id);    
-    });
-
-    CAM.parseListeners.push(function(activityDefinition){
-       activityIds.push(activityDefinition.id);    
-    });
-
-    var processDefinition = CAM.transform(
-    '<?xml version="1.0" encoding="UTF-8"?>' +
-    '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
-      'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
-    
-      '<process id="theProcess" isExecutable="true">' +
-    
-        '<startEvent id="theStart" />'+
-        '<exclusiveGateway id="decision" />'+    
-        '<endEvent id="end" />'+
-        
-        '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="decision" />'+
-        '<sequenceFlow id="flow2" sourceRef="decision" targetRef="end" />'+
-      
-      '</process>'+
-    
-    '</definitions>')[0];
-
-    expect(activityIds).toEqual(["theStart","theStart","decision","decision","end","end","theProcess","theProcess"]);
-
-  });
-  
 });

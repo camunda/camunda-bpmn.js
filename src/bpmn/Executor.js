@@ -497,3 +497,9 @@ var CAM = {};
   CAM.activityTypes["parallelGateway"] = parallelGateway;
 
 })(CAM);
+// if we are in a require enviroment, define the module
+if (typeof define == 'function') {
+  define([], function () {
+    return CAM;
+  });
+}

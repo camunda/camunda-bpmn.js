@@ -13,56 +13,59 @@
 
 "use strict";
 
-describe('Asynchronous Continuations', function() {
+define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
+  return describe('Asynchronous Continuations', function() {
 
-  var executionTrace = [];
+    var executionTrace = [];
+    var transformer = new Transformer();
 
-  afterEach(function() {
-    executionTrace = [];
-    CAM.parseListeners.splice(0,CAM.parseListeners.length);
-  });  
-
-  it('should invoke callback function for async activities', function() {
-
-    var interruptedExecution;
-
-    CAM.parseListeners.push(function(activityDefinition){
-      activityDefinition.asyncCallback = function(activityExecution) {
-        interruptedExecution = activityExecution;
-      };
+    afterEach(function() {
+      executionTrace = [];
+      transformer.parseListeners.splice(0,transformer.parseListeners.length);
     });
 
-    var processDefinition = CAM.transform(
-    '<?xml version="1.0" encoding="UTF-8"?>' +
-    '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
-      'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
-    
-      '<process id="theProcess" isExecutable="true">' +
-    
-        '<startEvent id="theStart" />'+
-        '<exclusiveGateway id="decision" />'+    
-        '<endEvent id="end" />'+
-        
-        '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="decision" />'+
-        '<sequenceFlow id="flow2" sourceRef="decision" targetRef="end" />'+
-      
-      '</process>'+
-    
-    '</definitions>')[0];
+    it('should invoke callback function for async activities', function() {
 
-    var execution = new CAM.ActivityExecution(processDefinition);
-    execution.start();
+      var interruptedExecution;
 
-    expect(execution.isEnded).toBe(false);
+      transformer.parseListeners.push(function(activityDefinition){
+        activityDefinition.asyncCallback = function(activityExecution) {
+          interruptedExecution = activityExecution;
+        };
+      });
 
-    while(interruptedExecution) {
-      var e = interruptedExecution;
-      interruptedExecution = null;
-      e.continue();
-    }
+      var processDefinition = transformer.transform(
+          '<?xml version="1.0" encoding="UTF-8"?>' +
+              '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
+              'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
 
-    expect(execution.isEnded).toBe(true);
+              '<process id="theProcess" isExecutable="true">' +
+
+              '<startEvent id="theStart" />'+
+              '<exclusiveGateway id="decision" />'+
+              '<endEvent id="end" />'+
+
+              '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="decision" />'+
+              '<sequenceFlow id="flow2" sourceRef="decision" targetRef="end" />'+
+
+              '</process>'+
+
+              '</definitions>')[0];
+
+      var execution = new CAM.ActivityExecution(processDefinition);
+      execution.start();
+
+      expect(execution.isEnded).toBe(false);
+
+      while(interruptedExecution) {
+        var e = interruptedExecution;
+        interruptedExecution = null;
+        e.continue();
+      }
+
+      expect(execution.isEnded).toBe(true);
+
+    });
 
   });
-  
 });

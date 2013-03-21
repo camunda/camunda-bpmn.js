@@ -13,69 +13,74 @@
 
 "use strict";
 
-describe('Execution Listener', function() {
+define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
+  return describe('Execution Listener', function() {
 
-  var executionTrace = [];
+    var executionTrace = [];
+    var transformer = new Transformer();
 
-  beforeEach(function() {
-    executionTrace = [];
-    CAM.parseListeners.splice(0,CAM.parseListeners.length);
-  });  
+    beforeEach(function() {
+      executionTrace = [];
+      transformer.parseListeners.splice(0,transformer.parseListeners.length);
+    });
 
-  it('should invoke the execution listeners on start end and take', function() {
+    it('should invoke the execution listeners on start end and take', function() {
 
-    CAM.parseListeners.push(function(activityDefinition){
-      
-      // add an execution listener to each activity definition in the process
-      activityDefinition.listeners.push(
-        {
-          "start" : function(activityExecution) {
-            executionTrace.push("start-"+activityExecution.activityDefinition.id);
-          },
-          "end" : function(activityExecution) {
-            executionTrace.push("end-"+activityExecution.activityDefinition.id);
-          },
-          "take" : function(activityExecution,transition) {
-            executionTrace.push("take-"+transition.id);
-          }
-        }
-      );
+      transformer.parseListeners.push(function(activityDefinition){
+
+        // add an execution listener to each activity definition in the process
+        activityDefinition.listeners.push(
+            {
+              "start" : function(activityExecution) {
+                executionTrace.push("start-"+activityExecution.activityDefinition.id);
+              },
+              "end" : function(activityExecution) {
+                executionTrace.push("end-"+activityExecution.activityDefinition.id);
+              },
+              "take" : function(activityExecution,transition) {
+                executionTrace.push("take-"+transition.id);
+              }
+            }
+        );
+
+      });
+
+      var processDefinition = transformer.transform(
+          '<?xml version="1.0" encoding="UTF-8"?>' +
+              '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
+              'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
+
+              '<process id="theProcess" isExecutable="true">' +
+
+              '<startEvent id="theStart" />'+
+              '<exclusiveGateway id="decision" />'+
+              '<endEvent id="end" />'+
+
+              '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="decision" />'+
+              '<sequenceFlow id="flow2" sourceRef="decision" targetRef="end" />'+
+
+              '</process>'+
+
+              '</definitions>')[0];
+
+      var execution = new CAM.ActivityExecution(processDefinition);
+      execution.start();
+
+      expect(executionTrace).toEqual([
+        'start-theProcess',
+        'start-theStart',
+        'end-theStart',
+        'take-flow1',
+        'start-decision',
+        'end-decision',
+        'take-flow2',
+        'start-end',
+        'end-end',
+        'end-theProcess' ]);
 
     });
 
-    var processDefinition = CAM.transform(
-    '<?xml version="1.0" encoding="UTF-8"?>' +
-    '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
-      'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
-    
-      '<process id="theProcess" isExecutable="true">' +
-    
-        '<startEvent id="theStart" />'+
-        '<exclusiveGateway id="decision" />'+    
-        '<endEvent id="end" />'+
-        
-        '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="decision" />'+
-        '<sequenceFlow id="flow2" sourceRef="decision" targetRef="end" />'+
-      
-      '</process>'+
-    
-    '</definitions>')[0];
-
-    var execution = new CAM.ActivityExecution(processDefinition);
-    execution.start();
-
-    expect(executionTrace).toEqual([ 
-      'start-theProcess', 
-        'start-theStart', 
-        'end-theStart',
-        'take-flow1',
-        'start-decision', 
-        'end-decision', 
-        'take-flow2',
-        'start-end', 
-        'end-end', 
-      'end-theProcess' ]);
-
   });
-  
+
 });
+
