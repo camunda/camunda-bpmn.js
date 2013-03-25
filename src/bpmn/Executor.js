@@ -218,15 +218,29 @@ var CAM = {};
       this.parentExecution.executeActivity(toActivity, sequenceFlow);
     };
 
-    ActivityExecution.prototype.signal = function() {
-      if(this.isEnded) {
-        throw new ExecutionException("cannot signal an ended activity instance", this);
-      }
-      var type = getActivityType(this.activityDefinition);      
-      if(!!type.signal) {
-        type.signal(this);
-      } else {
-        this.end();
+    ActivityExecution.prototype.signal = function(definitionId) {
+      var signalFn = function (execution) {
+        if(execution.isEnded) {
+          throw new ExecutionException("cannot signal an ended activity instance", execution);
+        }
+        var type = getActivityType(execution.activityDefinition);      
+        if(!!type.signal) {
+          type.signal(execution);
+        } else {
+          execution.end();
+        }
+      };
+
+      if (definitionId) {
+        for (var index in this.activityExecutions) {
+          var execution = this.activityExecutions[index];
+          if (execution.activityDefinition.id == definitionId) {
+            signalFn(execution);
+            break;
+          }
+        }
+      }else {
+        signalFn(this);
       }
     };
 
