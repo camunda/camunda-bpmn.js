@@ -1,4 +1,5 @@
 /* Licensed under the Apache License, Version 2.0 (the "License");
+/* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -13,23 +14,21 @@
 
 "use strict";
 
-define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
+define(["bpmn/Engine"], function(Engine) {
   return describe('Execution Listener', function() {
 
     var executionTrace = [];
-    var transformer = new Transformer();
+    var gatewayTrace = [];
+    var parseListeners = [];
 
     beforeEach(function() {
       executionTrace = [];
-      transformer.parseListeners.splice(0,transformer.parseListeners.length);
+      parseListeners.splice(0,parseListeners.length);
     });
 
     it('should invoke the execution listeners on start end and take', function() {
 
-      transformer.parseListeners.push(function(activityDefinition){
-
-        // add an execution listener to each activity definition in the process
-        activityDefinition.listeners.push(
+      parseListeners.push(
             {
               "start" : function(activityExecution) {
                 executionTrace.push("start-"+activityExecution.activityDefinition.id);
@@ -40,13 +39,19 @@ define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
               "take" : function(activityExecution,transition) {
                 executionTrace.push("take-"+transition.id);
               }
+            },
+            {
+              id: "decision",
+              "start" : function(activityExecution) {
+                gatewayTrace.push("start-"+activityExecution.activityDefinition.id);
+              },
+              "end" : function(activityExecution) {
+                gatewayTrace.push("end-"+activityExecution.activityDefinition.id);
+              }
             }
-        );
+      );
 
-      });
-
-      var processDefinition = transformer.transform(
-          '<?xml version="1.0" encoding="UTF-8"?>' +
+      var processXml = '<?xml version="1.0" encoding="UTF-8"?>' +
               '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
               'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
 
@@ -61,10 +66,9 @@ define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
 
               '</process>'+
 
-              '</definitions>')[0];
+              '</definitions>';
 
-      var execution = new CAM.ActivityExecution(processDefinition);
-      execution.start();
+      Engine.startInstance(processXml, {}, parseListeners);
 
       expect(executionTrace).toEqual([
         'start-theProcess',
@@ -77,7 +81,10 @@ define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
         'start-end',
         'end-end',
         'end-theProcess' ]);
-
+      
+      expect(gatewayTrace).toEqual([
+        'start-decision',
+        'end-decision' ]);
     });
 
   });
