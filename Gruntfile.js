@@ -3,6 +3,18 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    connect: {
+      server: {
+        options: {
+          port: 9000,
+          base: '.'
+        }
+      }
+    },
+    watch: {
+      files: 'src/**/*',
+      tasks: ['requirejs']
+    },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
@@ -30,8 +42,10 @@ module.exports = function(grunt) {
   // r.js optimizer for requirejs will not work for the renderer, because there are circular dependencie in dojo
   // we will need to use the dojo build tool to create a single file build for that
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks( 'grunt-contrib-connect');
+  grunt.loadNpmTasks( 'grunt-contrib-watch' );
 
   // Default task(s).
-  grunt.registerTask('default', ['requirejs']);
-
+  grunt.registerTask( 'default', ['requirejs']);
+  grunt.registerTask( 'server', [ 'connect:server'] );
 };

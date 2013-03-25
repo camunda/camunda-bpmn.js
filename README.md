@@ -11,7 +11,7 @@ camunda BPMN Javascript libraries for parsing, executing and rendering BPMN 2.0 
 Components
 ---------
  * *Transformer* - Supports parsing a BPMN 2.0 Xml File and transforming it into a Java Script object model. The same object model can then be passed to the Executor and the Renderer.
- * *Executor* - Lightweight Process Engine completely written in Java Script.
+ * *Engine* - Lightweight Process Engine completely written in Java Script.
  * *Renderer* - Allows rendering BPMN 2.0 Diagrams using SVG or HTML5 Canvas.
 
 Getting Started
@@ -51,3 +51,14 @@ require(["bpmn/Bpmn", "dojo/domReady!"], function(Bpmn) {
   });
 });
 ```
+Development
+===========
+
+We are using gruntjs:
+
+```
+grunt server watch  # start a web server at localhost:9000
+grunt requirejs # optimzises and minifies the engine into 'optimized' folder
+```
+
+Open [localhost:9000/test/runner.html](http://localhost:9000/test/runner.html) too execute the jasmine tests in your browser while running the grunt server.
