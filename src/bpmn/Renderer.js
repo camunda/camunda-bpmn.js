@@ -189,8 +189,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     var fontSize = font.size ? font.size :  10;
     var defaultAlign = "right";
 
-    var text = text.replace("&#xD;", "<w>").replace("&#xA;", "<w>");
-    var textLines = text.split('\n');
+    var text = text.replace("&#xD;", "<w>").replace("&#xA;", "<w>").replace("\n", "<w>");
+    var textLines = text.split("<w>");
 
     for (var i=0; i<textLines.length; i++) {
       var textLine = group.createText({text: textLines[i], align: align ? align : defaultAlign})
@@ -216,7 +216,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
     var x =  pos.x,
         y = pos.y;
-    console.log(arguments);
     wordWrap(baseElement.name, group, font, +x, +y, labelBounds ? null : align);
 
     return group;
