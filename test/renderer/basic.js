@@ -68,6 +68,62 @@ return describe('Basic Renderer Functionality', function() {
 
   });
 
+  it('should render labels correctly', function() {
+    afterEach(function () {
+
+    });
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/test-labels-basic.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+      rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 5000);
+
+    runs(function () {
+      expect(bpmn.definitionRenderer).toBeDefined();
+      var labels = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "text");
+      expect(labels.length).toBe(3);
+
+      // label padding is included
+      expect([labels[0]]).toHavePositions([{x : 535, y: 302}]);
+    });
+
+  });
+
+  it('should render labels in collaboration correctly', function() {
+    afterEach(function () {
+    });
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/test-labels-collaboration.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+      });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 5000);
+
+    runs(function () {
+      expect(bpmn.definitionRenderer).toBeDefined();
+      var label = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, {"type" : "text", "text": "review successful?"});
+      expect(label.length).toBe(1);
+      // gateway has label position
+      expect(label).toHavePositions([{x : 658, y: 119}]);
+    });
+
+  });
+
 });
 
 });

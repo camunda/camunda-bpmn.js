@@ -35,10 +35,6 @@
           return htmlReporter.specFilter(spec);
         };
 
-        function execJasmine() {
-          jasmineEnv.execute();
-        }
-
         var specs = [
           "engine/executionlistener.js",
           "engine/asynchronouscontinuations.js",
@@ -62,9 +58,14 @@
           specs = [testOnly];
         }
 
-        require(specs, function() {
-          execJasmine();
+        require(["util/TestHelper.js"].concat(specs), function (helper) {
+          jasmineEnv.beforeEach(function () {
+            this.addMatchers(helper.matchers);
+          });
+
+          jasmineEnv.execute();
         });
+
       })();
     </script>
   </head>
