@@ -4,7 +4,7 @@ camunda-bpmn.js
 camunda BPMN Javascript libraries for parsing, executing and rendering BPMN 2.0 with Java Script. 
 
 * Web Site: http://www.camunda.org/
-* Issue Tracker: https://app.camunda.com/jira/secure/RapidBoard.jspa?rapidView=23&view=planning
+* Issue Tracker: Issue Tracker: https://app.camunda.com/jira
 * Contribution Guildelines: http://www.camunda.org/app/community-contribute.html
 * License: Apache License, Version 2.0  http://www.apache.org/licenses/LICENSE-2.0
 
