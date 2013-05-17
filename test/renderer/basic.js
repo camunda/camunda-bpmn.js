@@ -69,7 +69,7 @@ return describe('Basic Renderer Functionality', function() {
 
   });
 
-  it('should render all timer events', function() {
+  it('should render all events', function() {
     afterEach(function () {
 
     });
@@ -89,7 +89,7 @@ return describe('Basic Renderer Functionality', function() {
 
     runs(function () {
       expect(bpmn.definitionRenderer).toBeDefined();
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle").length).toBe(19);
+      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle").length).toBe(41);
     });
 
   });
@@ -172,6 +172,31 @@ return describe('Basic Renderer Functionality', function() {
       // gateway has label position
       expect(label).toHavePositions([{x : 658, y: 119}]);
     });
+  });
+
+  it('should render all boundary events', function() {
+    afterEach(function () {
+    });
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/boundary_events.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+      });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 5000);
+
+    runs(function () {
+      expect(bpmn.definitionRenderer).toBeDefined();
+      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle").length).toBe(34);
+      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(17);
+    });
+
   });
 
 });

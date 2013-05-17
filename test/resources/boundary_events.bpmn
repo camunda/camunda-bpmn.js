@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_rEtPUL7eEeKTJdZ4xEyu1g" targetNamespace="http://activiti.org/bpmn">
+  <bpmn2:process id="Process_1" isExecutable="false">
+    <bpmn2:task id="Task_1" name="Task"/>
+    <bpmn2:boundaryEvent id="BoundaryEvent_2" name="" attachedToRef="Task_1">
+      <bpmn2:conditionalEventDefinition id="ConditionalEventDefinition_1"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:task id="Task_2" name="Task"/>
+    <bpmn2:boundaryEvent id="BoundaryEvent_3" name="" attachedToRef="Task_2">
+      <bpmn2:timerEventDefinition id="TimerEventDefinition_1"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:task id="Task_3" name="Task"/>
+    <bpmn2:boundaryEvent id="BoundaryEvent_4" name="" attachedToRef="Task_3">
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_1"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:task id="Task_15" name="Task"/>
+    <bpmn2:task id="Task_11" name="Task"/>
+    <bpmn2:task id="Task_10" name="Task"/>
+    <bpmn2:boundaryEvent id="BoundaryEvent_16" name="" parallelMultiple="true" attachedToRef="Task_15">
+      <bpmn2:timerEventDefinition id="TimerEventDefinition_3"/>
+      <bpmn2:messageEventDefinition id="MessageEventDefinition_4"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:task id="Task_12" name="Task"/>
+    <bpmn2:task id="Task_5" name="Task"/>
+    <bpmn2:task id="Task_8" name="Task"/>
+    <bpmn2:task id="Task_4" name="Task"/>
+    <bpmn2:task id="Task_7" name="Task"/>
+    <bpmn2:task id="Task_9" name="Task"/>
+    <bpmn2:task id="Task_6" name="Task"/>
+    <bpmn2:boundaryEvent id="BoundaryEvent_9" name="" attachedToRef="Task_9">
+      <bpmn2:cancelEventDefinition id="CancelEventDefinition_1"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:task id="Task_18" name="Task"/>
+    <bpmn2:boundaryEvent id="BoundaryEvent_14" name="" attachedToRef="Task_18" cancelActivity="false">
+      <bpmn2:escalationEventDefinition id="EscalationEventDefinition_2"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:task id="Task_13" name="Task"/>
+    <bpmn2:task id="Task_16" name="Task"/>
+    <bpmn2:task id="Task_17" name="Task"/>
+    <bpmn2:boundaryEvent id="BoundaryEvent_5" name="" attachedToRef="Task_4">
+      <bpmn2:messageEventDefinition id="MessageEventDefinition_2"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:boundaryEvent id="BoundaryEvent_6" name="" attachedToRef="Task_6">
+      <bpmn2:escalationEventDefinition id="EscalationEventDefinition_1"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:boundaryEvent id="BoundaryEvent_7" name="" attachedToRef="Task_8">
+      <bpmn2:compensateEventDefinition id="CompensateEventDefinition_1"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:boundaryEvent id="BoundaryEvent_8" name="" attachedToRef="Task_7">
+      <bpmn2:errorEventDefinition id="ErrorEventDefinition_1"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:boundaryEvent id="BoundaryEvent_1" name="" attachedToRef="Task_5">
+      <bpmn2:timerEventDefinition id="TimerEventDefinition_6"/>
+      <bpmn2:messageEventDefinition id="MessageEventDefinition_1"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:boundaryEvent id="BoundaryEvent_11" name="" attachedToRef="Task_10" cancelActivity="false">
+      <bpmn2:conditionalEventDefinition id="ConditionalEventDefinition_3"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:boundaryEvent id="BoundaryEvent_12" name="" attachedToRef="Task_11" cancelActivity="false">
+      <bpmn2:timerEventDefinition id="TimerEventDefinition_2"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:boundaryEvent id="BoundaryEvent_13" name="" attachedToRef="Task_12" cancelActivity="false">
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_2"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:boundaryEvent id="BoundaryEvent_15" name="" attachedToRef="Task_13" cancelActivity="false">
+      <bpmn2:messageEventDefinition id="MessageEventDefinition_3"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:boundaryEvent id="BoundaryEvent_17" name="" attachedToRef="Task_16" cancelActivity="false">
+      <bpmn2:timerEventDefinition id="TimerEventDefinition_4"/>
+      <bpmn2:messageEventDefinition id="MessageEventDefinition_5"/>
+    </bpmn2:boundaryEvent>
+    <bpmn2:boundaryEvent id="BoundaryEvent_18" name="" parallelMultiple="true" attachedToRef="Task_17" cancelActivity="false">
+      <bpmn2:timerEventDefinition id="TimerEventDefinition_5"/>
+      <bpmn2:messageEventDefinition id="MessageEventDefinition_6"/>
+    </bpmn2:boundaryEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_Task_3" bpmnElement="Task_1">
+        <dc:Bounds height="80.0" width="100.0" x="36.0" y="48.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_3" bpmnElement="BoundaryEvent_2">
+        <dc:Bounds height="36.0" width="36.0" x="94.0" y="110.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_4" bpmnElement="Task_2">
+        <dc:Bounds height="80.0" width="100.0" x="192.0" y="48.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_4" bpmnElement="BoundaryEvent_3">
+        <dc:Bounds height="36.0" width="36.0" x="248.0" y="110.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_5" bpmnElement="Task_3">
+        <dc:Bounds height="80.0" width="100.0" x="348.0" y="48.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_5" bpmnElement="BoundaryEvent_4">
+        <dc:Bounds height="36.0" width="36.0" x="403.0" y="110.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_6" bpmnElement="Task_4">
+        <dc:Bounds height="80.0" width="100.0" x="37.0" y="168.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_6" bpmnElement="BoundaryEvent_5">
+        <dc:Bounds height="36.0" width="36.0" x="70.0" y="230.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="85.0" y="271.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_9" bpmnElement="Task_7">
+        <dc:Bounds height="80.0" width="100.0" x="37.0" y="288.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_9" bpmnElement="BoundaryEvent_8">
+        <dc:Bounds height="36.0" width="36.0" x="70.0" y="350.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="85.0" y="391.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_12" bpmnElement="Task_10">
+        <dc:Bounds height="80.0" width="100.0" x="36.0" y="528.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_13" bpmnElement="Task_11">
+        <dc:Bounds height="80.0" width="100.0" x="192.0" y="528.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_14" bpmnElement="Task_12">
+        <dc:Bounds height="80.0" width="100.0" x="348.0" y="528.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_15" bpmnElement="Task_13">
+        <dc:Bounds height="80.0" width="100.0" x="38.0" y="650.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_12" bpmnElement="BoundaryEvent_11">
+        <dc:Bounds height="36.0" width="36.0" x="69.0" y="590.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="84.0" y="631.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_13" bpmnElement="BoundaryEvent_12">
+        <dc:Bounds height="36.0" width="36.0" x="225.0" y="590.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="240.0" y="631.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_14" bpmnElement="BoundaryEvent_13">
+        <dc:Bounds height="36.0" width="36.0" x="381.0" y="590.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="396.0" y="631.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_16" bpmnElement="BoundaryEvent_15">
+        <dc:Bounds height="36.0" width="36.0" x="71.0" y="712.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="86.0" y="753.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_17" bpmnElement="Task_15">
+        <dc:Bounds height="80.0" width="100.0" x="36.0" y="408.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_17" bpmnElement="BoundaryEvent_16">
+        <dc:Bounds height="36.0" width="36.0" x="69.0" y="470.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="84.0" y="511.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_18" bpmnElement="Task_16">
+        <dc:Bounds height="80.0" width="100.0" x="348.0" y="650.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_18" bpmnElement="BoundaryEvent_17">
+        <dc:Bounds height="36.0" width="36.0" x="381.0" y="712.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="396.0" y="753.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_19" bpmnElement="Task_17">
+        <dc:Bounds height="80.0" width="100.0" x="36.0" y="768.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_19" bpmnElement="BoundaryEvent_18">
+        <dc:Bounds height="36.0" width="36.0" x="69.0" y="830.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="84.0" y="871.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_20" bpmnElement="Task_5">
+        <dc:Bounds height="80.0" width="100.0" x="348.0" y="288.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_20" bpmnElement="BoundaryEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="381.0" y="350.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="396.0" y="391.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_21" bpmnElement="Task_6">
+        <dc:Bounds height="80.0" width="100.0" x="192.0" y="168.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_21" bpmnElement="BoundaryEvent_6">
+        <dc:Bounds height="36.0" width="36.0" x="225.0" y="230.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="240.0" y="271.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_22" bpmnElement="Task_8">
+        <dc:Bounds height="80.0" width="100.0" x="349.0" y="168.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_22" bpmnElement="BoundaryEvent_7">
+        <dc:Bounds height="36.0" width="36.0" x="384.0" y="230.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="399.0" y="271.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_23" bpmnElement="Task_9">
+        <dc:Bounds height="80.0" width="100.0" x="193.0" y="288.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_23" bpmnElement="BoundaryEvent_9">
+        <dc:Bounds height="36.0" width="36.0" x="226.0" y="350.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="241.0" y="391.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_25" bpmnElement="Task_18">
+        <dc:Bounds height="80.0" width="100.0" x="192.0" y="650.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_25" bpmnElement="BoundaryEvent_14">
+        <dc:Bounds height="36.0" width="36.0" x="225.0" y="712.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="240.0" y="753.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
