@@ -86,7 +86,16 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
   var activityStyle = {
     stroke: regularStroke,
-    "stroke-width": 2,
+    "stroke-width": 1,
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round",
+    "stroke-opacity" : 1,
+    "fill": "white"
+  };
+
+  var callActivityStyle = {
+    stroke: regularStroke,
+    "stroke-width": 3,
     "stroke-linecap": "round",
     "stroke-linejoin": "round",
     "stroke-opacity" : 1,
@@ -169,6 +178,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "eventBasedGateway" : generalStyle,
     "userTask" : activityStyle,
     "serviceTask" : activityStyle,
+    "callActivity" : callActivityStyle,
     "manualTask" : activityStyle,
     "receiveTask" : activityStyle,
     "scriptTask" : activityStyle,
@@ -189,7 +199,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     var fontSize = font.size ? font.size :  10;
     var defaultAlign = "right";
 
-    var text = text.replace("&#xD;", "<w>").replace("&#xA;", "<w>").replace("\n", "<w>");
+    var text = text.replace(/&#xD;/g, "<w>").replace(/&#xA;/g, "<w>").replace(/\n/g, "<w>");
     var textLines = text.split("<w>");
 
     for (var i=0; i<textLines.length; i++) {
@@ -413,7 +423,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var taskGroup = gfxGroup.createGroup();
       taskGroup.setTransform({dx :x, dy:y});
 
-      var strokeStyle = {color : style.stroke};
+      var strokeStyle = {color : style.stroke, width: style["stroke-width"]};
 
       if(baseElement.triggeredByEvent == "true") {
         strokeStyle.style = "Dot";
@@ -476,7 +486,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
           var path5 = taskGroup.createPath(path5String);
           path5.setStroke({color : style.stroke, width: 0.69999999});
           path5.setFill("#f0eff0");
-
 
         } else {
 
@@ -621,6 +630,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   RENDERER_DELEGATES["task"] = taskRenderer;
   RENDERER_DELEGATES["subProcess"] = taskRenderer;
   RENDERER_DELEGATES["serviceTask"] = taskRenderer;
+  RENDERER_DELEGATES["callActivity"] = taskRenderer;
   RENDERER_DELEGATES["manualTask"] = taskRenderer;
   RENDERER_DELEGATES["receiveTask"] = taskRenderer;
   RENDERER_DELEGATES["scriptTask"] = taskRenderer;
