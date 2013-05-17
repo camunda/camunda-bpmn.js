@@ -69,6 +69,31 @@ return describe('Basic Renderer Functionality', function() {
 
   });
 
+  it('should render all timer events', function() {
+    afterEach(function () {
+
+    });
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/events.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      expect(bpmn.definitionRenderer).toBeDefined();
+      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle").length).toBe(19);
+    });
+
+  });
+
   it('should render basic event types', function() {
     afterEach(function () {
 
