@@ -199,6 +199,28 @@ return describe('Basic Renderer Functionality', function() {
 
   });
 
+  it('should not render non-existing label on pools / lanes', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/collaboration-empty-label.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      expect(bpmn.definitionRenderer).toBeDefined();
+      // there should be 9 rect task shapes
+      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "text").length).toBe(0);
+    });
+  });
+
   it('should render complete render test', function() {
 
     var rendered = false;

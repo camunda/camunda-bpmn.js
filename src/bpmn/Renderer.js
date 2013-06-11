@@ -254,12 +254,15 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var rect = processGroup.createRect({ x: 0, y: 0, width: width, height: height});
       rect.setStroke(style.stroke);
 
-      var text = processGroup.createText({ x: 0, y: 0, text: baseElement.name});
+      var label = baseElement.name;
+      if (label) {
+        var text = processGroup.createText({ x: 0, y: 0, text: label });
 
-      text.setFont({ family: "Arial", size: "9pt", weight: "normal", align: "middle"}) //set font
-      text.setFill("black");
-      // FIXME this 30 looks like a magic number
-      text.setTransform([gfx.matrix.translate(15, height/2 +30), gfx.matrix.rotateg(-90) ]);
+        text.setFont({ family: "Arial", size: "9pt", weight: "normal", align: "middle"}); //set font
+        text.setFill("black");
+        // FIXME this 30 looks like a magic number
+        text.setTransform([gfx.matrix.translate(15, height/2 +30), gfx.matrix.rotateg(-90) ]);
+      }
 
       var separator = processGroup.createLine({ x1: 30, y1: 0, x2: 30, y2: height});
       separator.setStroke(style.stroke);
@@ -283,12 +286,15 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var rect = laneGroup.createRect({ x: 0, y: 0, width: width, height: height});
       rect.setStroke(style.stroke);
 
-      var text = laneGroup.createText({ x: 0, y: 0, text: elementRenderer.baseElement.name});
+      var label = elementRenderer.baseElement.name;
+      if (label) {
+        var text = laneGroup.createText({ x: 0, y: 0, text: label });
 
-      text.setFont({ family: "Arial", size: "9pt", weight: "normal", align: "middle"}) //set font
-      text.setFill("black");
+        text.setFont({ family: "Arial", size: "9pt", weight: "normal", align: "middle"}); //set font
+        text.setFill("black");
 
-      text.setTransform([gfx.matrix.translate(10, height/2 + 30), gfx.matrix.rotateg(-90) ]);
+        text.setTransform([gfx.matrix.translate(15, height/2 + 30), gfx.matrix.rotateg(-90) ]);
+      }
     }
   };
 
@@ -735,9 +741,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
           new BpmnElementRenderer(currentElement.baseElements[i], this).render(options, gfxGroup);
         }
       }
-
     }
-
   };
 
   function getBoundsFromChildren(diChildren) {

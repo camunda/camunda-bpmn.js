@@ -468,7 +468,11 @@ define([], function () {
       var processes = definitionsElement.getElementsByTagNameNS(NS_BPMN_SEMANTIC, "process");
 
       for(var i =0; i < processes.length; i++) {
-        processes[i].setAttributeNS(NS_BPMN_SEMANTIC, "name" , processNames[processes[i].getAttribute("id")]);
+        var name = processNames[processes[i].getAttribute("id")];
+        if (name) {
+          processes[i].setAttributeNS(NS_BPMN_SEMANTIC, "name" , processNames[processes[i].getAttribute("id")]);
+        }
+
         transformProcess(processes[i], bpmnDiElementIndex);
       }
 
