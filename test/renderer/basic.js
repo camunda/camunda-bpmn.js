@@ -168,7 +168,7 @@ return describe('Basic Renderer Functionality', function() {
 
     runs(function () {
       expect(bpmn.definitionRenderer).toBeDefined();
-      var label = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, {"type" : "text", "text": "review successful?"});
+      var label = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, {"type" : "text", "text": "review"});
       expect(label.length).toBe(1);
       // gateway has label position
       expect(label).toHavePositions([{x : 658, y: 119}]);

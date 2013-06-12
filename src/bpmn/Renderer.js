@@ -252,11 +252,11 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
             .setFill("black");
 
           if (tempTextGroup.getTextWidth() > BpmnElementRenderer.wordWrapMaxWidth) {
-            textLines.push(oldLine);
+            textLines.push(oldLine.trim());
             oldLine = words[i];
             if (lastWord) textLines.push(words[i])
           } else if (lastWord) {
-            textLines.push(currentLine);
+            textLines.push(currentLine.trim());
           } else { // continue with current line
             oldLine = currentLine;
           }
