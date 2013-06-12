@@ -11,19 +11,19 @@
 
 define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window", "dojo/query", "dojo/dom", "dojo/dom-class"], function (gfx, lang, domConstruct, win, query, dom, domClass) {
   var eventDefinitionPaths = {
-    "messagecatch":" M7 10  L7 20  L23 20  L23 10  z M7 10  L15 16  L23 10 ",
-    "messagethrow":"M7 9  L15 15  L23 9  z M7 10  L7 20  L23 20  L23 10  L15 16  z",
-    "timerEventDefinition":" M15 5  L15 8  M20 6  L18.5 9  M24 10  L21 11.5  M25 15  L22 15  M24 20  L21 18.5  M20 24  L18.5 21  M15 25  L15 22  M10 24  L11.5 21  M6 20  L9 18.5  M5 15  L8 15  M6 10  L9 11.5  M10 6  L11.5 9  M17 8  L15 15  L19 15 ",
-    "errorEventDefinition": " M21.820839 10.171502  L18.36734 23.58992  L12.541380000000002 13.281818999999999  L8.338651200000001 19.071607  L12.048949000000002 5.832305699999999  L17.996148000000005 15.132659  L21.820839 10.171502  z",
-    "escalationEventDefinition": "M15 7.75  L21 22.75  L15 16  L9 22.75  z",
-    "signalEventDefinition": "M7.7124971 20.247342  L22.333334 20.247342  L15.022915000000001 7.575951200000001  L7.7124971 20.247342  z",
-    "cancelEventDefinition": " M6.283910500000001 9.27369  L9.151395 6.4062062  L14.886362000000002 12.141174  L20.621331 6.4062056  L23.488814 9.273689  L17.753846 15.008657  L23.488815 20.743626  L20.621331 23.611111  L14.886362000000002 17.876142  L9.151394 23.611109  L6.283911000000001 20.743625  L12.018878 15.008658  L6.283910500000001 9.27369  z",
-    "conditionalEventDefinition": " M6 6  L24 6 L24 24 L6 24 L6 6 M9 9  L21 9  M9 13  L21 13  M9 17  L21 17  M9 21  L21 21 z",
-    "compensateEventDefinition": "M14 8 L14 22 L7 15 L14 8 M21 8 L21 22 L14 15 L21 8 z",
-    "multipleParallel": "M5.75 12  L5.75 18  L12 18  L12 24.75  L18 24.75  L18 18  L24.75 18  L24.75 12  L18 12  L18 5.75  L12 5.75  L12 12  z",
-    "multiple": " M19.834856 21.874369  L9.762008 21.873529  L6.650126 12.293421000000002  L14.799725 6.373429600000001  L22.948336 12.294781  L19.834856 21.874369  z",
-    "linkEventDefinition": "M9 13 L18 13 L18 10 L23 15 L18 20 L18 17 L8 17 L8 13"
-  };
+    "messagecatch": "m 0.5,0.78571427 8,6.00000003 8,-6.00000003 z m 0,1.00000003 0,9.9999997 16,0 0,-9.9999997 -8,6 z",
+    "messagethrow": "m 0.5,0.78571427 8,6.00000003 8,-6.00000003 z m 0,1.00000003 0,9.9999997 16,0 0,-9.9999997 -8,6 z",
+    "timerEventDefinition":"m 5.7098215,0.07589285 c -5.99031189,0 -10.84375,4.85343775 -10.84375,10.84375015 0,5.990311 4.85343811,10.875 10.84375,10.875 5.9903115,0 10.8749995,-4.884689 10.8749995,-10.875 0,-5.9903125 -4.884688,-10.84375015 -10.8749995,-10.84375015 z m 0,1.00000005 c 5.4498715,0 9.8749995,4.3938778 9.8749995,9.8437501 0,5.449871 -4.425128,9.875 -9.8749995,9.875 -5.44987165,0 -9.84375,-4.425129 -9.84375,-9.875 0,-5.4498724 4.39387835,-9.8437501 9.84375,-9.8437501 z m -0.5,0 0,3 1,0 0,-3 -1,0 z m -4.0625001,0.78125 -0.87499995,0.4375 1.50000005,3 0.875,-0.4375 -1.5000001,-3 z m 9.1249996,0 -1.4999998,3 0.875,0.4375 1.4999998,-3 -0.875,-0.4375 z m -3.0312498,2.0625 -1.9999997,7.0000001 -0.1875,0.65625 0.65625,0 3.9999997,0 0,-1 -3.3124997,0 1.8124997,-6.3750001 -0.96875,-0.28125 z m -10.3124997,1.71875 -0.4375,0.875 2.99999989,1.5 0.43750002,-0.875 -2.99999991,-1.5 z m 17.5624995,0 -3,1.5 0.4375,0.875 3,-1.5 -0.4375,-0.875 z m -18.7812495,4.9375001 0,1 3,0 0,-1 -3,0 z m 16.9999995,0 0,1 3,0 0,-1 -3,0 z m -13.21874961,3.5625 -2.99999989,1.5 0.4375,0.875 2.99999991,-1.5 -0.43750002,-0.875 z m 12.43749961,0 -0.4375,0.875 3,1.5 0.4375,-0.875 -3,-1.5 z m -10.1562495,2.71875 -1.50000005,3 0.87499995,0.4375 1.5000001,-3 -0.875,-0.4375 z m 7.8749997,0 -0.875,0.4375 1.4999998,3 0.875,-0.4375 -1.4999998,-3 z m -4.4374997,1.21875 0,3 1,0 0,-3 -1,0 z",
+    "errorEventDefinition": "M 11.463696,4.1000734 8.0101971,17.518491 2.1842371,7.2103904 -2.0184917,13.000178 1.6918061,-0.23912289 7.6390051,9.0612304 11.463696,4.1000734 z",
+    "escalationEventDefinition": "m 3.9285714,0.07142856 6,15.00000044 -6,-6.7500004 -6,6.7500004 z",
+    "signalEventDefinition": "m -3,12.747342 14.620837,0 L 4.3104179,0.07595118 -3,12.747342 z",
+    "cancelEventDefinition": "M -2.0994652,2.5764382 0.3207675,0.1562061 5.1612312,4.9966705 10.001696,0.15620559 12.421927,2.5764374 7.5814632,7.416902 12.421928,12.257368 10.001696,14.677601 5.1612312,9.837136 0.32076665,14.6776 -2.0994648,12.257367 2.7409989,7.4169029 -2.0994652,2.5764382 z",
+    "conditionalEventDefinition": "m -3.0037595,0.38909773 15.2932325,0 0,15.29323327 -15.2932325,0 0,-15.29323327 m 2.54887227,2.54887217 10.19548863,0 m -10.19548863,3.3984963 10.19548863,0 m -10.19548863,3.3984961 10.19548863,0 m -10.19548863,3.3984967 10.19548863,0 z",
+    "compensateEventDefinition": "m 3.6428571,0.67857141 0,13.99999959 -7,-6.9999996 7,-6.99999999 m 6.9999999,0 0,13.99999959 L 3.6428571,7.6785714 10.642857,0.67857141 z",
+    "multipleParallel": "m -3.375188,6.7213694 0,6.0000016 6.25,0 0,6.75 6,0 0,-6.75 6.75,0 0,-6.0000016 -6.75,0 0,-6.25000004 -6,0 0,6.25000004 z",
+    "multiple": "M 9.770542,15.081371 -0.30230591,15.080531 -3.414188,5.5004192 4.735411,-0.41957216 12.884022,5.5017792 9.770542,15.081371 z",
+    "linkEventDefinition": "m -1.5357143,2.8073706 9,0 0,-2.99999997 5.0000003,4.99999997 -5.0000003,5 0,-3 -10,0 0,-4"
+  }
 
   var taskDefinitionPaths = {
     // Public Domain: http://thenounproject.com/noun/user/#icon-No1331
@@ -52,8 +52,15 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "compensate": "M 50 70 L 55 65 L 55 75z M44.7 70 L49.7 75 L 49.7 65z"
   };
 
+  var labelPadding = 2;
+
   var regularStroke = "#444";
   var highlightStroke = "darkOrange";
+
+
+  var defaultStyle = {
+    "stroke-width": 0
+  }
 
   var generalStyle = {
     stroke: regularStroke,
@@ -86,7 +93,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   var activityStyle = {
-    stroke: regularStroke,
+    "stroke": regularStroke,
     "stroke-width": 1,
     "stroke-linecap": "round",
     "stroke-linejoin": "round",
@@ -175,6 +182,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "intermediateThrowEvent" : eventStyle,
     "exclusiveGateway" : generalStyle,
     "inclusiveGateway" : generalStyle,
+    "complexGateway" : generalStyle,
     "parallelGateway" : lang.mixin(lang.clone(eventStyle), {"stroke-width" : 3}),
     "eventBasedGateway" : generalStyle,
     "userTask" : activityStyle,
@@ -187,12 +195,14 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "businessRuleTask" : activityStyle,
     "task": activityStyle,
     "subProcess" :  activityStyle,
+    "adHocSubProcess" :  activityStyle,
     "process" : participantStyle,
     "lane" : laneStyle,
     "sequenceFlow" : lang.mixin(lang.clone(generalStyle), sequenceFlowStyle),
     "textAnnotation" : generalStyle,
     "association" : associationStyle,
-    "dataStoreReference" : dataObjectStyle
+    "dataStoreReference" : dataObjectStyle,
+    "dataObject" : dataObjectStyle
   };
 
   function wordWrap (text, group, font, x, y, align) {
@@ -215,7 +225,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
   function renderLabel(elementRenderer, group, bounds, align) {
     var baseElement = elementRenderer.baseElement;
-    var labelPadding = 2;
 
     if (!baseElement.name) {
       return;
@@ -227,6 +236,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
     var x =  pos.x,
         y = pos.y;
+
     wordWrap(baseElement.name, group, font, +x, +y, labelBounds ? null : align);
 
     return group;
@@ -389,7 +399,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         case "eventBasedGateway":
           var outercircle = symbolGroup.createCircle({ cx: width/2, cy: height/2, r: symbolSize*0.80 }).setStroke(style.stroke);
           var innercircle = symbolGroup.createCircle({ cx: width/2, cy: height/2, r: symbolSize*0.65 }).setStroke(style.stroke);
-          var eventpath = symbolGroup.createPath(eventDefinitionPaths["multiple"]).setStroke(style.stroke).setTransform({dx: width/2 -15, dy: height/2 -15});
+          var eventpath = symbolGroup.createPath(eventDefinitionPaths["multiple"]).setStroke(style.stroke).setTransform({dx: width/2-4.5, dy: height/2-8});
           break;
 
         case "exclusiveGateway":
@@ -398,6 +408,18 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
             .setFont({ family: "Arial", size: symbolSize+"pt"}) //set font
             .setStroke(stroke)
             .setFill(gatewayMarkerStyle.fill);
+          symbol.setTransform({dy: symbolSize/2, dx: 0});
+          break;
+
+        case "complexGateway":
+
+          var symbol = symbolGroup.createText({ x: width/2, y: height /2, text: "X", align: "middle" })
+            .setFont({ family: "Arial", size: symbolSize+"pt"}) //set font
+            .setStroke(stroke)
+            .setFill(gatewayMarkerStyle.fill);
+          stroke.width = 4;
+          symbolGroup.createLine({ x1: width/2, y1: height*0.2, x2: width/2, y2: height - height * 0.2}).setStroke(stroke);
+          symbolGroup.createLine({ x1: width * 0.2, y1: height/2, x2: width  -width*0.2, y2: height/2}).setStroke(stroke);
           symbol.setTransform({dy: symbolSize/2, dx: 0});
           break;
 
@@ -416,7 +438,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     }
   };
 
-  var taskRenderer = {
+  var activityRenderer = {
     render : function(elementRenderer, gfxGroup) {
       var baseElement = elementRenderer.baseElement;
       var style = elementRenderer.getStyle();
@@ -578,8 +600,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         }
 
         var path = circleGroup.createPath(eventDefinitionPaths[typeLookup]);
+        var pathBounds = path.getBoundingBox();
+
         path.setStroke(style.stroke);
-        path.setTransform({dx: -strokeStyle.width/2, dy: -strokeStyle.width/2});
+        path.setTransform({dx: rad - (pathBounds ? pathBounds.width / 4 : 0) - strokeStyle.width/4, dy: rad - (pathBounds ? pathBounds.height / 2 : 0)});
         if (eventType == "throw") {
           path.setFill("black");
         }
@@ -657,20 +681,22 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   RENDERER_DELEGATES["boundaryEvent"] = eventRenderer;
   RENDERER_DELEGATES["intermediateCatchEvent"] = eventRenderer;
   RENDERER_DELEGATES["intermediateThrowEvent"] = eventRenderer;
-  RENDERER_DELEGATES["userTask"] = taskRenderer;
-  RENDERER_DELEGATES["task"] = taskRenderer;
-  RENDERER_DELEGATES["subProcess"] = taskRenderer;
-  RENDERER_DELEGATES["serviceTask"] = taskRenderer;
-  RENDERER_DELEGATES["callActivity"] = taskRenderer;
-  RENDERER_DELEGATES["manualTask"] = taskRenderer;
-  RENDERER_DELEGATES["receiveTask"] = taskRenderer;
-  RENDERER_DELEGATES["scriptTask"] = taskRenderer;
-  RENDERER_DELEGATES["sendTask"] = taskRenderer;
-  RENDERER_DELEGATES["businessRuleTask"] = taskRenderer;
+  RENDERER_DELEGATES["userTask"] = activityRenderer;
+  RENDERER_DELEGATES["task"] = activityRenderer;
+  RENDERER_DELEGATES["subProcess"] = activityRenderer;
+  RENDERER_DELEGATES["adHocSubProcess"] = activityRenderer;
+  RENDERER_DELEGATES["serviceTask"] = activityRenderer;
+  RENDERER_DELEGATES["callActivity"] = activityRenderer;
+  RENDERER_DELEGATES["manualTask"] = activityRenderer;
+  RENDERER_DELEGATES["receiveTask"] = activityRenderer;
+  RENDERER_DELEGATES["scriptTask"] = activityRenderer;
+  RENDERER_DELEGATES["sendTask"] = activityRenderer;
+  RENDERER_DELEGATES["businessRuleTask"] = activityRenderer;
   RENDERER_DELEGATES["exclusiveGateway"] = gatewayRenderer;
   RENDERER_DELEGATES["inclusiveGateway"] = gatewayRenderer;
   RENDERER_DELEGATES["parallelGateway"] = gatewayRenderer;
   RENDERER_DELEGATES["eventBasedGateway"] = gatewayRenderer;
+  RENDERER_DELEGATES["complexGateway"] = gatewayRenderer;
   RENDERER_DELEGATES["sequenceFlow"] = connectionRenderer;
   RENDERER_DELEGATES["association"] = connectionRenderer;
   RENDERER_DELEGATES["lane"] = laneRenderer;
@@ -783,6 +809,15 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   BpmnElementRenderer.prototype.getLabelBounds = function () {
+
+    // first check by type
+    switch (this.baseElement.type) {
+      case "adHocSubProcess":
+      case "subProcess":
+        return {x: this.baseElement.bounds.x + textStyle["font-size"] + labelPadding, y: +this.baseElement.bounds.y + textStyle["font-size"] + labelPadding};
+        break;
+    }
+
     var diChildren = this.baseElement.bpmndi[0].children;
 
     for (var index in diChildren) {
@@ -814,7 +849,14 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       }
       return outerBounds;
     } else {
-      return this.getElementBounds(this.baseElement);
+      if (this.baseElement.bounds) {
+        return this.baseElement.bounds;
+      }
+
+      var elementBounds = this.getElementBounds(this.baseElement);
+      this.baseElement.bounds = elementBounds;
+
+      return elementBounds;
     }
   };
 
@@ -862,10 +904,11 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   BpmnElementRenderer.prototype.getStyle = function (baseElement) {
-    if (baseElement) {
-      return styleMap[baseElement.type];
+    if (!baseElement) {
+      return styleMap[this.baseElement.type] ? styleMap[this.baseElement.type] : defaultStyle;
+    }else {
+      return styleMap[baseElement.type] ? styleMap[baseElement.type] : defaultStyle;
     }
-    return styleMap[this.baseElement.type];
   };
 
   BpmnElementRenderer.prototype.getEventType = function () {

@@ -346,10 +346,9 @@ define([], function () {
         } else if(elementType == "laneSet") {
           bpmnObject = transformLaneSet(element, scopeActivity, bpmnDiElementIndex);
 
-        } else if(elementType == "subProcess") {
+        } else if(elementType == "subProcess" || elementType =="adHocSubProcess") {
           bpmnObject = transformElementsContainer(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
-
-        } else if(!!element && element.nodeName != "sequenceFlow" && element.nodeType == 1 /* (nodeType=1 => element nodes only) */ ) {  
+        } else if(!!element && element.nodeName != "sequenceFlow" && element.nodeType == 1 /* (nodeType=1 => element nodes only) */ ) {
           bpmnObject = createBpmnObject(element, scopeActivity, bpmnDiElementIndex);
 
         }

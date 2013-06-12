@@ -63,8 +63,33 @@ return describe('Basic Renderer Functionality', function() {
 
     runs(function () {
       expect(bpmn.definitionRenderer).toBeDefined();
-      // there should be one rect task shape
       expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(1);
+    });
+
+  });
+
+  it('should render a subprocess', function() {
+    afterEach(function () {
+
+    });
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/renderer-test.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+      });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      expect(bpmn.definitionRenderer).toBeDefined();
+      // implement me
+      expect(true).toBe(false);
     });
 
   });
