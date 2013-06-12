@@ -23,7 +23,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "multipleParallel": "M5.75 12  L5.75 18  L12 18  L12 24.75  L18 24.75  L18 18  L24.75 18  L24.75 12  L18 12  L18 5.75  L12 5.75  L12 12  z",
     "multiple": " M19.834856 21.874369  L9.762008 21.873529  L6.650126 12.293421000000002  L14.799725 6.373429600000001  L22.948336 12.294781  L19.834856 21.874369  z",
     "linkEventDefinition": "M9 13 L18 13 L18 10 L23 15 L18 20 L18 17 L8 17 L8 13"
-  }
+  };
 
   var taskDefinitionPaths = {
     // Public Domain: http://thenounproject.com/noun/user/#icon-No1331
@@ -36,7 +36,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "sendTask" : "M 0.93908473,0.91877964 8.9390847,6.9187796 16.939085,0.91877964 z m 0,0.99999996 0,10.0000004 16.00000027,0 0,-10.0000004 -8.0000003,6 z",
     "manualTask":  "M0.5,3.751L4.583,0.5009999999999999C4.583,0.5009999999999999,15.749,0.5839999999999999,16.666,0.5839999999999999S14.249,3.5009999999999994,15.166,3.5009999999999994S26.833,3.5009999999999994,27.75,3.5009999999999994C28.916,5.209,27.582,6.667999999999999,26.916,7.167999999999999S27.791,9.084999999999999,25.916,11.584999999999999C25.166,11.834999999999999,26.666,13.459999999999999,24.583000000000002,14.918C23.416,15.501,25.166,16.46,23.333000000000002,17.750999999999998C22.166,17.750999999999998,2.5000000000000036,17.833999999999996,2.5000000000000036,17.833999999999996L0.5000000000000036,16.500999999999998V3.751ZM13.5,7L27,7M13.5,11L26,11M14,14.5L25,14.5M8.2,3.1L15,3.1",
     "businessRuleTask" : "m 0.32589285,0.32077148 0,0.25000003 0,4.46874999 0,0.25 0.25,0 17.03125015,0 0.25,0 0,-0.25 0,-4.46874999 0,-0.25000003 -0.25,0 -17.03125015,0 -0.25,0 z m 0.5,0.50000003 16.53125015,0 0,3.96874999 -16.53125015,0 0,-3.96874999 z m 4.71875005,4.91635739 0,5.7500011 -4.75000005,0 0,0.5 4.75000005,0 0,3.75 0.5,0 0,-3.75 11.7500001,0 0,-0.5 -11.7500001,0 0,-5.7500011 -0.5,0 z m -5.21875005,-0.050286 0,0.3059125 0,9.7509627 0,0.305912 0.25,0 17.12500015,0 0.25,0 0,-0.305912 0,-9.7509627 0,-0.3059125 -0.25,0 -17.12500015,0 -0.25,0 z m 0.5,0.611825 16.62500015,0 0,9.1391372 -16.62500015,0 0,-9.1391372 z"
-  }
+  };
 
   var dataPaths = {
     "dataObject" : "M5,5L45,5L55,15L55,65L5,65L5,5M45,5L45,15L55,15",
@@ -50,7 +50,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "miPar": "M 0 -2 v8 M 4 -2 v8 M 8 -2 v8",
     "adhoc": "m 0 0 c -0.54305,0.60192 -1.04853,1.0324 -1.51647,1.29142 -0.46216,0.25908 -0.94744,0.38857 -1.4558,0.38857 -0.57194,0 -1.23628,-0.22473 -1.99307,-0.67428 -0.0577,-0.0306 -0.10111,-0.0534 -0.12999,-0.0687 -0.0346,-0.0228 -0.0896,-0.0533 -0.16464,-0.0915 -0.80878,-0.47234 -1.4558,-0.70857 -1.94107,-0.70857 -0.46217,0 -0.91566,0.14858 -1.36047,0.44576 -0.44485,0.2895 -0.92434,0.75046 -1.43849,1.38285 l 0,-2.03429 c 0.54881,-0.60194 1.05431,-1.0324 1.51647,-1.29147 0.46793,-0.26666 0.9532,-0.39999 1.45581,-0.39999 0.57191,0 1.24205,0.22856 2.01039,0.68574 0.0461,0.0308 0.0838,0.0533 0.11266,0.0687 0.0404,0.0228 0.0982,0.0533 0.1733,0.0913 0.803,0.4724 1.45002,0.70861 1.94108,0.70857 0.44481,4e-5 0.88676,-0.14475 1.32581,-0.43429 0.43905,-0.2895 0.9272,-0.75425 1.46448,-1.39428",
     "compensate": "M 50 70 L 55 65 L 55 75z M44.7 70 L49.7 75 L 49.7 65z"
-  }
+  };
 
   var regularStroke = "#444";
   var highlightStroke = "darkOrange";
@@ -61,19 +61,19 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "stroke-linecap": "round",
     "stroke-linejoin": "round",
     "stroke-opacity" : 1
-  }
+  };
 
   var groupStyle = {
     stroke: regularStroke,
     "stroke-width": 2,
     "stroke-opacity" : 1
-  }
+  };
 
   var dataObjectStyle = {
     stroke: regularStroke,
     "stroke-width": 1,
     "stroke-opacity" : 1
-  }
+  };
 
   var eventStyle = {
      stroke: regularStroke,
@@ -440,65 +440,73 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       rect.setStroke(strokeStyle);
       rect.setFill(style.fill);
 
+      function createServiceTaskPath(group, style) {
+        var path1String = "m 20.347,4.895 -2.561,2.56 0.943,2.277 3.624,0 0,3.383 -3.622,0 -0.943,2.277 2.563,2.563 -2.393,2.392 -2.561,-2.561 -2.277,0.943 0,3.624 -3.383,0 0,-3.622 L 7.46,17.788 4.897,20.35 2.506,17.958 5.066,15.397 4.124,13.12 l -3.624,0 0,-3.383 3.621,0 0.944,-2.276 -2.562,-2.563 2.392,-2.392 2.56,2.56 2.277,-0.941 0,-3.625 3.384,0 0,3.621 2.276,0.943 2.562,-2.562 z";
+        var path1 = group.createPath(path1String);
+        path1.setStroke({color : style.stroke, width: 1.5});
+        path1.setTransform({dx: 5, dy:5, xx: 0.7, yy:0.7});
+
+        var path2String = "m 15.141,11.426 c 0,2.051185 -1.662814,3.714 -3.714,3.714 -2.0511855,0 -3.7139999,-1.662815 -3.7139999,-3.714 0,-2.0511859 1.6628144,-3.7140003 3.7139999,-3.7140003 2.051186,0 3.714,1.6628144 3.714,3.7140003 z";
+        var path2 = group.createPath(path2String);
+        path2.setStroke({color : style.stroke, width: 1.5});
+        path2.setTransform({dx: 5, dy:5, xx: 0.7, yy:0.7});
+
+        var path3String = "m 26.347,10.895 -2.561,2.56 0.943,2.277 3.624,0 0,3.383 -3.622,0 -0.943,2.277 2.563,2.563 -2.393,2.392 -2.561,-2.561 -2.277,0.943 0,3.624 -3.383,0 0,-3.622 -2.277,-0.943 -2.563,2.562 -2.391,-2.392 2.56,-2.561 -0.942,-2.277 -3.624,0 0,-3.383 3.621,0 0.944,-2.276 -2.562,-2.563 2.392,-2.392 2.56,2.56 2.277,-0.941 0,-3.625 3.384,0 0,3.621 2.276,0.943 2.562,-2.562 z";
+        var path3 = group.createPath(path3String);
+        path3.setStroke({'fill':'#ffffff', color : style.stroke, width: 1.5});
+        path3.setTransform({dx: 5, dy:5, xx: 0.7, yy:0.7});
+        path3.setFill("#ffffff");
+
+        var path4String = "m 21.141,17.426001 c 0,2.051185 -1.662814,3.714 -3.714,3.714 -2.051186,0 -3.714,-1.662815 -3.714,-3.714 0,-2.051186 1.662814,-3.714 3.714,-3.714 2.051186,0 3.714,1.662814 3.714,3.714 z";
+        var path4 = group.createPath(path4String);
+        path4.setStroke({color : style.stroke, width: 1.5});
+        path4.setTransform({dx: 5, dy:5, xx: 0.7, yy:0.7});
+      }
+
+      function createUserTaskPath(group, style) {
+        var path1String = "m 6.0095,22.5169 h 16.8581 v -5.4831 c 0,0 -1.6331,-2.7419 -4.9581,-3.6169 h -6.475 c -3.0919,0.9331 -5.4831,4.025 -5.4831,4.025 l 0.0581,5.075 z";
+        var path1 = group.createPath(path1String);
+        path1.setStroke({color : style.stroke, width: 0.69999999});
+        path1.setFill("#f4f6f7");
+
+        var path2String = "m 9.8,19.6 0,2.8";
+        var path2 = group.createPath(path2String);
+        path1.setFill("none");
+        path2.setStroke({color : style.stroke, width: 0.69999999});
+
+        var path3String = "m 19.6,19.6 0,2.8";
+        var path3 = group.createPath(path3String);
+
+        path3.setStroke({color : style.stroke, width: 0.69999999});
+
+        var path4String = "m 18.419,5.9159999 c 0,2.9917264 -2.425274,5.4170001 -5.417,5.4170001 -2.991727,0 -5.417,-2.4252737 -5.417,-5.4170001 0,-2.9917264 2.425273,-5.41699983 5.417,-5.41699983 2.991726,0 5.417,2.42527343 5.417,5.41699983 z";
+        var path4 = group.createPath(path4String);
+        path4.setStroke({color : style.stroke, width: 1.5});
+        path4.setTransform({dx: 5, dy:5, xx: 0.75, yy:0.75});
+        path4.setFill(style.stroke);
+
+        var path5String = "m 11.2301,10.5581 c 0,0 1.9698,-1.6982 3.7632,-1.2649 1.7934,0.4333 3.2368,-0.4851 3.2368,-0.4851 0.175,1.1816 0.0294,2.625 -1.0206,3.9088 0,0 0.7581,0.525 0.7581,1.05 0,0.525 0.0875,1.3125 -0.7,2.1 -0.7875,0.7875 -3.85,0.875 -4.725,0 -0.875,-0.875 -0.875,-1.2831 -0.875,-1.8669 0,-0.5838 0.4081,-0.875 0.875,-1.3419 -0.7581,-0.4081 -1.7493,-1.6625 -1.3125,-2.1 z";
+
+        var path5 = group.createPath(path5String);
+        path5.setStroke({color : style.stroke, width: 0.69999999});
+        path5.setFill("#f0eff0");
+      }
+
+      function createTaskPath(group, style, path) {
+        var path = taskGroup.createPath(path);
+        path.setStroke({color : style.stroke, width: 1.5});
+        path.setTransform({dx: 5, dy:5});
+      }
+
       if (taskDefinitionPaths[baseElement.type]) {
-        
+
         if (baseElement.type == 'serviceTask') {
-         var path1String = "m 20.347,4.895 -2.561,2.56 0.943,2.277 3.624,0 0,3.383 -3.622,0 -0.943,2.277 2.563,2.563 -2.393,2.392 -2.561,-2.561 -2.277,0.943 0,3.624 -3.383,0 0,-3.622 L 7.46,17.788 4.897,20.35 2.506,17.958 5.066,15.397 4.124,13.12 l -3.624,0 0,-3.383 3.621,0 0.944,-2.276 -2.562,-2.563 2.392,-2.392 2.56,2.56 2.277,-0.941 0,-3.625 3.384,0 0,3.621 2.276,0.943 2.562,-2.562 z";
-          var path1 = taskGroup.createPath(path1String);
-          path1.setStroke({color : style.stroke, width: 1.5});
-          path1.setTransform({dx: 5, dy:5, xx: 0.7, yy:0.7});
-
-         var path2String = "m 15.141,11.426 c 0,2.051185 -1.662814,3.714 -3.714,3.714 -2.0511855,0 -3.7139999,-1.662815 -3.7139999,-3.714 0,-2.0511859 1.6628144,-3.7140003 3.7139999,-3.7140003 2.051186,0 3.714,1.6628144 3.714,3.7140003 z";
-          var path2 = taskGroup.createPath(path2String);
-          path2.setStroke({color : style.stroke, width: 1.5});
-          path2.setTransform({dx: 5, dy:5, xx: 0.7, yy:0.7});
-
-         var path3String = "m 26.347,10.895 -2.561,2.56 0.943,2.277 3.624,0 0,3.383 -3.622,0 -0.943,2.277 2.563,2.563 -2.393,2.392 -2.561,-2.561 -2.277,0.943 0,3.624 -3.383,0 0,-3.622 -2.277,-0.943 -2.563,2.562 -2.391,-2.392 2.56,-2.561 -0.942,-2.277 -3.624,0 0,-3.383 3.621,0 0.944,-2.276 -2.562,-2.563 2.392,-2.392 2.56,2.56 2.277,-0.941 0,-3.625 3.384,0 0,3.621 2.276,0.943 2.562,-2.562 z";
-          var path3 = taskGroup.createPath(path3String);
-          path3.setStroke({'fill':'#ffffff', color : style.stroke, width: 1.5});
-          path3.setTransform({dx: 5, dy:5, xx: 0.7, yy:0.7});
-          path3.setFill("#ffffff");
-
-         var path4String = "m 21.141,17.426001 c 0,2.051185 -1.662814,3.714 -3.714,3.714 -2.051186,0 -3.714,-1.662815 -3.714,-3.714 0,-2.051186 1.662814,-3.714 3.714,-3.714 2.051186,0 3.714,1.662814 3.714,3.714 z";
-          var path4 = taskGroup.createPath(path4String);
-          path4.setStroke({color : style.stroke, width: 1.5});
-          path4.setTransform({dx: 5, dy:5, xx: 0.7, yy:0.7});
-
-        } else 
-                if (baseElement.type == 'userTask') {
-         var path1String = "m 6.0095,22.5169 h 16.8581 v -5.4831 c 0,0 -1.6331,-2.7419 -4.9581,-3.6169 h -6.475 c -3.0919,0.9331 -5.4831,4.025 -5.4831,4.025 l 0.0581,5.075 z";
-          var path1 = taskGroup.createPath(path1String);
-          path1.setStroke({color : style.stroke, width: 0.69999999});
-          path1.setFill("#f4f6f7");
-
-         var path2String = "m 9.8,19.6 0,2.8";
-          var path2 = taskGroup.createPath(path2String);
-          path1.setFill("none");
-          path2.setStroke({color : style.stroke, width: 0.69999999});
-
-         var path3String = "m 19.6,19.6 0,2.8";
-         var path3 = taskGroup.createPath(path3String);
-          
-          path3.setStroke({color : style.stroke, width: 0.69999999});
-
-          var path4String = "m 18.419,5.9159999 c 0,2.9917264 -2.425274,5.4170001 -5.417,5.4170001 -2.991727,0 -5.417,-2.4252737 -5.417,-5.4170001 0,-2.9917264 2.425273,-5.41699983 5.417,-5.41699983 2.991726,0 5.417,2.42527343 5.417,5.41699983 z";
-          var path4 = taskGroup.createPath(path4String);
-          path4.setStroke({color : style.stroke, width: 1.5});
-          path4.setTransform({dx: 5, dy:5, xx: 0.75, yy:0.75});
-          path4.setFill(style.stroke);
-          
-
-         var path5String = "m 11.2301,10.5581 c 0,0 1.9698,-1.6982 3.7632,-1.2649 1.7934,0.4333 3.2368,-0.4851 3.2368,-0.4851 0.175,1.1816 0.0294,2.625 -1.0206,3.9088 0,0 0.7581,0.525 0.7581,1.05 0,0.525 0.0875,1.3125 -0.7,2.1 -0.7875,0.7875 -3.85,0.875 -4.725,0 -0.875,-0.875 -0.875,-1.2831 -0.875,-1.8669 0,-0.5838 0.4081,-0.875 0.875,-1.3419 -0.7581,-0.4081 -1.7493,-1.6625 -1.3125,-2.1 z";
-
-          var path5 = taskGroup.createPath(path5String);
-          path5.setStroke({color : style.stroke, width: 0.69999999});
-          path5.setFill("#f0eff0");
-
+          createServiceTaskPath(taskGroup, style);
+        } else
+        if (baseElement.type == 'userTask') {
+          createUserTaskPath(taskGroup, style);
         } else {
-
-          var path = taskGroup.createPath(taskDefinitionPaths[baseElement.type]);
-          path.setStroke({color : style.stroke, width: 1.5});
-          path.setTransform({dx: 5, dy:5});
+          createTaskPath(taskGroup, style, taskDefinitionPaths[baseElement.type]);
         }
       }
 
@@ -577,7 +585,13 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         }
       }
 
-      renderLabel(elementRenderer, gfxGroup, {x : x + +bounds.width / 2, y : y + +bounds.width + rad}, "middle");
+      if (element.type == "boundaryEvent") {
+        elementRenderer.postRenderParent(function() {
+          circleGroup.moveToFront();
+        });
+      }
+
+      renderLabel(elementRenderer, gfxGroup, {x : x + parseFloat(bounds.width) / 2, y : y + parseFloat(bounds.width) + rad}, "middle");
 
       return circle;
     }
@@ -688,8 +702,13 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     this.baseElement = baseElement;
   };
 
+  BpmnElementRenderer.prototype.postRenderParent = function(callback) {
+    this.options.postRenderCallbacks.push(callback);
+  };
+
   BpmnElementRenderer.prototype.render = function(options, gfxGroup) {
     this.gfxGroup = gfxGroup;
+    this.options = options;
 
     // create surface element if needed
     if (!gfxGroup) {
@@ -737,8 +756,15 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       // if the current element has child base elements, create the
       // subordinate renderers
       if(!!currentElement.baseElements) {
+        var postRenderCallbacks = [];
+        var renderingOpts = lang.mixin(lang.clone(options), { postRenderCallbacks: postRenderCallbacks });
+        
         for(var i = 0; i < currentElement.baseElements.length; i++) {
-          new BpmnElementRenderer(currentElement.baseElements[i], this).render(options, gfxGroup);
+          new BpmnElementRenderer(currentElement.baseElements[i], this).render(renderingOpts, gfxGroup);
+        }
+
+        for (var j = 0, fn; !!(fn = postRenderCallbacks[j]); j++) {
+          fn();
         }
       }
     }

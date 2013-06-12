@@ -221,6 +221,29 @@ return describe('Basic Renderer Functionality', function() {
     });
   });
 
+  it('should render boundary event in front of task', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/boundary-behind-task.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      var task = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect")[0];
+      var boundary = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle")[0];
+
+      expect(task).toBeInFrontOf(boundary);
+    });
+  });
+
   it('should render complete render test', function() {
 
     var rendered = false;
