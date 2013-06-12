@@ -68,7 +68,30 @@ return describe('Basic Renderer Functionality', function() {
 
   });
 
-  xit('should render a subprocess');
+  it('should render a subprocess', function() {
+    afterEach(function () {
+
+    });
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/subprocess_event.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      expect(helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "meal preparations" }).length).toBe(1);
+      expect(helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "provide meal" }).length).toBe(1);
+    });
+
+  });
 
   it('should render all events', function() {
     afterEach(function () {
