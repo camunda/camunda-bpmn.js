@@ -669,7 +669,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         });
       }
 
-      renderLabel(elementRenderer, gfxGroup, {x : x + + bounds.width / 2, y : y + +bounds.width + rad}, "middle");
+      renderLabel(elementRenderer, gfxGroup, {x : x + +bounds.width / 2, y : y + +bounds.width + rad}, "middle");
 
       return circle;
     }
