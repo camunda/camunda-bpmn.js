@@ -385,8 +385,6 @@ define([], function () {
       // transform a scope
       transformScope(containerElement, containerObject, bpmnDiElementIndex);
 
-      generatedElements.push(containerObject);
-
       invokeParseListeners(containerObject, containerElement);
     };
 
@@ -474,7 +472,6 @@ define([], function () {
 
         transformProcess(processes[i], bpmnDiElementIndex);
       }
-
     };
 
     transformDefinitions(definitions[0]);
