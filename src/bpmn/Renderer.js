@@ -23,7 +23,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "multipleParallel": "m -3.375188,6.7213694 0,6.0000016 6.25,0 0,6.75 6,0 0,-6.75 6.75,0 0,-6.0000016 -6.75,0 0,-6.25000004 -6,0 0,6.25000004 z",
     "multiple": "M 9.770542,15.081371 -0.30230591,15.080531 -3.414188,5.5004192 4.735411,-0.41957216 12.884022,5.5017792 9.770542,15.081371 z",
     "linkEventDefinition": "m -1.5357143,2.8073706 9,0 0,-2.99999997 5.0000003,4.99999997 -5.0000003,5 0,-3 -10,0 0,-4"
-  }
+  };
 
   var taskDefinitionPaths = {
     // Public Domain: http://thenounproject.com/noun/user/#icon-No1331
@@ -60,7 +60,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
   var defaultStyle = {
     "stroke-width": 0
-  }
+  };
 
   var generalStyle = {
     stroke: regularStroke,
@@ -615,7 +615,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         });
       }
 
-      renderLabel(elementRenderer, gfxGroup, {x : x + parseFloat(bounds.width) / 2, y : y + parseFloat(bounds.width) + rad}, "middle");
+      renderLabel(elementRenderer, gfxGroup, {x : x + + bounds.width / 2, y : y + +bounds.width + rad}, "middle");
 
       return circle;
     }

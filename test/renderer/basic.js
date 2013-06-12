@@ -68,31 +68,7 @@ return describe('Basic Renderer Functionality', function() {
 
   });
 
-  it('should render a subprocess', function() {
-    afterEach(function () {
-
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/renderer-test.bpmn", {
-      diagramElement : "canvas"
-    }).then(function (bpmn) {
-        rendered = true;
-      });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      // implement me
-      expect(true).toBe(false);
-    });
-
-  });
+  xit('should render a subprocess');
 
   it('should render all events', function() {
     afterEach(function () {
