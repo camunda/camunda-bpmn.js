@@ -10,17 +10,28 @@
  */
 
 define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window", "dojo/query", "dojo/dom", "dojo/dom-class"], function (gfx, lang, domConstruct, win, query, dom, domClass) {
+  // constructor
+  function BpmnElementRenderer(baseElement) {
+
+    if(!baseElement) {
+      throw new RenderingException("Base element cannot be null");
+    }
+
+    // the bpmn base element to be rendered
+    this.baseElement = baseElement;
+  };
+
   var eventDefinitionPaths = {
     "messagecatch": "m 0.5,0.78571427 8,6.00000003 8,-6.00000003 z m 0,1.00000003 0,9.9999997 16,0 0,-9.9999997 -8,6 z",
     "messagethrow": "m 0.5,0.78571427 8,6.00000003 8,-6.00000003 z m 0,1.00000003 0,9.9999997 16,0 0,-9.9999997 -8,6 z",
     "timerEventDefinition":"m 5.7098215,0.07589285 c -5.99031189,0 -10.84375,4.85343775 -10.84375,10.84375015 0,5.990311 4.85343811,10.875 10.84375,10.875 5.9903115,0 10.8749995,-4.884689 10.8749995,-10.875 0,-5.9903125 -4.884688,-10.84375015 -10.8749995,-10.84375015 z m 0,1.00000005 c 5.4498715,0 9.8749995,4.3938778 9.8749995,9.8437501 0,5.449871 -4.425128,9.875 -9.8749995,9.875 -5.44987165,0 -9.84375,-4.425129 -9.84375,-9.875 0,-5.4498724 4.39387835,-9.8437501 9.84375,-9.8437501 z m -0.5,0 0,3 1,0 0,-3 -1,0 z m -4.0625001,0.78125 -0.87499995,0.4375 1.50000005,3 0.875,-0.4375 -1.5000001,-3 z m 9.1249996,0 -1.4999998,3 0.875,0.4375 1.4999998,-3 -0.875,-0.4375 z m -3.0312498,2.0625 -1.9999997,7.0000001 -0.1875,0.65625 0.65625,0 3.9999997,0 0,-1 -3.3124997,0 1.8124997,-6.3750001 -0.96875,-0.28125 z m -10.3124997,1.71875 -0.4375,0.875 2.99999989,1.5 0.43750002,-0.875 -2.99999991,-1.5 z m 17.5624995,0 -3,1.5 0.4375,0.875 3,-1.5 -0.4375,-0.875 z m -18.7812495,4.9375001 0,1 3,0 0,-1 -3,0 z m 16.9999995,0 0,1 3,0 0,-1 -3,0 z m -13.21874961,3.5625 -2.99999989,1.5 0.4375,0.875 2.99999991,-1.5 -0.43750002,-0.875 z m 12.43749961,0 -0.4375,0.875 3,1.5 0.4375,-0.875 -3,-1.5 z m -10.1562495,2.71875 -1.50000005,3 0.87499995,0.4375 1.5000001,-3 -0.875,-0.4375 z m 7.8749997,0 -0.875,0.4375 1.4999998,3 0.875,-0.4375 -1.4999998,-3 z m -4.4374997,1.21875 0,3 1,0 0,-3 -1,0 z",
     "errorEventDefinition": "M 11.463696,4.1000734 8.0101971,17.518491 2.1842371,7.2103904 -2.0184917,13.000178 1.6918061,-0.23912289 7.6390051,9.0612304 11.463696,4.1000734 z",
     "escalationEventDefinition": "m 3.9285714,0.07142856 6,15.00000044 -6,-6.7500004 -6,6.7500004 z",
-    "signalEventDefinition": "m -3,12.747342 14.620837,0 L 4.3104179,0.07595118 -3,12.747342 z",
+    "signalEventDefinition": "m -3,10.747183 14.620837,0 L 4.3104179,-1.924209 -3,10.747183 z",
     "cancelEventDefinition": "M -2.0994652,2.5764382 0.3207675,0.1562061 5.1612312,4.9966705 10.001696,0.15620559 12.421927,2.5764374 7.5814632,7.416902 12.421928,12.257368 10.001696,14.677601 5.1612312,9.837136 0.32076665,14.6776 -2.0994648,12.257367 2.7409989,7.4169029 -2.0994652,2.5764382 z",
     "conditionalEventDefinition": "m -3.0037595,0.38909773 15.2932325,0 0,15.29323327 -15.2932325,0 0,-15.29323327 m 2.54887227,2.54887217 10.19548863,0 m -10.19548863,3.3984963 10.19548863,0 m -10.19548863,3.3984961 10.19548863,0 m -10.19548863,3.3984967 10.19548863,0 z",
-    "compensateEventDefinition": "m 3.6428571,0.67857141 0,13.99999959 -7,-6.9999996 7,-6.99999999 m 6.9999999,0 0,13.99999959 L 3.6428571,7.6785714 10.642857,0.67857141 z",
-    "multipleParallel": "m -3.375188,6.7213694 0,6.0000016 6.25,0 0,6.75 6,0 0,-6.75 6.75,0 0,-6.0000016 -6.75,0 0,-6.25000004 -6,0 0,6.25000004 z",
+    "compensateEventDefinition": "m 3.1,-0.32181697 0,13.99999997 -7,-7 7,-6.99999997 m 7,0 0,13.99999997 -7,-7 7,-6.99999997 z",
+    "multipleParallel": "m -4.075,6.121179 0,6.000004 6.25,0 0,6.75 6,0 0,-6.75 6.75,0 0,-6.000004 -6.75,0 0,-6.24999992 -6,0 0,6.24999992 z",
     "multiple": "M 9.770542,15.081371 -0.30230591,15.080531 -3.414188,5.5004192 4.735411,-0.41957216 12.884022,5.5017792 9.770542,15.081371 z",
     "linkEventDefinition": "m -1.5357143,2.8073706 9,0 0,-2.99999997 5.0000003,4.99999997 -5.0000003,5 0,-3 -10,0 0,-4"
   };
@@ -52,7 +63,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "compensate": "M 50 70 L 55 65 L 55 75z M44.7 70 L49.7 75 L 49.7 65z"
   };
 
-  var labelPadding = 2;
+  BpmnElementRenderer.labelPadding = 2;
+  BpmnElementRenderer.wordWrapMaxWidth = 100 + BpmnElementRenderer.labelPadding;
 
   var regularStroke = "#444";
   var highlightStroke = "darkOrange";
@@ -210,13 +222,55 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     var fontSize = font.size ? font.size :  10;
     var defaultAlign = "right";
 
+    if(!text) {
+      return;
+    }
+
     var text = text.replace(/&#xD;/g, "<w>").replace(/&#xA;/g, "<w>").replace(/\n/g, "<w>");
-    var textLines = text.split("<w>");
+    var textLines = []; // the lines which will be used to render
+
+    if (text.indexOf("<w>") != -1) { // there are line breaks, use them
+      textLines = text.split("<w>");
+    }else { // no line breaks, try to wrap
+      var words = text.split(" ");
+
+      if (words.length == 1) {
+        textLines.push(text);
+      }else {
+        var currentLine = "";
+        var oldLine = "";
+
+        // append word for word, render the resulting line and check against the configured max width
+        // TODO check if there is a "native" way to do, for example in SVG
+        for (var i=0; i < words.length; i++) {
+          currentLine = oldLine + words[i] + " ";
+          var lastWord = i == (words.length -1);
+
+          // create temporary gfx group the check the real rendered width
+          var tempTextGroup = group.createText({text: currentLine, align: align ? align : defaultAlign})
+            .setFont(font) //set font
+            .setFill("black");
+
+          if (tempTextGroup.getTextWidth() > BpmnElementRenderer.wordWrapMaxWidth) {
+            textLines.push(oldLine);
+            oldLine = words[i];
+            if (lastWord) textLines.push(words[i])
+          } else if (lastWord) {
+            textLines.push(currentLine);
+          } else { // continue with current line
+            oldLine = currentLine;
+          }
+
+          tempTextGroup.getParent().remove(tempTextGroup); // remove temporary gfx group
+        }
+      }
+    }
 
     for (var i=0; i<textLines.length; i++) {
       var textLine = group.createText({text: textLines[i], align: align ? align : defaultAlign})
         .setFont(font) //set font
         .setFill("black");
+
       textLine.setTransform({dx: x, dy: y + i*fontSize});
     }
 
@@ -232,7 +286,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     var font = { family: textStyle["font-family"], size: textStyle["font-size"], weight: "normal" };
 
     var labelBounds = elementRenderer.getLabelBounds();
-    var pos = labelBounds ? {x: +labelBounds.x + labelPadding, y: +labelBounds.y + labelPadding} : {x: +bounds.x, y: +bounds.y};
+    var pos = labelBounds ? {x: +labelBounds.x + BpmnElementRenderer.labelPadding, y: +labelBounds.y + BpmnElementRenderer.labelPadding} : {x: +bounds.x, y: +bounds.y};
 
     var x =  pos.x,
         y = pos.y;
@@ -717,17 +771,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   })();
 
 
-  // constructor
-  function BpmnElementRenderer(baseElement) {
-
-    if(!baseElement) {
-      throw new RenderingException("Base element cannot be null");
-    }
-
-    // the bpmn base element to be rendered
-    this.baseElement = baseElement;
-  };
-
   BpmnElementRenderer.prototype.postRenderParent = function(callback) {
     this.options.postRenderCallbacks.push(callback);
   };
@@ -814,7 +857,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     switch (this.baseElement.type) {
       case "adHocSubProcess":
       case "subProcess":
-        return {x: this.baseElement.bounds.x + textStyle["font-size"] + labelPadding, y: +this.baseElement.bounds.y + textStyle["font-size"] + labelPadding};
+        return {x: this.baseElement.bounds.x + textStyle["font-size"] + BpmnElementRenderer.labelPadding, y: +this.baseElement.bounds.y + textStyle["font-size"] + BpmnElementRenderer.labelPadding};
         break;
     }
 
