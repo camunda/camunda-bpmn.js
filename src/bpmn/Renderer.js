@@ -50,7 +50,9 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "miPar": "M 0 -2 v8 M 4 -2 v8 M 8 -2 v8",
     "adhoc": "m 0 0 c -0.54305,0.60192 -1.04853,1.0324 -1.51647,1.29142 -0.46216,0.25908 -0.94744,0.38857 -1.4558,0.38857 -0.57194,0 -1.23628,-0.22473 -1.99307,-0.67428 -0.0577,-0.0306 -0.10111,-0.0534 -0.12999,-0.0687 -0.0346,-0.0228 -0.0896,-0.0533 -0.16464,-0.0915 -0.80878,-0.47234 -1.4558,-0.70857 -1.94107,-0.70857 -0.46217,0 -0.91566,0.14858 -1.36047,0.44576 -0.44485,0.2895 -0.92434,0.75046 -1.43849,1.38285 l 0,-2.03429 c 0.54881,-0.60194 1.05431,-1.0324 1.51647,-1.29147 0.46793,-0.26666 0.9532,-0.39999 1.45581,-0.39999 0.57191,0 1.24205,0.22856 2.01039,0.68574 0.0461,0.0308 0.0838,0.0533 0.11266,0.0687 0.0404,0.0228 0.0982,0.0533 0.1733,0.0913 0.803,0.4724 1.45002,0.70861 1.94108,0.70857 0.44481,4e-5 0.88676,-0.14475 1.32581,-0.43429 0.43905,-0.2895 0.9272,-0.75425 1.46448,-1.39428",
     "compensate": "M 50 70 L 55 65 L 55 75z M44.7 70 L49.7 75 L 49.7 65z"
-  }
+  };
+
+  var labelPadding = 2;
 
   var regularStroke = "#444";
   var highlightStroke = "darkOrange";
@@ -180,6 +182,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "intermediateThrowEvent" : eventStyle,
     "exclusiveGateway" : generalStyle,
     "inclusiveGateway" : generalStyle,
+    "complexGateway" : generalStyle,
     "parallelGateway" : lang.mixin(lang.clone(eventStyle), {"stroke-width" : 3}),
     "eventBasedGateway" : generalStyle,
     "userTask" : activityStyle,
@@ -192,6 +195,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "businessRuleTask" : activityStyle,
     "task": activityStyle,
     "subProcess" :  activityStyle,
+    "adHocSubProcess" :  activityStyle,
     "process" : participantStyle,
     "lane" : laneStyle,
     "sequenceFlow" : lang.mixin(lang.clone(generalStyle), sequenceFlowStyle),
@@ -221,7 +225,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
   function renderLabel(elementRenderer, group, bounds, align) {
     var baseElement = elementRenderer.baseElement;
-    var labelPadding = 2;
 
     if (!baseElement.name) {
       return;
@@ -233,6 +236,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
     var x =  pos.x,
         y = pos.y;
+
     wordWrap(baseElement.name, group, font, +x, +y, labelBounds ? null : align);
 
     return group;
@@ -395,7 +399,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         case "eventBasedGateway":
           var outercircle = symbolGroup.createCircle({ cx: width/2, cy: height/2, r: symbolSize*0.80 }).setStroke(style.stroke);
           var innercircle = symbolGroup.createCircle({ cx: width/2, cy: height/2, r: symbolSize*0.65 }).setStroke(style.stroke);
-          var eventpath = symbolGroup.createPath(eventDefinitionPaths["multiple"]).setStroke(style.stroke).setTransform({dx: width/2 -15, dy: height/2 -15});
+          var eventpath = symbolGroup.createPath(eventDefinitionPaths["multiple"]).setStroke(style.stroke).setTransform({dx: width/2-4.5, dy: height/2-8});
           break;
 
         case "exclusiveGateway":
@@ -404,6 +408,18 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
             .setFont({ family: "Arial", size: symbolSize+"pt"}) //set font
             .setStroke(stroke)
             .setFill(gatewayMarkerStyle.fill);
+          symbol.setTransform({dy: symbolSize/2, dx: 0});
+          break;
+
+        case "complexGateway":
+
+          var symbol = symbolGroup.createText({ x: width/2, y: height /2, text: "X", align: "middle" })
+            .setFont({ family: "Arial", size: symbolSize+"pt"}) //set font
+            .setStroke(stroke)
+            .setFill(gatewayMarkerStyle.fill);
+          stroke.width = 4;
+          symbolGroup.createLine({ x1: width/2, y1: height*0.2, x2: width/2, y2: height - height * 0.2}).setStroke(stroke);
+          symbolGroup.createLine({ x1: width * 0.2, y1: height/2, x2: width  -width*0.2, y2: height/2}).setStroke(stroke);
           symbol.setTransform({dy: symbolSize/2, dx: 0});
           break;
 
@@ -422,7 +438,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     }
   };
 
-  var taskRenderer = {
+  var activityRenderer = {
     render : function(elementRenderer, gfxGroup) {
       var baseElement = elementRenderer.baseElement;
       var style = elementRenderer.getStyle();
@@ -576,8 +592,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         }
 
         var path = circleGroup.createPath(eventDefinitionPaths[typeLookup]);
+        var pathBounds = path.getBoundingBox();
+
         path.setStroke(style.stroke);
-        path.setTransform({dx: -strokeStyle.width/2, dy: -strokeStyle.width/2});
+        path.setTransform({dx: rad - (pathBounds ? pathBounds.width / 4 : 0) - strokeStyle.width/4, dy: rad - (pathBounds ? pathBounds.height / 2 : 0)});
         if (eventType == "throw") {
           path.setFill("black");
         }
@@ -649,21 +667,22 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   RENDERER_DELEGATES["boundaryEvent"] = eventRenderer;
   RENDERER_DELEGATES["intermediateCatchEvent"] = eventRenderer;
   RENDERER_DELEGATES["intermediateThrowEvent"] = eventRenderer;
-  RENDERER_DELEGATES["userTask"] = taskRenderer;
-  RENDERER_DELEGATES["task"] = taskRenderer;
-  RENDERER_DELEGATES["subProcess"] = taskRenderer;
-  RENDERER_DELEGATES["adHocSubProcess"] = taskRenderer;
-  RENDERER_DELEGATES["serviceTask"] = taskRenderer;
-  RENDERER_DELEGATES["callActivity"] = taskRenderer;
-  RENDERER_DELEGATES["manualTask"] = taskRenderer;
-  RENDERER_DELEGATES["receiveTask"] = taskRenderer;
-  RENDERER_DELEGATES["scriptTask"] = taskRenderer;
-  RENDERER_DELEGATES["sendTask"] = taskRenderer;
-  RENDERER_DELEGATES["businessRuleTask"] = taskRenderer;
+  RENDERER_DELEGATES["userTask"] = activityRenderer;
+  RENDERER_DELEGATES["task"] = activityRenderer;
+  RENDERER_DELEGATES["subProcess"] = activityRenderer;
+  RENDERER_DELEGATES["adHocSubProcess"] = activityRenderer;
+  RENDERER_DELEGATES["serviceTask"] = activityRenderer;
+  RENDERER_DELEGATES["callActivity"] = activityRenderer;
+  RENDERER_DELEGATES["manualTask"] = activityRenderer;
+  RENDERER_DELEGATES["receiveTask"] = activityRenderer;
+  RENDERER_DELEGATES["scriptTask"] = activityRenderer;
+  RENDERER_DELEGATES["sendTask"] = activityRenderer;
+  RENDERER_DELEGATES["businessRuleTask"] = activityRenderer;
   RENDERER_DELEGATES["exclusiveGateway"] = gatewayRenderer;
   RENDERER_DELEGATES["inclusiveGateway"] = gatewayRenderer;
   RENDERER_DELEGATES["parallelGateway"] = gatewayRenderer;
   RENDERER_DELEGATES["eventBasedGateway"] = gatewayRenderer;
+  RENDERER_DELEGATES["complexGateway"] = gatewayRenderer;
   RENDERER_DELEGATES["sequenceFlow"] = connectionRenderer;
   RENDERER_DELEGATES["association"] = connectionRenderer;
   RENDERER_DELEGATES["lane"] = laneRenderer;
@@ -764,6 +783,15 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   BpmnElementRenderer.prototype.getLabelBounds = function () {
+
+    // first check by type
+    switch (this.baseElement.type) {
+      case "adHocSubProcess":
+      case "subProcess":
+        return {x: this.baseElement.bounds.x + textStyle["font-size"] + labelPadding, y: +this.baseElement.bounds.y + textStyle["font-size"] + labelPadding};
+        break;
+    }
+
     var diChildren = this.baseElement.bpmndi[0].children;
 
     for (var index in diChildren) {
@@ -795,7 +823,14 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       }
       return outerBounds;
     } else {
-      return this.getElementBounds(this.baseElement);
+      if (this.baseElement.bounds) {
+        return this.baseElement.bounds;
+      }
+
+      var elementBounds = this.getElementBounds(this.baseElement);
+      this.baseElement.bounds = elementBounds;
+
+      return elementBounds;
     }
   };
 
