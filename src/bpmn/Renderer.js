@@ -55,6 +55,11 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   var regularStroke = "#444";
   var highlightStroke = "darkOrange";
 
+
+  var defaultStyle = {
+    "stroke-width": 0
+  }
+
   var generalStyle = {
     stroke: regularStroke,
     "stroke-width": 2,
@@ -86,7 +91,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   var activityStyle = {
-    stroke: regularStroke,
+    "stroke": regularStroke,
     "stroke-width": 1,
     "stroke-linecap": "round",
     "stroke-linejoin": "round",
@@ -192,7 +197,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "sequenceFlow" : lang.mixin(lang.clone(generalStyle), sequenceFlowStyle),
     "textAnnotation" : generalStyle,
     "association" : associationStyle,
-    "dataStoreReference" : dataObjectStyle
+    "dataStoreReference" : dataObjectStyle,
+    "dataObject" : dataObjectStyle
   };
 
   function wordWrap (text, group, font, x, y, align) {
@@ -646,6 +652,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   RENDERER_DELEGATES["userTask"] = taskRenderer;
   RENDERER_DELEGATES["task"] = taskRenderer;
   RENDERER_DELEGATES["subProcess"] = taskRenderer;
+  RENDERER_DELEGATES["adHocSubProcess"] = taskRenderer;
   RENDERER_DELEGATES["serviceTask"] = taskRenderer;
   RENDERER_DELEGATES["callActivity"] = taskRenderer;
   RENDERER_DELEGATES["manualTask"] = taskRenderer;
@@ -836,10 +843,11 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   BpmnElementRenderer.prototype.getStyle = function (baseElement) {
-    if (baseElement) {
-      return styleMap[baseElement.type];
+    if (!baseElement) {
+      return styleMap[this.baseElement.type] ? styleMap[this.baseElement.type] : defaultStyle;
+    }else {
+      return styleMap[baseElement.type] ? styleMap[baseElement.type] : defaultStyle;
     }
-    return styleMap[this.baseElement.type];
   };
 
   BpmnElementRenderer.prototype.getEventType = function () {
