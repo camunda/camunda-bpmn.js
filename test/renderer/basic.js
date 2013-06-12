@@ -144,7 +144,7 @@ return describe('Basic Renderer Functionality', function() {
       expect(labels.length).toBe(3);
 
       // label padding is included
-      expect([labels[0]]).toHavePositions([{x : 535, y: 302}]);
+      expect([labels[2]]).toHavePositions([{x : 535, y: 302}]);
     });
 
   });
