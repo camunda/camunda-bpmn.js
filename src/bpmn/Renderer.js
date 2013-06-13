@@ -970,7 +970,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     switch (element.type) {
       case "adHocSubProcess":
       case "subProcess":
-        return {x: element.bounds.x + textStyle["font-size"] + BpmnElementRenderer.labelPadding, y: + element.bounds.y + textStyle["font-size"] + BpmnElementRenderer.labelPadding};
+        if (element.bpmndi[0].isExpanded === "true") {
+          return {x: element.bounds.x + textStyle["font-size"] + BpmnElementRenderer.labelPadding, y: + element.bounds.y + textStyle["font-size"] + BpmnElementRenderer.labelPadding};
+        }
+
         break;
     }
 
