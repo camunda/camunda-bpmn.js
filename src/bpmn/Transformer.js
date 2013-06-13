@@ -184,6 +184,26 @@ define([], function () {
       return taskObject;
     };
 
+    function transformIoSpecification(element, scope, bpmnDiElementIndex) {
+      var ioObject = createBpmnObject(element, scope, bpmnDiElementIndex);
+      var inputElements = element.getElementsByTagName("dataInput");
+      var outputElements = element.getElementsByTagName("dataOutput");
+
+      var baseElements = [];
+
+      for (var index = 0; index < inputElements.length; index++) {
+        baseElements.push(createBpmnObject(inputElements[index], scope, bpmnDiElementIndex));
+      }
+
+      for (var index = 0; index < outputElements.length; index++) {
+        baseElements.push(createBpmnObject(outputElements[index], scope, bpmnDiElementIndex));
+      }
+
+      ioObject["baseElements"] = baseElements;
+
+      return ioObject;
+    };
+
     function transformLaneSet(laneSetElement, scope, bpmnDiElementIndex) {
       // TODO not creating a seperate bpmn object for the lane set, adding lanes to the process directly
       var element = laneSetElement.firstChild;
@@ -376,9 +396,10 @@ define([], function () {
 
         } else if(elementType == "subProcess" || elementType =="adHocSubProcess") {
           bpmnObject = transformElementsContainer(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
+        } else if(elementType == "ioSpecification"){
+          bpmnObject = transformIoSpecification(element, scopeActivity, bpmnDiElementIndex);
         } else if(!!element && element.nodeName != "sequenceFlow" && element.nodeType == 1 /* (nodeType=1 => element nodes only) */ ) {
           bpmnObject = createBpmnObject(element, scopeActivity, bpmnDiElementIndex);
-
         }
 
         if(!!bpmnObject) {

@@ -50,12 +50,14 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   var dataPaths = {
-    "dataObject" : "M5,5L45,5L55,15L55,65L5,65L5,5M45,5L45,15L55,15",
-    "dataObjectReference" : "M5,5L45,5L55,15L55,65L5,65L5,5M45,5L45,15L55,15",
-    "dataStoreReference" : "m 62.926,15.69 c 0,1.986 -3.62,6.551 -31.267,6.551 -27.646,0 -30.734,-4.686 -30.734,-6.454 m 0,-4.65 c 0,1.769 3.088,6.455 30.734,6.455 27.647,0 31.267,-4.565 31.267,-6.551 M 0.925,6.487 c 0,2.35 3.088,6.455 30.734,6.455 27.647,0 31.267,-3.912 31.267,-6.552 m 0,0.001 v 4.844 M 0.949,6.391 v 4.844 m 61.977,-0.194 v 4.844 M 0.949,11.041 v 4.844 M 31.634,0.662 c 20.013,0 31.292,3.05 31.292,5.729 0,2.678 0,45.096 0,48.244 0,3.148 -16.42,6.2 -31.388,6.2 -14.968,0 -30.613,-2.955 -30.613,-6.298 0,-3.342 0,-45.728 0,-48.05 0,-2.322 10.697,-5.825 30.709,-5.825 z"
+    "dataObject" : {path: "m 0.49099769,0.73102628 39.21440331,0 9.803601,9.83633372 0,49.181671 -49.01800431,0 0,-59.01800472 m 39.21440331,0 0,9.83633372 9.803601,0", width: 50, height:60},
+    "dataObjectReference" :{path: "m 0.49099769,0.73102628 39.21440331,0 9.803601,9.83633372 0,49.181671 -49.01800431,0 0,-59.01800472 m 39.21440331,0 0,9.83633372 9.803601,0", width: 50, height:60},
+    "dataInput" :{path: "m 0.49099769,0.73102628 39.21440331,0 9.803601,9.83633372 0,49.181671 -49.01800431,0 0,-59.01800472 m 39.21440331,0 0,9.83633372 9.803601,0", width: 50, height:60},
+    "dataOutput" :{path: "m 0.49099769,0.73102628 39.21440331,0 9.803601,9.83633372 0,49.181671 -49.01800431,0 0,-59.01800472 m 39.21440331,0 0,9.83633372 9.803601,0", width: 50, height:60},
+    "dataStoreReference" : {path: "m 59.525317,15.298375 c 0,1.948956 -3.447739,6.428808 -29.779135,6.428808 -26.3304438,0 -29.2714988,-4.598594 -29.2714988,-6.333617 m 0,-4.563267 c 0,1.736004 2.941055,6.334599 29.2714988,6.334599 26.331396,0 29.779135,-4.479852 29.779135,-6.428808 M 0.4746832,6.2670314 c 0,2.306167 2.941055,6.3345996 29.2714988,6.3345996 26.331396,0 29.779135,-3.8390326 29.779135,-6.4297906 m 0,9.81e-4 V 10.926471 M 0.49754114,6.1728214 V 10.926471 M 59.525317,10.73609 v 4.753647 M 0.49754114,10.73609 v 4.753647 M 29.722371,0.55068142 c 19.060666,0 29.802946,2.99310998 29.802946,5.62213998 0,2.62805 0,44.2548566 0,47.3441386 0,3.089282 -15.638642,6.084356 -29.894377,6.084356 -14.255736,0 -29.1562568,-2.899883 -29.1562568,-6.180529 0,-3.279663 0,-44.8750666 0,-47.1537556 0,-2.278689 10.1879748,-5.71634998 29.2476878,-5.71634998 z", width:60, height:60}
   };
 
-  var activityMarkerPaths = {
+  var markerPaths = {
     "loop": "m 0,2.4999366 0,3 -3,0 m 3,0 a 4.875,4.875 0 1 1 4,0",
     "multiInstanceSequential": "m -2.499754,-2 h 10 m -10,4 h 10 m -10,4 h 10",
     "multiInstanceParallel": "m -2.199754,-2 v 8 m 4,-8 v 8 m 4,-8 v 8",
@@ -226,7 +228,9 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "textAnnotation" : generalStyle,
     "association" : associationStyle,
     "dataStoreReference" : dataObjectStyle,
-    "dataObject" : dataObjectStyle
+    "dataObject" : dataObjectStyle,
+    "dataInput" : dataObjectStyle,
+    "dataOutput" : dataObjectStyle
   };
 
   function wordWrap (text, group, font, x, y, align, moveUp) {
@@ -601,7 +605,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         var count = 0;
 
         function renderMarker(marker) {
-          var markerPath = taskGroup.createPath(activityMarkerPaths[marker]);
+          var markerPath = taskGroup.createPath(markerPaths[marker]);
           markerPath.setStroke({color : markerStyle.stroke, width: markerStyle["stroke-width"]});
           if (marker == "adHoc") {
             markerPath.setFill("black");
@@ -825,13 +829,35 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var width = +bounds.width;
       var height= +bounds.height;
 
+      var pathInfo = dataPaths[elementRenderer.baseElement.type];
       // render basic circle
       var dataRefGroup = gfxGroup.createGroup();
-      dataRefGroup.setTransform({dx :x ,dy: y});
+      dataRefGroup.setTransform({dx :x ,dy: y, xx : width / pathInfo.width, yy: height / pathInfo.height});
+
+      if (elementRenderer.baseElement.isCollection === "true") {
+        var collectionPath = dataRefGroup.createPath(markerPaths["multiInstanceParallel"]);
+        collectionPath.setStroke("#000");
+        collectionPath.setFill("#000");
+        collectionPath.setTransform({dx: width /2 -5 , dy: height - 15});
+      }
+
+      switch(elementRenderer.baseElement.type) {
+        case "dataInput" :
+          var dataMarkerPath = dataRefGroup.createPath(eventDefinitionPaths["linkEventDefinition"]);
+          dataMarkerPath.setStroke("#000");
+          dataMarkerPath.setTransform({dx: 10, dy: 10});
+          break;
+        case "dataOutput" :
+          var dataMarkerPath = dataRefGroup.createPath(eventDefinitionPaths["linkEventDefinition"]);
+          dataMarkerPath.setStroke("#000");
+          dataMarkerPath.setFill("#000");
+          dataMarkerPath.setTransform({dx: 10, dy: 10});
+          break;
+      }
 
       var font = { family: textStyle["font-family"], size: textStyle["font-size"], weight: "normal" };
 
-      var path = dataRefGroup.createPath(dataPaths[elementRenderer.baseElement.type]).setStroke(style.stroke);
+      var path = dataRefGroup.createPath(pathInfo.path).setStroke(style.stroke);
       renderLabel(elementRenderer, gfxGroup, {x: x + width/2, y: y + height + 10}, "middle");
       return path;
     }
@@ -869,6 +895,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   RENDERER_DELEGATES["dataStoreReference"] = dataRefRenderer;
   RENDERER_DELEGATES["dataObjectReference"] = dataRefRenderer;
   RENDERER_DELEGATES["dataObject"] = dataRefRenderer;
+  RENDERER_DELEGATES["dataInput"] = dataRefRenderer;
+  RENDERER_DELEGATES["dataOutput"] = dataRefRenderer;
 
   var RenderingException = (function () {
 
