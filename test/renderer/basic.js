@@ -93,6 +93,31 @@ return describe('Basic Renderer Functionality', function() {
 
   });
 
+  it('should wordwrap long single word labels', function() {
+    afterEach(function () {
+
+    });
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/test-wordwrap.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+      });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      expect(helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "dadadadadada" }).length).toBe(3);
+      expect(helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "dadadadbatman" }).length).toBe(1);
+    });
+
+  });
+
   it('should render all events', function() {
     afterEach(function () {
 
