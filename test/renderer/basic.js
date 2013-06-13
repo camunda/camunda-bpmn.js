@@ -319,12 +319,36 @@ return describe('Basic Renderer Functionality', function() {
     });
   });
 
-  it('should render complete render test', function() {
+  it('should render collapsed pool', function() {
 
     var rendered = false;
 
     var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/renderer-test.bpmn", {
+    bpmn.renderUrl("resources/collapsed-pool.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      var pool = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect")[0];
+      var poolLabel = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "text")[0];
+
+      expect(pool).toBeDefined();
+      expect(poolLabel).toBeDefined();
+    });
+  });
+
+  it('should render complex test', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/complex.bpmn", {
       diagramElement : "canvas"
     }).then(function (bpmn) {
         rendered = true;
@@ -341,6 +365,52 @@ return describe('Basic Renderer Functionality', function() {
     });
 
   });
-});
+
+  it('should render complex test (waitstates, subprocesses)', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/complex-waitstates-subprocesses.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      expect(bpmn.definitionRenderer).toBeDefined();
+      // there should be 9 rect task shapes
+      // expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(9);
+    });
+
+  });
+
+  xit('should render two tasks with boundary events on top of each other', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/BoundaryEventStack.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      expect(bpmn.definitionRenderer).toBeDefined();
+      // there should be 9 rect task shapes
+      // expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(9);
+    });
+
+  });  
+  });
 
 });

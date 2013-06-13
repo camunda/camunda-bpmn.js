@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions targetNamespace="http://activiti.org/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_yYP9gNKqEeKTYanl-hyIxQ">
+  <bpmn2:collaboration id="_Collaboration_3">
+    <bpmn2:participant id="_Participant_3" name="Process A" processRef="Process_1"/>
+    <bpmn2:participant id="Participant_1" name="Process B"/>
+    <bpmn2:messageFlow id="MessageFlow_1" name="" sourceRef="Task_1" targetRef="Participant_1"/>
+  </bpmn2:collaboration>
+  <bpmn2:process id="Process_1" isExecutable="false">
+    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn2:lane id="Lane_1">
+        <bpmn2:flowNodeRef>Task_1</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:task id="Task_1" name="Task"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
+      <bpmndi:BPMNShape id="_BPMNShape_Participant_3" bpmnElement="_Participant_3" isHorizontal="true">
+        <dc:Bounds height="215.0" width="540.0" x="144.0" y="24.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_4" bpmnElement="Lane_1" isHorizontal="true">
+        <dc:Bounds height="215.0" width="510.0" x="174.0" y="24.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Participant_4" bpmnElement="Participant_1" isHorizontal="true">
+        <dc:Bounds height="100.0" width="600.0" x="144.0" y="360.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Task_2" bpmnElement="Task_1">
+        <dc:Bounds height="80.0" width="100.0" x="436.0" y="89.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_MessageFlow_1" bpmnElement="MessageFlow_1" sourceElement="_BPMNShape_Task_2" targetElement="_BPMNShape_Participant_4">
+        <di:waypoint xsi:type="dc:Point" x="486.0" y="169.0"/>
+        <di:waypoint xsi:type="dc:Point" x="486.0" y="264.0"/>
+        <di:waypoint xsi:type="dc:Point" x="414.0" y="264.0"/>
+        <di:waypoint xsi:type="dc:Point" x="414.0" y="360.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

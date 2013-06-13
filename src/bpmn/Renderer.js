@@ -146,6 +146,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "stroke": regularStroke
   };
 
+  var collapsedPoolStyle = lang.mixin(lang.clone(participantStyle), {
+    "stroke-width": 2
+  });
+
   var laneStyle = {
     "stroke": "#ccc"
   };
@@ -216,6 +220,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "subProcess" :  activityStyle,
     "adHocSubProcess" :  activityStyle,
     "process" : participantStyle,
+    "participant" : collapsedPoolStyle,
     "lane" : laneStyle,
     "sequenceFlow" : lang.mixin(lang.clone(generalStyle), sequenceFlowStyle),
     "textAnnotation" : generalStyle,
@@ -315,11 +320,12 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   }
 
   function renderLabel(elementRenderer, group, bounds, align, moveUp) {
-    var baseElement = elementRenderer.baseElement;
+    var baseElement = elementRenderer.renderElement;
 
     if (!baseElement.name) {
       return;
     }
+
     var font = { family: textStyle["font-family"], size: textStyle["font-size"], weight: "normal" };
 
     var labelBounds = elementRenderer.getLabelBounds();
@@ -332,6 +338,44 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
     return group;
   }
+
+  var collapsedPoolRenderer = {
+    render: function(elementRenderer, gfxGroup) {
+
+      var baseElement = elementRenderer.renderElement;
+      var style = elementRenderer.getStyle(baseElement);
+      var bounds = elementRenderer.renderBounds;
+
+      if (baseElement.processRef) {
+        // only render collapsed pools (i.e. pools without content)
+        return;
+      }
+
+
+      // no participant bounds
+      if (!bounds) {
+        return;
+      }
+
+      var x = +bounds.x;
+      var y = +bounds.y;
+      var width = +bounds.width;
+      var height = +bounds.height;
+
+      var group = gfxGroup.createGroup();
+      group.setTransform({dx :x, dy:y});
+
+      var stroke = { color: style.stroke, width : style["stroke-width"]};
+
+      var rect = group.createRect({ x: 0, y: 0, width: width, height: height});
+      rect.setStroke(stroke);
+
+      var label = baseElement.name;
+      if (label) {
+        renderLabel(elementRenderer, gfxGroup, {x: x + width / 2, y: y + height / 2}, "middle");
+      }
+    }
+  };
 
   var processRenderer = {
     render : function(elementRenderer, gfxGroup) {
@@ -796,6 +840,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   // build up the map of renderers
   var RENDERER_DELEGATES = {};
   RENDERER_DELEGATES["process"] = processRenderer;
+  RENDERER_DELEGATES["participant"] = collapsedPoolRenderer;
   RENDERER_DELEGATES["startEvent"] = eventRenderer;
   RENDERER_DELEGATES["endEvent"] = eventRenderer;
   RENDERER_DELEGATES["boundaryEvent"] = eventRenderer;
@@ -919,15 +964,17 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
   BpmnElementRenderer.prototype.getLabelBounds = function () {
 
+    var element = this.renderElement;
+
     // first check by type
-    switch (this.baseElement.type) {
+    switch (element.type) {
       case "adHocSubProcess":
       case "subProcess":
-        return {x: this.baseElement.bounds.x + textStyle["font-size"] + BpmnElementRenderer.labelPadding, y: +this.baseElement.bounds.y + textStyle["font-size"] + BpmnElementRenderer.labelPadding};
+        return {x: element.bounds.x + textStyle["font-size"] + BpmnElementRenderer.labelPadding, y: + element.bounds.y + textStyle["font-size"] + BpmnElementRenderer.labelPadding};
         break;
     }
 
-    var diChildren = this.baseElement.bpmndi[0].children;
+    var diChildren = element.bpmndi[0].children;
 
     for (var index in diChildren) {
       var diChild = diChildren[index];
