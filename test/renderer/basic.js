@@ -338,6 +338,29 @@ return describe('Basic Renderer Functionality', function() {
     });
 
   });
-});
+
+  xit('should render two tasks with boundary events on top of each other', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/BoundaryEventStack.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      expect(bpmn.definitionRenderer).toBeDefined();
+      // there should be 9 rect task shapes
+      // expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(9);
+    });
+
+  });  
+  });
 
 });
