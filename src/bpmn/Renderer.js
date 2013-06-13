@@ -217,17 +217,39 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "dataObject" : dataObjectStyle
   };
 
-  function wordWrap (text, group, font, x, y, align) {
+  function wordWrap (text, group, font, x, y, align, moveUp) {
     var tempText = "";
     var fontSize = font.size ? font.size :  10;
     var defaultAlign = "right";
 
-    if(!text) {
+    if(!text || text.length == 0) {
       return;
     }
 
     var text = text.replace(/&#xD;/g, "<w>").replace(/&#xA;/g, "<w>").replace(/\n/g, "<w>");
     var textLines = []; // the lines which will be used to render
+
+
+    var renderText = function (text) {
+      return group.createText({text: text, align: align ? align : defaultAlign})
+        .setFont(font) //set font
+        .setFill("black");
+    }
+
+    /**
+     * splits given string into chunks of given length
+     *
+     * @param str the string
+     * @param len the chunksize
+     * @returns {Array}
+     */
+    function splitSubstring(str, len) {
+      var ret = [ ];
+      for (var offset = 0, strLen = str.length; offset < strLen; offset += len) {
+        ret.push(str.substring(offset, offset + len));
+      }
+      return ret;
+    }
 
     if (text.indexOf("<w>") != -1) { // there are line breaks, use them
       textLines = text.split("<w>");
@@ -235,7 +257,17 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var words = text.split(" ");
 
       if (words.length == 1) {
-        textLines.push(text);
+        var word = words[0];
+        // divide with increasing divider until we are sure the parts fit into the max width
+        for (var divider= 1, isFitting = false; isFitting == false; divider++) {
+          var chunkSize = word.length / divider;
+          var tempTextGroup = renderText(word.substring(0, chunkSize));
+          if (tempTextGroup.getTextWidth() <= BpmnElementRenderer.wordWrapMaxWidth) {
+            textLines = splitSubstring(word, chunkSize);
+            isFitting = true;
+          }
+          tempTextGroup.getParent().remove(tempTextGroup);
+        }
       }else {
         var currentLine = "";
         var oldLine = "";
@@ -247,9 +279,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
           var lastWord = i == (words.length -1);
 
           // create temporary gfx group the check the real rendered width
-          var tempTextGroup = group.createText({text: currentLine, align: align ? align : defaultAlign})
-            .setFont(font) //set font
-            .setFill("black");
+          var tempTextGroup = renderText(currentLine);
 
           if (tempTextGroup.getTextWidth() > BpmnElementRenderer.wordWrapMaxWidth) {
             textLines.push(oldLine.trim());
@@ -267,17 +297,17 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     }
 
     for (var i=0; i<textLines.length; i++) {
-      var textLine = group.createText({text: textLines[i], align: align ? align : defaultAlign})
-        .setFont(font) //set font
-        .setFill("black");
+      var textLine = renderText(textLines[i]);
+      // if we habe more than two lines, move the lines up by 25 per cent, beginning with the second line, so we get impression of vertical centering
+      var dy = moveUp ? (y - (textLines.length > 1 ? textLines.length * fontSize * 0.25 : 0) + i*fontSize) : y + i*fontSize;
 
-      textLine.setTransform({dx: x, dy: y + i*fontSize});
+      textLine.setTransform({dx: x, dy: dy});
     }
 
     return textLines;
   }
 
-  function renderLabel(elementRenderer, group, bounds, align) {
+  function renderLabel(elementRenderer, group, bounds, align, moveUp) {
     var baseElement = elementRenderer.baseElement;
 
     if (!baseElement.name) {
@@ -291,7 +321,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     var x =  pos.x,
         y = pos.y;
 
-    wordWrap(baseElement.name, group, font, +x, +y, labelBounds ? null : align);
+    wordWrap(baseElement.name, group, font, +x, +y, labelBounds ? null : align, moveUp);
 
     return group;
   }
@@ -586,7 +616,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         }
       }
 
-      var text = renderLabel(elementRenderer, gfxGroup, {x: x + width /2 , y: y + height /2}, "middle");
+      var text = renderLabel(elementRenderer, gfxGroup, {x: x + width /2 , y: y + height /2}, "middle", true);
     }
   };
 
