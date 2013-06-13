@@ -93,6 +93,29 @@ define([], function () {
         lastGeneratedId++;
       }
 
+      var miElement = element.getElementsByTagName("multiInstanceLoopCharacteristics");
+      var loop = element.getElementsByTagName("standardLoopCharacteristics");
+
+      bpmnObject.marker = {};
+
+      if (miElement.length != 0) {
+        var multiInstance = miElement[0];
+        if (multiInstance.getAttribute("isSequential") === "true") {
+          bpmnObject.marker["multiInstanceSequential"] = true;
+        }else {
+          bpmnObject.marker["multiInstanceParallel"] = true;
+        }
+      }
+
+      if (loop.length != 0) {
+        bpmnObject.marker["loop"] = true;
+      }
+
+      if(bpmnObject.isForCompensation == "true") {
+        bpmnObject.marker["compensation"] = true;
+      }
+
+
       return bpmnObject;
 
     }
@@ -149,7 +172,7 @@ define([], function () {
       return bpmnObject;
     };
 
-    function transformTask(element, scope, sequenceFlows, bpmnDiElementIndex) {
+    function transformActivity(element, scope, sequenceFlows, bpmnDiElementIndex) {
       // the ActivityDefinition to be built
 
       var taskObject = createFlowElement(element, scope, sequenceFlows, bpmnDiElementIndex);
@@ -328,7 +351,7 @@ define([], function () {
           elementType = elementType.substr(elementType.indexOf(":") + 1, elementType.length);
         }
 
-        var taskElementTypes = ["task", "manualTask", "serviceTask", "scriptTask", "userTask", "sendTask", "recieveTask", "businessRuleTask"];
+        var taskElementTypes = ["callActivity","task", "manualTask", "serviceTask", "scriptTask", "userTask", "sendTask", "recieveTask", "businessRuleTask"];
         var eventElementTypes = ["startEvent", "endEvent",  "intermediateThrowEvent", "intermediateCatchEvent", "boundaryEvent"];
 
         if(elementType == "exclusiveGateway") {
@@ -338,7 +361,7 @@ define([], function () {
           bpmnObject = transformParallelGateway(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
 
         } else if(taskElementTypes.indexOf(elementType) != -1) {
-          bpmnObject = transformTask(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
+          bpmnObject = transformActivity(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
 
         } else if(eventElementTypes.indexOf(elementType) != -1) {
           bpmnObject = transformEvent(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);

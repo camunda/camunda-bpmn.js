@@ -168,6 +168,32 @@ return describe('Basic Renderer Functionality', function() {
 
   });
 
+  it('should render activity markers', function() {
+    afterEach(function () {
+
+    });
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/markers.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+      });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 5000);
+
+    runs(function () {
+      expect(bpmn.definitionRenderer).toBeDefined();
+      // should render all marker paths
+      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path").length).toBe(9);
+    });
+
+  });
+
   it('should render labels correctly', function() {
     afterEach(function () {
 

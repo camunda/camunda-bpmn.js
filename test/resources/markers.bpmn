@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:signavio="http://www.signavio.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="Signavio Process Editor, http://www.signavio.com" exporterVersion="7.0.0" expressionLanguage="http://www.w3.org/1999/XPath" id="sid-0cb2257f-9915-4468-a5fc-67f543d12c11" targetNamespace="http://www.signavio.com/bpmn20" typeLanguage="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+   <globalTask id="sid-7e59df54-f656-401b-9f22-3f73b5dd0215" name="call activity"/>
+   <process id="sid-48a437f2-2185-4067-a204-9f668d92464b" isClosed="false" isExecutable="false" processType="None">
+      <task completionQuantity="1" id="sid-3D5A0860-CA0F-4E82-8D2B-33AC37DE9172" isForCompensation="false" name="loop" startQuantity="1">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffcc"/>
+         </extensionElements>
+         <standardLoopCharacteristics id="sid-1c654b46-56cd-4f8e-91c0-ef5e44e3aede" testBefore="false"/>
+      </task>
+      <task completionQuantity="1" id="sid-7EDA39B1-CA21-49F3-83B1-BAEE8BFF33CF" isForCompensation="false" name="mi parallel&#10;" startQuantity="1">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffcc"/>
+         </extensionElements>
+         <multiInstanceLoopCharacteristics behavior="All" id="sid-ebd07fae-24cb-4b18-949e-46bd8ae6603e" isSequential="false"/>
+      </task>
+      <task completionQuantity="1" id="sid-ABC76EBF-C11C-4C50-90FA-3370EFE13805" isForCompensation="false" name="mi seq" startQuantity="1">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffcc"/>
+         </extensionElements>
+         <multiInstanceLoopCharacteristics behavior="All" id="sid-142e3fec-f981-4034-8cc1-ae8f582ee860" isSequential="true"/>
+      </task>
+      <callActivity calledElement="sid-7e59df54-f656-401b-9f22-3f73b5dd0215" completionQuantity="1" id="sid-A52D5C24-1F0D-40C6-BA4E-355AF0A37EEC" isForCompensation="false" name="call activity" startQuantity="1">
+         <extensionElements>
+            <signavio:signavioStencil id="Task"/>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffcc"/>
+         </extensionElements>
+      </callActivity>
+      <task completionQuantity="1" id="sid-55DA99DD-C1D0-49D5-8642-82FF1AB0F402" isForCompensation="true" name="loop compensation" startQuantity="1">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffcc"/>
+         </extensionElements>
+         <standardLoopCharacteristics id="sid-97b2ce28-f2e3-43e9-b5dc-568400619562" testBefore="false"/>
+      </task>
+      <adHocSubProcess cancelRemainingInstances="true" completionQuantity="1" id="sid-720A7088-C2B4-40ED-88F9-5AB709798AF4" isForCompensation="true" name="adhoc subprocess compensation" ordering="Sequential" startQuantity="1" triggeredByEvent="false">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
+         </extensionElements>
+      </adHocSubProcess>
+      <subProcess completionQuantity="1" id="sid-3D47475C-381B-4E22-A7FC-628EC74B131C" isForCompensation="false" name="collapsed suboprocess" startQuantity="1" triggeredByEvent="false">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffcc"/>
+         </extensionElements>
+      </subProcess>
+   </process>
+   <bpmndi:BPMNDiagram id="sid-0ef36cc1-c771-4332-84e0-c88970988a7c">
+      <bpmndi:BPMNPlane bpmnElement="sid-48a437f2-2185-4067-a204-9f668d92464b" id="sid-94661318-4d62-45d9-aca9-f7bc80c874e2">
+         <bpmndi:BPMNShape bpmnElement="sid-3D5A0860-CA0F-4E82-8D2B-33AC37DE9172" id="sid-3D5A0860-CA0F-4E82-8D2B-33AC37DE9172_gui">
+            <omgdc:Bounds height="80.0" width="100.0" x="195.0" y="75.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="sid-7EDA39B1-CA21-49F3-83B1-BAEE8BFF33CF" id="sid-7EDA39B1-CA21-49F3-83B1-BAEE8BFF33CF_gui">
+            <omgdc:Bounds height="80.0" width="100.0" x="345.0" y="75.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="sid-ABC76EBF-C11C-4C50-90FA-3370EFE13805" id="sid-ABC76EBF-C11C-4C50-90FA-3370EFE13805_gui">
+            <omgdc:Bounds height="80.0" width="100.0" x="510.0" y="75.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="sid-A52D5C24-1F0D-40C6-BA4E-355AF0A37EEC" id="sid-A52D5C24-1F0D-40C6-BA4E-355AF0A37EEC_gui">
+            <omgdc:Bounds height="80.0" width="100.0" x="195.0" y="195.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="sid-55DA99DD-C1D0-49D5-8642-82FF1AB0F402" id="sid-55DA99DD-C1D0-49D5-8642-82FF1AB0F402_gui">
+            <omgdc:Bounds height="80.0" width="100.0" x="345.0" y="195.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="sid-720A7088-C2B4-40ED-88F9-5AB709798AF4" id="sid-720A7088-C2B4-40ED-88F9-5AB709798AF4_gui" isExpanded="true">
+            <omgdc:Bounds height="160.0" width="200.0" x="510.0" y="210.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="sid-3D47475C-381B-4E22-A7FC-628EC74B131C" id="sid-3D47475C-381B-4E22-A7FC-628EC74B131C_gui" isExpanded="false">
+            <omgdc:Bounds height="80.0" width="100.0" x="195.0" y="330.0"/>
+         </bpmndi:BPMNShape>
+      </bpmndi:BPMNPlane>
+   </bpmndi:BPMNDiagram>
+</definitions>
