@@ -93,21 +93,26 @@ define([], function () {
         lastGeneratedId++;
       }
 
-      var miElement = element.getElementsByTagName("multiInstanceLoopCharacteristics");
-      var loop = element.getElementsByTagName("standardLoopCharacteristics");
-
-      bpmnObject.marker = {};
-
-      if (miElement.length != 0) {
-        var multiInstance = miElement[0];
-        if (multiInstance.getAttribute("isSequential") === "true") {
-          bpmnObject.marker["multiInstanceSequential"] = true;
-        }else {
-          bpmnObject.marker["multiInstanceParallel"] = true;
+      function getChildElementByName(element, name) {
+        for (var index = 0; index < element.childNodes.length; index++) {
+            if (element.childNodes[index].nodeName == name) {
+              return element.childNodes[index];
+            }
         }
       }
 
-      if (loop.length != 0) {
+      var miElement = getChildElementByName(element, "multiInstanceLoopCharacteristics");
+      var loop = getChildElementByName(element, "standardLoopCharacteristics");
+
+      bpmnObject.marker = {};
+
+      if (miElement && miElement.getAttribute("isSequential") === "true") {
+        bpmnObject.marker["multiInstanceSequential"] = true;
+      }else if (miElement) {
+        bpmnObject.marker["multiInstanceParallel"] = true;
+      }
+
+      if (loop) {
         bpmnObject.marker["loop"] = true;
       }
 
