@@ -462,7 +462,7 @@ define([], function () {
       var bpmnDiagrams = definitionsElement.getElementsByTagNameNS(NS_BPMN_DIAGRAM_INTERCHANGE, "BPMNDiagram");
 
       var bpmnDiElementIndex = {};
-      for(var i=0; i < bpmnDiagrams.length; i++) {
+      for(var i = 0; i < bpmnDiagrams.length; i++) {
         createBpmnDiElementIndex(bpmnDiagrams[i], bpmnDiElementIndex);
       }
 
@@ -472,20 +472,25 @@ define([], function () {
       var participants = getParticipants(definitionsElement, bpmnDiElementIndex);
       generatedElements = generatedElements.concat(participants);
 
-      for(var i = 0; i < participants.length; i++) {
-        var participant = participants[i];
+      for (var j = 0, participant; !!(participant = participants[j]); j++) {
+
+        if (!participant.processRef) {
+          continue;
+        }
+
         // map participant shape to process shape for resolution in transform process
         bpmnDiElementIndex[participant.processRef] = bpmnDiElementIndex[participant.id];
+
         processNames[participant.processRef] = participant.name;
       }
 
-      for(var i = 0; i < processes.length; i++) {
-        var name = processNames[processes[i].getAttribute("id")];
+      for(var k = 0, process; !!(process = processes[k]); k++) {
+        var name = processNames[process.getAttribute("id")];
         if (name) {
-          processes[i].setAttributeNS(NS_BPMN_SEMANTIC, "name" , processNames[processes[i].getAttribute("id")]);
+          process.setAttributeNS(NS_BPMN_SEMANTIC, "name" , processNames[process.getAttribute("id")]);
         }
 
-        transformProcess(processes[i], bpmnDiElementIndex);
+        transformProcess(process, bpmnDiElementIndex);
       }
     };
 

@@ -293,6 +293,30 @@ return describe('Basic Renderer Functionality', function() {
     });
   });
 
+  it('should render collapsed pool', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/collapsed-pool.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      var pool = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect")[0];
+      var poolLabel = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "text")[0];
+
+      expect(pool).toBeDefined();
+      expect(poolLabel).toBeDefined();
+    });
+  });
+
   it('should render complex test', function() {
 
     var rendered = false;
