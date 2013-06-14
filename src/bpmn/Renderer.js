@@ -896,7 +896,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var font = { family: textStyle["font-family"], size: textStyle["font-size"], weight: "normal" };
 
       var path = dataRefGroup.createPath(pathInfo.path).setStroke(style.stroke);
-      path.setFill(style.fill);
 
       renderLabel(elementRenderer, gfxGroup, {x: x + width/2, y: y + height + 10}, "middle");
       return path;
