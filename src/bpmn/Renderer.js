@@ -50,17 +50,20 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   var dataPaths = {
-    "dataObject" : "M5,5L45,5L55,15L55,65L5,65L5,5M45,5L45,15L55,15",
-    "dataObjectReference" : "M5,5L45,5L55,15L55,65L5,65L5,5M45,5L45,15L55,15",
-    "dataStoreReference" : "m 62.926,15.69 c 0,1.986 -3.62,6.551 -31.267,6.551 -27.646,0 -30.734,-4.686 -30.734,-6.454 m 0,-4.65 c 0,1.769 3.088,6.455 30.734,6.455 27.647,0 31.267,-4.565 31.267,-6.551 M 0.925,6.487 c 0,2.35 3.088,6.455 30.734,6.455 27.647,0 31.267,-3.912 31.267,-6.552 m 0,0.001 v 4.844 M 0.949,6.391 v 4.844 m 61.977,-0.194 v 4.844 M 0.949,11.041 v 4.844 M 31.634,0.662 c 20.013,0 31.292,3.05 31.292,5.729 0,2.678 0,45.096 0,48.244 0,3.148 -16.42,6.2 -31.388,6.2 -14.968,0 -30.613,-2.955 -30.613,-6.298 0,-3.342 0,-45.728 0,-48.05 0,-2.322 10.697,-5.825 30.709,-5.825 z"
+    "dataObject" : {path: "m 0.49099769,0.73102628 39.21440331,0 9.803601,9.83633372 0,49.181671 -49.01800431,0 0,-59.01800472 m 39.21440331,0 0,9.83633372 9.803601,0", width: 50, height:60},
+    "dataObjectReference" :{path: "m 0.49099769,0.73102628 39.21440331,0 9.803601,9.83633372 0,49.181671 -49.01800431,0 0,-59.01800472 m 39.21440331,0 0,9.83633372 9.803601,0", width: 50, height:60},
+    "dataInput" :{path: "m 0.49099769,0.73102628 39.21440331,0 9.803601,9.83633372 0,49.181671 -49.01800431,0 0,-59.01800472 m 39.21440331,0 0,9.83633372 9.803601,0", width: 50, height:60},
+    "dataOutput" :{path: "m 0.49099769,0.73102628 39.21440331,0 9.803601,9.83633372 0,49.181671 -49.01800431,0 0,-59.01800472 m 39.21440331,0 0,9.83633372 9.803601,0", width: 50, height:60},
+    "dataStoreReference" : {path: "m 59.525317,15.298375 c 0,1.948956 -3.447739,6.428808 -29.779135,6.428808 -26.3304438,0 -29.2714988,-4.598594 -29.2714988,-6.333617 m 0,-4.563267 c 0,1.736004 2.941055,6.334599 29.2714988,6.334599 26.331396,0 29.779135,-4.479852 29.779135,-6.428808 M 0.4746832,6.2670314 c 0,2.306167 2.941055,6.3345996 29.2714988,6.3345996 26.331396,0 29.779135,-3.8390326 29.779135,-6.4297906 m 0,9.81e-4 V 10.926471 M 0.49754114,6.1728214 V 10.926471 M 59.525317,10.73609 v 4.753647 M 0.49754114,10.73609 v 4.753647 M 29.722371,0.55068142 c 19.060666,0 29.802946,2.99310998 29.802946,5.62213998 0,2.62805 0,44.2548566 0,47.3441386 0,3.089282 -15.638642,6.084356 -29.894377,6.084356 -14.255736,0 -29.1562568,-2.899883 -29.1562568,-6.180529 0,-3.279663 0,-44.8750666 0,-47.1537556 0,-2.278689 10.1879748,-5.71634998 29.2476878,-5.71634998 z", width:60, height:60}
   };
 
-  var activityMarkerPaths = {
-    "loop": "M 0 0 L 0 3 L -3 3 M 0 3 A 4.875,4.875 0 1 1 4 3",
-    "miSeq": "M 0 -2 h10 M 0 2 h10 M 0 6 h10",
-    "miPar": "M 0 -2 v8 M 4 -2 v8 M 8 -2 v8",
-    "adhoc": "m 0 0 c -0.54305,0.60192 -1.04853,1.0324 -1.51647,1.29142 -0.46216,0.25908 -0.94744,0.38857 -1.4558,0.38857 -0.57194,0 -1.23628,-0.22473 -1.99307,-0.67428 -0.0577,-0.0306 -0.10111,-0.0534 -0.12999,-0.0687 -0.0346,-0.0228 -0.0896,-0.0533 -0.16464,-0.0915 -0.80878,-0.47234 -1.4558,-0.70857 -1.94107,-0.70857 -0.46217,0 -0.91566,0.14858 -1.36047,0.44576 -0.44485,0.2895 -0.92434,0.75046 -1.43849,1.38285 l 0,-2.03429 c 0.54881,-0.60194 1.05431,-1.0324 1.51647,-1.29147 0.46793,-0.26666 0.9532,-0.39999 1.45581,-0.39999 0.57191,0 1.24205,0.22856 2.01039,0.68574 0.0461,0.0308 0.0838,0.0533 0.11266,0.0687 0.0404,0.0228 0.0982,0.0533 0.1733,0.0913 0.803,0.4724 1.45002,0.70861 1.94108,0.70857 0.44481,4e-5 0.88676,-0.14475 1.32581,-0.43429 0.43905,-0.2895 0.9272,-0.75425 1.46448,-1.39428",
-    "compensate": "M 50 70 L 55 65 L 55 75z M44.7 70 L49.7 75 L 49.7 65z"
+  var markerPaths = {
+    "loop": "m 0,2.4999366 0,3 -3,0 m 3,0 a 4.875,4.875 0 1 1 4,0",
+    "multiInstanceSequential": "m -2.499754,-2 h 10 m -10,4 h 10 m -10,4 h 10",
+    "multiInstanceParallel": "m -2.199754,-2 v 8 m 4,-8 v 8 m 4,-8 v 8",
+    "adHoc": "M -0.59975394,0 C -1.1428039,0.60192 -1.648284,1.0324 -2.116224,1.29142 c -0.46216,0.25908 -0.94744,0.38857 -1.4558,0.38857 -0.57194,0 -1.23628,-0.22473 -1.99307,-0.67428 -0.0577,-0.0306 -0.10111,-0.0534 -0.12999,-0.0687 -0.0346,-0.0228 -0.0896,-0.0533 -0.16464,-0.0915 -0.80878,-0.47234 -1.4558,-0.70857 -1.94107,-0.70857 -0.46217,0 -0.91566,0.14858 -1.36047,0.44576 -0.44485,0.2895 -0.92434,0.75046 -1.43849,1.38285 l 0,-2.03429 c 0.54881,-0.60194 1.05431,-1.0324 1.51647,-1.29147 0.46793,-0.26666 0.9532,-0.39999 1.45581,-0.39999 0.57191,0 1.24205,0.22856 2.01039,0.68574 0.0461,0.0308 0.0838,0.0533 0.11266,0.0687 0.0404,0.0228 0.0982,0.0533 0.1733,0.0913 0.803,0.4724 1.45002,0.70861 1.94108,0.70857 0.44481,4e-5 0.88676,-0.14475 1.32581,-0.43429 0.43905,-0.2895 0.9272001,-0.75425 1.46448006,-1.39428 z",
+    "compensation": "m 0.71428559,1.6639369 5.00000041,-5.0000001 0,9.9999998 z m -5.29999999,0 4.99999999,4.9999997 0,-9.9999998 z",
+    "reference" : "m -2.8535142,-2.3696092 c 0,9.607029 0,9.7871607 0,9.7871607 l 9.3068093,0 0,-9.7871607 -9.6389273,-0.025715 5.1356324,0.025715 0,9.7871607 4.4432509,0 0,-4.8638044 -9.2553782,0.025715 z"
   };
 
   BpmnElementRenderer.labelPadding = 2;
@@ -68,7 +71,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   // TODO: use element width rather than fixed width
   BpmnElementRenderer.wordWrapMaxWidth = 100 + BpmnElementRenderer.labelPadding;
 
-  var regularStroke = "#444";
+  var regularStroke = "#222";
   var highlightStroke = "darkOrange";
 
 
@@ -81,6 +84,12 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "stroke-width": 2,
     "stroke-linecap": "round",
     "stroke-linejoin": "round",
+    "stroke-opacity" : 1
+  };
+
+  var markerStyle = {
+    stroke: regularStroke,
+    "stroke-width": 1.3,
     "stroke-opacity" : 1
   };
 
@@ -228,7 +237,9 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "dataInputAssociation" : dataAssociationStyle,
     "dataOutputAssociation" : dataAssociationStyle,
     "dataStoreReference" : dataObjectStyle,
-    "dataObject" : dataObjectStyle
+    "dataObject" : dataObjectStyle,
+    "dataInput" : dataObjectStyle,
+    "dataOutput" : dataObjectStyle
   };
 
   function wordWrap (text, group, font, x, y, align, moveUp) {
@@ -585,6 +596,35 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       rect.setStroke(strokeStyle);
       rect.setFill(style.fill);
 
+      if (baseElement.marker) {
+        var count = 0;
+
+        function renderMarker(marker) {
+          var markerPath = taskGroup.createPath(markerPaths[marker]);
+          markerPath.setStroke({color : markerStyle.stroke, width: markerStyle["stroke-width"]});
+          if (marker == "adHoc") {
+            markerPath.setFill("black");
+          }
+          var sign = count % 2 == 0 ? 1 : -1;
+          markerPath.setTransform({dx :width/2 + (count * 15)*sign, dy:height-10});
+        }
+        // always render reference marker first, so its always centered
+        if ( (baseElement.type == "callActivity" && baseElement.calledElement) ||
+             (baseElement.type == "subProcess" && baseElement.bpmndi[0].isExpanded === "false") ) {
+          renderMarker("reference");
+          count++;
+        }
+
+        if (baseElement.type.indexOf("adHoc") != -1) {
+          baseElement.marker["adHoc"] = true;
+        }
+
+        for (var marker in baseElement.marker) {
+          renderMarker(marker);
+          count++;
+        }
+      }
+
       function createServiceTaskPath(group, style) {
         var path1String = "m 20.347,4.895 -2.561,2.56 0.943,2.277 3.624,0 0,3.383 -3.622,0 -0.943,2.277 2.563,2.563 -2.393,2.392 -2.561,-2.561 -2.277,0.943 0,3.624 -3.383,0 0,-3.622 L 7.46,17.788 4.897,20.35 2.506,17.958 5.066,15.397 4.124,13.12 l -3.624,0 0,-3.383 3.621,0 0.944,-2.276 -2.562,-2.563 2.392,-2.392 2.56,2.56 2.277,-0.941 0,-3.625 3.384,0 0,3.621 2.276,0.943 2.562,-2.562 z";
         var path1 = group.createPath(path1String);
@@ -789,13 +829,35 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var width = +bounds.width;
       var height= +bounds.height;
 
+      var pathInfo = dataPaths[elementRenderer.baseElement.type];
       // render basic circle
       var dataRefGroup = gfxGroup.createGroup();
-      dataRefGroup.setTransform({dx :x ,dy: y});
+      dataRefGroup.setTransform({dx :x ,dy: y, xx : width / pathInfo.width, yy: height / pathInfo.height});
+
+      if (elementRenderer.baseElement.isCollection === "true") {
+        var collectionPath = dataRefGroup.createPath(markerPaths["multiInstanceParallel"]);
+        collectionPath.setStroke("#000");
+        collectionPath.setFill("#000");
+        collectionPath.setTransform({dx: width /2 -5 , dy: height - 15});
+      }
+
+      switch(elementRenderer.baseElement.type) {
+        case "dataInput" :
+          var dataMarkerPath = dataRefGroup.createPath(eventDefinitionPaths["linkEventDefinition"]);
+          dataMarkerPath.setStroke("#000");
+          dataMarkerPath.setTransform({dx: 10, dy: 10});
+          break;
+        case "dataOutput" :
+          var dataMarkerPath = dataRefGroup.createPath(eventDefinitionPaths["linkEventDefinition"]);
+          dataMarkerPath.setStroke("#000");
+          dataMarkerPath.setFill("#000");
+          dataMarkerPath.setTransform({dx: 10, dy: 10});
+          break;
+      }
 
       var font = { family: textStyle["font-family"], size: textStyle["font-size"], weight: "normal" };
 
-      var path = dataRefGroup.createPath(dataPaths[elementRenderer.baseElement.type]).setStroke(style.stroke);
+      var path = dataRefGroup.createPath(pathInfo.path).setStroke(style.stroke);
       path.setFill(style.fill);
 
       renderLabel(elementRenderer, gfxGroup, {x: x + width/2, y: y + height + 10}, "middle");
@@ -902,6 +964,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         var position = getMidPoint(waypoints);
 
         envelop.setStroke(style.stroke);
+        envelop.setFill("white");
         envelop.setTransform({ dx: position.x, dy: position.y, xx: 1.5, yy: 1.5 });
 
         renderLabel({
@@ -959,7 +1022,9 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   RENDERER_DELEGATES["textAnnotation"] = textAnnotationRenderer;
   RENDERER_DELEGATES["dataStoreReference"] = dataRefRenderer;
   RENDERER_DELEGATES["dataObjectReference"] = dataRefRenderer;
-  RENDERER_DELEGATES["dataObject"] = dataRefRenderer;
+  RENDERER_DELEGATES["dataObject"] = dataRefRenderer
+  RENDERER_DELEGATES["dataInput"] = dataRefRenderer;
+  RENDERER_DELEGATES["dataOutput"] = dataRefRenderer;
   RENDERER_DELEGATES["message"] = messageRenderer;
 
   var CONNECTION_DECORATORS = {};
@@ -1069,7 +1134,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     switch (element.type) {
       case "adHocSubProcess":
       case "subProcess":
-        return {x: element.bounds.x + textStyle["font-size"] + BpmnElementRenderer.labelPadding, y: + element.bounds.y + textStyle["font-size"] + BpmnElementRenderer.labelPadding};
+        if (element.bpmndi[0].isExpanded === "true") {
+          return {x: element.bounds.x + textStyle["font-size"] + BpmnElementRenderer.labelPadding, y: + element.bounds.y + textStyle["font-size"] + BpmnElementRenderer.labelPadding};
+        }
+
         break;
     }
 

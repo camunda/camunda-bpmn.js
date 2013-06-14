@@ -93,6 +93,34 @@ define([], function () {
         lastGeneratedId++;
       }
 
+      function getChildElementByName(element, name) {
+        for (var index = 0; index < element.childNodes.length; index++) {
+            if (element.childNodes[index].nodeName == name) {
+              return element.childNodes[index];
+            }
+        }
+      }
+
+      var miElement = getChildElementByName(element, "multiInstanceLoopCharacteristics");
+      var loop = getChildElementByName(element, "standardLoopCharacteristics");
+
+      bpmnObject.marker = {};
+
+      if (miElement && miElement.getAttribute("isSequential") === "true") {
+        bpmnObject.marker["multiInstanceSequential"] = true;
+      }else if (miElement) {
+        bpmnObject.marker["multiInstanceParallel"] = true;
+      }
+
+      if (loop) {
+        bpmnObject.marker["loop"] = true;
+      }
+
+      if(bpmnObject.isForCompensation == "true") {
+        bpmnObject.marker["compensation"] = true;
+      }
+
+
       return bpmnObject;
 
     }
@@ -149,12 +177,32 @@ define([], function () {
       return bpmnObject;
     }
 
-    function transformTask(element, scope, sequenceFlows, bpmnDiElementIndex) {
+    function transformActivity(element, scope, sequenceFlows, bpmnDiElementIndex) {
       // the ActivityDefinition to be built
 
       var taskObject = createFlowElement(element, scope, sequenceFlows, bpmnDiElementIndex);
       return taskObject;
     }
+
+    function transformIoSpecification(element, scope, bpmnDiElementIndex) {
+      var ioObject = createBpmnObject(element, scope, bpmnDiElementIndex);
+      var inputElements = element.getElementsByTagName("dataInput");
+      var outputElements = element.getElementsByTagName("dataOutput");
+
+      var baseElements = [];
+
+      for (var index = 0; index < inputElements.length; index++) {
+        baseElements.push(createBpmnObject(inputElements[index], scope, bpmnDiElementIndex));
+      }
+
+      for (var index = 0; index < outputElements.length; index++) {
+        baseElements.push(createBpmnObject(outputElements[index], scope, bpmnDiElementIndex));
+      }
+
+      ioObject["baseElements"] = baseElements;
+
+      return ioObject;
+    };
 
     function transformLaneSet(laneSetElement, scope, bpmnDiElementIndex) {
       // TODO not creating a seperate bpmn object for the lane set, adding lanes to the process directly
@@ -327,7 +375,7 @@ define([], function () {
           elementType = elementType.substr(elementType.indexOf(":") + 1, elementType.length);
         }
 
-        var taskElementTypes = ["task", "manualTask", "serviceTask", "scriptTask", "userTask", "sendTask", "recieveTask", "businessRuleTask"];
+        var taskElementTypes = ["callActivity","task", "manualTask", "serviceTask", "scriptTask", "userTask", "sendTask", "recieveTask", "businessRuleTask"];
         var eventElementTypes = ["startEvent", "endEvent",  "intermediateThrowEvent", "intermediateCatchEvent", "boundaryEvent"];
 
         if(elementType == "exclusiveGateway") {
@@ -337,7 +385,7 @@ define([], function () {
           bpmnObject = transformParallelGateway(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
 
         } else if(taskElementTypes.indexOf(elementType) != -1) {
-          bpmnObject = transformTask(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
+          bpmnObject = transformActivity(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
 
         } else if(eventElementTypes.indexOf(elementType) != -1) {
           bpmnObject = transformEvent(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
@@ -347,9 +395,10 @@ define([], function () {
 
         } else if(elementType == "subProcess" || elementType =="adHocSubProcess") {
           bpmnObject = transformElementsContainer(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
+        } else if(elementType == "ioSpecification"){
+          bpmnObject = transformIoSpecification(element, scopeActivity, bpmnDiElementIndex);
         } else if(!!element && element.nodeName != "sequenceFlow" && element.nodeType == 1 /* (nodeType=1 => element nodes only) */ ) {
           bpmnObject = createBpmnObject(element, scopeActivity, bpmnDiElementIndex);
-
         }
 
         if(!!bpmnObject) {
