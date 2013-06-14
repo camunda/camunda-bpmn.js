@@ -915,7 +915,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         group: flowGroup });
 
       arrow.setStroke({ color : style.stroke });
-      arrow.setFill("white");
+      arrow.setFill("black");
     }
   };
 
@@ -988,6 +988,37 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     }
   };
 
+  var associationDecorator = {
+    decorate: function(elementRenderer, waypoints, flowGroup) {
+
+      var element = elementRenderer.renderElement;
+
+      var direction = element.associationDirection;
+
+      var style = elementRenderer.getStyle();
+
+      if (direction == "One" || direction == "Both") {
+        var arrow1 = createArrow({
+          from: waypoints[waypoints.length - 2],
+          to: waypoints[waypoints.length - 1],
+          group: flowGroup,
+          open: true });
+
+        arrow1.setStroke({ color : style.stroke });
+      }
+
+      if (direction == "Both") {
+        var arrow2 = createArrow({
+          from: waypoints[1],
+          to: waypoints[0],
+          group: flowGroup,
+          open: true });
+
+        arrow2.setStroke({ color : style.stroke });
+      }
+    }
+  };
+
   // build up the map of renderers
   var RENDERER_DELEGATES = {};
   RENDERER_DELEGATES["process"] = processRenderer;
@@ -1022,7 +1053,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   RENDERER_DELEGATES["textAnnotation"] = textAnnotationRenderer;
   RENDERER_DELEGATES["dataStoreReference"] = dataRefRenderer;
   RENDERER_DELEGATES["dataObjectReference"] = dataRefRenderer;
-  RENDERER_DELEGATES["dataObject"] = dataRefRenderer
+  RENDERER_DELEGATES["dataObject"] = dataRefRenderer;
   RENDERER_DELEGATES["dataInput"] = dataRefRenderer;
   RENDERER_DELEGATES["dataOutput"] = dataRefRenderer;
   RENDERER_DELEGATES["message"] = messageRenderer;
@@ -1033,6 +1064,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   CONNECTION_DECORATORS["messageFlow"] = messageFlowDecorator;
   CONNECTION_DECORATORS["dataInputAssociation"] = dataAssociationDecorator;
   CONNECTION_DECORATORS["dataOutputAssociation"] = dataAssociationDecorator;
+  CONNECTION_DECORATORS["association"] = associationDecorator;
 
   var RenderingException = (function () {
 

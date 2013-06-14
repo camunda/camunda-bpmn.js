@@ -387,8 +387,8 @@ return describe('Basic Renderer Functionality', function() {
       var lines = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "polyline");
       var texts = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "I AM DATA" });
 
-      // two objects
-      expect(objects.length).toBe(2);
+      // two objects + arrow path
+      expect(objects.length).toBe(3);
 
       // on text
       expect(texts.length).toBe(1);
