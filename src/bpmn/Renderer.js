@@ -71,6 +71,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   // TODO: use element width rather than fixed width
   BpmnElementRenderer.wordWrapMaxWidth = 100 + BpmnElementRenderer.labelPadding;
 
+  var categoryValues = {};
+
   var regularStroke = "#222";
   var highlightStroke = "darkOrange";
 
@@ -95,8 +97,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
   var groupStyle = {
     stroke: regularStroke,
-    "stroke-width": 2,
-    "stroke-opacity" : 1
+    style : "LongDashDot"
   };
 
   var dataObjectStyle = {
@@ -226,8 +227,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "businessRuleTask" : activityStyle,
     "task": activityStyle,
     "subProcess" :  activityStyle,
+    "transaction" :  activityStyle,
     "adHocSubProcess" :  activityStyle,
     "process" : participantStyle,
+    "group" : groupStyle,
     "participant" : collapsedPoolStyle,
     "lane" : laneStyle,
     "sequenceFlow" : lang.mixin(lang.clone(generalStyle), sequenceFlowStyle),
@@ -426,6 +429,33 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     }
   };
 
+  var groupRenderer = {
+    render : function(elementRenderer, gfxGroup) {
+      var baseElement = elementRenderer.renderElement;
+      var style = elementRenderer.getStyle(baseElement);
+      var bounds = elementRenderer.renderBounds;
+
+      if (!bounds) {
+        return;
+      }
+
+      var x = +bounds.x;
+      var y = +bounds.y;
+      var width = +bounds.width;
+      var height = +bounds.height;
+
+      var groupGfx = gfxGroup.createGroup();
+      groupGfx.setTransform({dx :x, dy:y});
+
+      var rect = groupGfx.createRect({ x: 0, y: 0, width: width, height: height});
+      rect.setStroke({color: style.stroke, style : style.style});
+
+      baseElement.name = categoryValues[baseElement.categoryValueRef] ? categoryValues[baseElement.categoryValueRef] : "";
+
+      renderLabel(elementRenderer, gfxGroup, {x: x + BpmnElementRenderer.labelPadding*2 , y: y + BpmnElementRenderer.labelPadding*4+ textStyle["font-size"]}, "left", true);
+    }
+  };
+
   var laneRenderer = {
     render : function(elementRenderer, gfxGroup) {
       var baseElement = elementRenderer.baseElement;
@@ -596,6 +626,13 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       rect.setStroke(strokeStyle);
       rect.setFill(style.fill);
 
+      if (baseElement.type == "transaction") {
+        var innerRectDistance = 3;
+        var insideRect = taskGroup.createRect({ x: 0+innerRectDistance, y: 0+innerRectDistance, width: width-innerRectDistance*2, height: height-innerRectDistance*2, r: 5 });
+        insideRect.setStroke(strokeStyle);
+        insideRect.setFill(style.fill);
+      }
+
       if (baseElement.marker) {
         var count = 0;
 
@@ -610,7 +647,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         }
         // always render reference marker first, so its always centered
         if ( (baseElement.type == "callActivity" && baseElement.calledElement) ||
-             (baseElement.type == "subProcess" && baseElement.bpmndi[0].isExpanded === "false") ) {
+             (baseElement.type == "subProcess" && baseElement.bpmndi[0].isExpanded === "false") ||
+             (baseElement.type == "transaction" && baseElement.bpmndi[0].isExpanded === "false")) {
           renderMarker("reference");
           count++;
         }
@@ -858,7 +896,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var font = { family: textStyle["font-family"], size: textStyle["font-size"], weight: "normal" };
 
       var path = dataRefGroup.createPath(pathInfo.path).setStroke(style.stroke);
-      path.setFill(style.fill);
 
       renderLabel(elementRenderer, gfxGroup, {x: x + width/2, y: y + height + 10}, "middle");
       return path;
@@ -1031,6 +1068,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   RENDERER_DELEGATES["userTask"] = activityRenderer;
   RENDERER_DELEGATES["task"] = activityRenderer;
   RENDERER_DELEGATES["subProcess"] = activityRenderer;
+  RENDERER_DELEGATES["transaction"] = activityRenderer;
+  RENDERER_DELEGATES["group"] = groupRenderer;
   RENDERER_DELEGATES["adHocSubProcess"] = activityRenderer;
   RENDERER_DELEGATES["serviceTask"] = activityRenderer;
   RENDERER_DELEGATES["callActivity"] = activityRenderer;
@@ -1098,9 +1137,15 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     var elements = [].concat(this.baseElement);
 
     for (var index in elements) {
+
       // TODO use this elements in all renderers, currently they are using the elementRenderer ref to get this stuff
       var currentElement = this.renderElement = elements[index];
       var bounds = this.renderBounds = this.getElementBounds(currentElement);
+
+      if (currentElement.type == "categoryValue") {
+        categoryValues[currentElement.id] = currentElement.value;
+        continue;
+      }
 
       if (bounds) {
         var diagramElement = query("#"+options.diagramElement)[0];
@@ -1164,6 +1209,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
     // first check by type
     switch (element.type) {
+      case "transaction":
       case "adHocSubProcess":
       case "subProcess":
         if (element.bpmndi[0].isExpanded === "true") {

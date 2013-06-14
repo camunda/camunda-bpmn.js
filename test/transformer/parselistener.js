@@ -48,7 +48,7 @@ define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
 
               '</definitions>')[0];
 
-      expect(activityIds).toEqual(["theStart","decision","end","theProcess"]);
+      expect(activityIds).toEqual(["theStart","decision","end", "theProcess"]);
 
     });
 
@@ -80,7 +80,7 @@ define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
 
               '</definitions>')[0];
 
-      expect(activityIds).toEqual(["theStart","theStart","decision","decision","end","end","theProcess","theProcess"]);
+      expect(activityIds).toEqual(["theStart","theStart","decision","decision","end","end", "theProcess","theProcess"]);
 
     });
 
