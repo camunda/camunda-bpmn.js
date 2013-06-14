@@ -91,7 +91,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   var dataObjectStyle = {
     stroke: regularStroke,
     "stroke-width": 1,
-    "stroke-opacity" : 1
+    "stroke-opacity" : 1,
+    "fill": "white"
   };
 
   var eventStyle = {
@@ -158,7 +159,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "fill" : regularStroke,
     "style" : "Solid",
     "stroke-width": 2,
-    "arrow-end": "block-midium-midium",
+    "arrow-end": "block-medium-medium",
     "stroke-linecap": "square",
     "stroke-linejoin": "round"
   };
@@ -167,15 +168,18 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "stroke" : regularStroke,
     "style" : "Dot",
     "stroke-width": 2,
-    "arrow-end": "block-midium-midium",
+    "arrow-end": "block-medium-medium",
     "stroke-linecap": "square",
     "stroke-linejoin": "round"
   };
+
+  var dataAssociationStyle = lang.clone(associationStyle);
 
   var messageFlowStyle = {
     "stroke-width": 2,
     "arrow-end": "open-wide-long",
     "stroke-dasharray": "-",
+    "style" : "LongDash",
     "stroke-linecap": "round",
     "stroke-linejoin": "round"
   };
@@ -216,8 +220,11 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "participant" : collapsedPoolStyle,
     "lane" : laneStyle,
     "sequenceFlow" : lang.mixin(lang.clone(generalStyle), sequenceFlowStyle),
+    "messageFlow" : lang.mixin(lang.clone(generalStyle), messageFlowStyle),
     "textAnnotation" : generalStyle,
     "association" : associationStyle,
+    "dataInputAssociation" : dataAssociationStyle,
+    "dataOutputAssociation" : dataAssociationStyle,
     "dataStoreReference" : dataObjectStyle,
     "dataObject" : dataObjectStyle
   };
@@ -344,7 +351,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         return;
       }
 
-
       // no participant bounds
       if (!bounds) {
         return;
@@ -436,9 +442,31 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     }
   };
 
+  function getMidPoint(waypoints) {
+
+    var sumx = 0;
+    var sumy = 0;
+    var count = 0;
+
+    for (var index in waypoints) {
+      var waypoint = waypoints[index];
+      var factor = 1;
+
+      if (waypoints.length > 2 && index == 1) {
+        factor = 12;
+      }
+
+      sumx += +waypoint.x * factor;
+      sumy += +waypoint.y * factor;
+      count+= factor;
+    }
+
+    return { x: sumx / count, y: sumy / count };
+  }
+
   var connectionRenderer = {
     render : function(elementRenderer, gfxGroup) {
-      var baseElement = elementRenderer.baseElement;
+      var baseElement = elementRenderer.renderElement;
       var style = elementRenderer.getStyle();
       var waypoints = elementRenderer.getWaypoints();
 
@@ -447,50 +475,15 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var line = flowGroup.createPolyline(waypoints);
       line.setStroke({color: style.stroke, style : style.style});
 
-      var secondLastPoint = waypoints[waypoints.length-2];
-      var lastPoint = waypoints[waypoints.length-1];
+      var endPointDecorator = CONNECTION_DECORATORS[baseElement.type];
 
-      var vector = {x:lastPoint.x - secondLastPoint.x, y: lastPoint.y - secondLastPoint.y};
-
-      var xsize = 6;
-      var ysize = 4;
-
-      var svgPath = "M" + lastPoint.x +
-        " " + lastPoint.y +
-        " L"+ (lastPoint.x - xsize) +
-        " " + (lastPoint.y + ysize) +
-        " L"+ (lastPoint.x - xsize) +
-        " " + (lastPoint.y - ysize) +
-        " Z";
-
-      if (elementRenderer.isDirectedFlow()) {
-        var arrowGroup = flowGroup.createGroup();
-        var arrowPath = arrowGroup.createPath(svgPath);
-        var theta = Math.atan2(-vector.y, vector.x);
-
-        arrowPath.setStroke({color : style.stroke});
-        arrowPath.setFill(style.fill);
-        arrowPath.setTransform([gfx.matrix.rotateAt(-theta, lastPoint)]);
+      if (endPointDecorator) {
+        endPointDecorator.decorate(elementRenderer, waypoints, flowGroup);
       }
 
-      var sumx = 0;
-      var sumy = 0;
-      var count = 0;
+      renderLabel(elementRenderer, gfxGroup, getMidPoint(waypoints), "middle");
 
-      for (var index in waypoints) {
-        var waypoint = waypoints[index];
-        var factor = 1;
-
-        if (waypoints.length > 2 && index == 1) {
-          factor = 12;
-        }
-
-        sumx += +waypoint.x * factor;
-        sumy += +waypoint.y * factor;
-        count+= factor;
-      }
-
-      renderLabel(elementRenderer, gfxGroup, {x: sumx / count, y: sumy / count}, "middle");
+      return flowGroup;
     }
   };
 
@@ -796,8 +789,98 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var font = { family: textStyle["font-family"], size: textStyle["font-size"], weight: "normal" };
 
       var path = dataRefGroup.createPath(dataPaths[elementRenderer.baseElement.type]).setStroke(style.stroke);
+      path.setFill(style.fill);
+
       renderLabel(elementRenderer, gfxGroup, {x: x + width/2, y: y + height + 10}, "middle");
       return path;
+    }
+  };
+
+  function createArrow(options) {
+    var from = options.from,
+        to = options.to,
+        flowGroup = options.group,
+        open = options.open;
+
+    var vector = {x: to.x - from.x, y: to.y - from.y };
+
+    var xsize = 8;
+    var ysize = 4;
+
+    var svgPath =
+      "M" + (to.x - xsize) + " " + (to.y + ysize) +
+      " L " + to.x + " " + to.y +
+      " L"+ (to.x - xsize) + " " + (to.y - ysize);
+
+    if (!open) {
+      svgPath += " Z";
+    }
+
+    var group = flowGroup.createGroup();
+    var arrowPath = group.createPath(svgPath);
+    var theta = Math.atan2(-vector.y, vector.x);
+
+    arrowPath.setTransform([gfx.matrix.rotateAt(-theta, to)]);
+
+    return arrowPath;
+  }
+
+  function createDot(point, flowGroup) {
+
+    var r = 4;
+
+    var group = flowGroup.createGroup();
+    var circle = group.createCircle({ cx: point.x, cy: point.y, r: r });
+
+    return circle;
+  }
+
+  var sequenceFlowDecorator = {
+
+    decorate: function(elementRenderer, waypoints, flowGroup) {
+
+      var style = elementRenderer.getStyle();
+      var arrow = createArrow({
+        from: waypoints[waypoints.length - 2],
+        to: waypoints[waypoints.length - 1],
+        group: flowGroup });
+
+      arrow.setStroke({ color : style.stroke });
+      arrow.setFill("white");
+    }
+  };
+
+  var messageFlowDecorator = {
+    decorate: function(elementRenderer, waypoints, flowGroup) {
+
+      var style = elementRenderer.getStyle();
+
+      // render additional start / end symbol
+      var arrowPath = createArrow({ 
+        from: waypoints[waypoints.length - 2],
+        to: waypoints[waypoints.length - 1],
+        group: flowGroup });
+
+      arrowPath.setStroke({ color : style.stroke });
+      arrowPath.setFill("white");
+
+      var circle = createDot(waypoints[0], flowGroup);
+      circle.setStroke({ color : style.stroke });
+      circle.setFill("white");
+    }
+  };
+
+  var dataAssociationDecorator = {
+    decorate: function(elementRenderer, waypoints, flowGroup) {
+
+      var style = elementRenderer.getStyle();
+      var arrow = createArrow({
+        from: waypoints[waypoints.length - 2],
+        to: waypoints[waypoints.length - 1],
+        group: flowGroup,
+        open: true });
+
+      arrow.setStroke({ color : style.stroke });
     }
   };
 
@@ -827,12 +910,22 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   RENDERER_DELEGATES["eventBasedGateway"] = gatewayRenderer;
   RENDERER_DELEGATES["complexGateway"] = gatewayRenderer;
   RENDERER_DELEGATES["sequenceFlow"] = connectionRenderer;
+  RENDERER_DELEGATES["dataInputAssociation"] = connectionRenderer;
+  RENDERER_DELEGATES["dataOutputAssociation"] = connectionRenderer;
+  RENDERER_DELEGATES["messageFlow"] = connectionRenderer;
   RENDERER_DELEGATES["association"] = connectionRenderer;
   RENDERER_DELEGATES["lane"] = laneRenderer;
   RENDERER_DELEGATES["textAnnotation"] = textAnnotationRenderer;
   RENDERER_DELEGATES["dataStoreReference"] = dataRefRenderer;
   RENDERER_DELEGATES["dataObjectReference"] = dataRefRenderer;
   RENDERER_DELEGATES["dataObject"] = dataRefRenderer;
+
+  var CONNECTION_DECORATORS = {};
+
+  CONNECTION_DECORATORS["sequenceFlow"] = sequenceFlowDecorator;
+  CONNECTION_DECORATORS["messageFlow"] = messageFlowDecorator;
+  CONNECTION_DECORATORS["dataInputAssociation"] = dataAssociationDecorator;
+  CONNECTION_DECORATORS["dataOutputAssociation"] = dataAssociationDecorator;
 
   var RenderingException = (function () {
 
@@ -894,7 +987,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       if(!!delegate) {
         this.svgElement = delegate.render(this, gfxGroup);
       } else {
-        console.log("Unable to render element of type ", this.baseElement.type);
+        console.log("Unable to render element of type ", currentElement.type);
       }
 
       // if the current element has child base elements, create the
@@ -1009,9 +1102,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   BpmnElementRenderer.prototype.getWaypoints = function() {
-    var waypoints = [];
+    var element = this.renderElement,
+        waypoints = [];
 
-    var diChildren = this.baseElement.bpmndi[0].children;
+    var diChildren = element.bpmndi[0].children;
     for (var index in diChildren) {
       var diChild = diChildren[index];
 
@@ -1024,11 +1118,9 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   BpmnElementRenderer.prototype.getStyle = function (baseElement) {
-    if (!baseElement) {
-      return styleMap[this.baseElement.type] ? styleMap[this.baseElement.type] : defaultStyle;
-    }else {
-      return styleMap[baseElement.type] ? styleMap[baseElement.type] : defaultStyle;
-    }
+    var element = baseElement || this.renderElement;
+
+    return styleMap[element.type] || defaultStyle;
   };
 
   BpmnElementRenderer.prototype.getEventType = function () {
@@ -1055,16 +1147,6 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       case "intermediateCatchEvent":
       case "boundaryEvent":
       case "intermediateThrowEvent":
-        return true;
-      default:
-        return false;
-    }
-  };
-
-  BpmnElementRenderer.prototype.isDirectedFlow = function () {
-    switch (this.baseElement.type) {
-      case "sequenceFlow":
-      case "messageFlow":
         return true;
       default:
         return false;

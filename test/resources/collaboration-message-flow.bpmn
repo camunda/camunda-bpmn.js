@@ -1,38 +1,54 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions targetNamespace="http://activiti.org/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_yYP9gNKqEeKTYanl-hyIxQ">
-  <bpmn2:collaboration id="_Collaboration_3">
-    <bpmn2:participant id="_Participant_3" name="Process A" processRef="Process_1"/>
-    <bpmn2:participant id="Participant_1" name="Process B"/>
-    <bpmn2:messageFlow id="MessageFlow_1" name="" sourceRef="Task_1" targetRef="Participant_1"/>
-  </bpmn2:collaboration>
-  <bpmn2:process id="Process_1" isExecutable="false">
-    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
-      <bpmn2:lane id="Lane_1">
-        <bpmn2:flowNodeRef>Task_1</bpmn2:flowNodeRef>
-      </bpmn2:lane>
-    </bpmn2:laneSet>
-    <bpmn2:task id="Task_1" name="Task"/>
-  </bpmn2:process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_3">
-      <bpmndi:BPMNShape id="_BPMNShape_Participant_3" bpmnElement="_Participant_3" isHorizontal="true">
-        <dc:Bounds height="215.0" width="540.0" x="144.0" y="24.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_Lane_4" bpmnElement="Lane_1" isHorizontal="true">
-        <dc:Bounds height="215.0" width="510.0" x="174.0" y="24.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_Participant_4" bpmnElement="Participant_1" isHorizontal="true">
-        <dc:Bounds height="100.0" width="600.0" x="144.0" y="360.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_Task_2" bpmnElement="Task_1">
-        <dc:Bounds height="80.0" width="100.0" x="436.0" y="89.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_MessageFlow_1" bpmnElement="MessageFlow_1" sourceElement="_BPMNShape_Task_2" targetElement="_BPMNShape_Participant_4">
-        <di:waypoint xsi:type="dc:Point" x="486.0" y="169.0"/>
-        <di:waypoint xsi:type="dc:Point" x="486.0" y="264.0"/>
-        <di:waypoint xsi:type="dc:Point" x="414.0" y="264.0"/>
-        <di:waypoint xsi:type="dc:Point" x="414.0" y="360.0"/>
-      </bpmndi:BPMNEdge>
-    </bpmndi:BPMNPlane>
-  </bpmndi:BPMNDiagram>
-</bpmn2:definitions>
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:signavio="http://www.signavio.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="Signavio Process Editor, http://www.signavio.com" exporterVersion="7.0.0" expressionLanguage="http://www.w3.org/1999/XPath" id="sid-9bf284c7-d15d-4592-ac26-b0028c5797bc" targetNamespace="http://activiti.org/bpmn" typeLanguage="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+   <collaboration id="sid-7de4a1ef-a269-4fa1-986b-a556cd5cae37">
+      <participant id="_Participant_3" name="Process A" processRef="Process_1">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
+         </extensionElements>
+      </participant>
+      <participant id="Participant_1" name="Process B">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
+         </extensionElements>
+      </participant>
+      <messageFlow id="MessageFlow_1" name="My Message" sourceRef="Task_1" targetRef="Participant_1">
+      </messageFlow>
+   </collaboration>
+   <process id="Process_1" isClosed="false" isExecutable="false" name="Process A" processType="None">
+      <extensionElements/>
+      <laneSet id="sid-21775dd8-2b15-45a4-b8a9-a16aab6e48e1">
+         <lane id="Lane_1">
+            <extensionElements>
+               <signavio:signavioMetaData metaKey="bgcolor" metaValue=""/>
+            </extensionElements>
+            <flowNodeRef>Task_1</flowNodeRef>
+         </lane>
+      </laneSet>
+      <task completionQuantity="1" id="Task_1" isForCompensation="false" name="Task" startQuantity="1">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffcc"/>
+         </extensionElements>
+      </task>
+   </process>
+   <bpmndi:BPMNDiagram id="sid-5e8578e7-8be4-41cb-94d9-20f899147def">
+      <bpmndi:BPMNPlane bpmnElement="sid-7de4a1ef-a269-4fa1-986b-a556cd5cae37" id="sid-024b214e-bc40-4d2b-81ed-6832e448b570">
+         <bpmndi:BPMNShape bpmnElement="_Participant_3" id="_Participant_3_gui" isHorizontal="true">
+            <omgdc:Bounds height="215.0" width="540.0" x="144.0" y="24.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="Participant_1" id="Participant_1_gui" isHorizontal="true">
+            <omgdc:Bounds height="100.0" width="600.0" x="144.0" y="360.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="Lane_1" id="Lane_1_gui" isHorizontal="true">
+            <omgdc:Bounds height="215.0" width="510.0" x="174.0" y="24.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="Task_1" id="Task_1_gui">
+            <omgdc:Bounds height="80.0" width="100.0" x="436.0" y="89.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNEdge bpmnElement="MessageFlow_1" id="MessageFlow_1_gui" messageVisibleKind="initiating">
+            <omgdi:waypoint x="486.0" y="169.0"/>
+            <omgdi:waypoint x="486.0" y="264.0"/>
+            <omgdi:waypoint x="414.0" y="264.0"/>
+            <omgdi:waypoint x="414.0" y="360.0"/>
+         </bpmndi:BPMNEdge>
+      </bpmndi:BPMNPlane>
+   </bpmndi:BPMNDiagram>
+</definitions>
