@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:signavio="http://www.signavio.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="Signavio Process Editor, http://www.signavio.com" exporterVersion="7.0.0" expressionLanguage="http://www.w3.org/1999/XPath" id="sid-b98e149f-fd15-44c4-a38c-7c657235ae5b" targetNamespace="http://www.signavio.com/bpmn20" typeLanguage="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+   <process id="sid-a511a1d6-9df0-4175-9802-47d5959a1561" isExecutable="false" processType="None">
+      <dataObject id="sid-28989615-50BA-46A9-AA6D-42E4C6C95FFE" isCollection="false" name="I AM DATA">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
+         </extensionElements>
+      </dataObject>
+      <dataObject id="sid-34382E07-93F5-48D8-87F9-96EAA14DE3CB" isCollection="false" name="iamverylongstringdataobject">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
+         </extensionElements>
+      </dataObject>
+      <association associationDirection="One" id="sid-3063C14D-CD51-4C9A-AD3B-689C66E80F4A" sourceRef="sid-28989615-50BA-46A9-AA6D-42E4C6C95FFE" targetRef="sid-34382E07-93F5-48D8-87F9-96EAA14DE3CB"/>
+   </process>
+   <bpmndi:BPMNDiagram id="sid-6148c104-ab58-4655-9760-175686295b2f">
+      <bpmndi:BPMNPlane bpmnElement="sid-a511a1d6-9df0-4175-9802-47d5959a1561" id="sid-aff23262-63a2-482b-96ec-c907add7e09a">
+         <bpmndi:BPMNShape bpmnElement="sid-28989615-50BA-46A9-AA6D-42E4C6C95FFE" id="sid-28989615-50BA-46A9-AA6D-42E4C6C95FFE_gui">
+            <omgdc:Bounds height="97.0" width="88.0" x="390.0" y="195.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNShape bpmnElement="sid-34382E07-93F5-48D8-87F9-96EAA14DE3CB" id="sid-34382E07-93F5-48D8-87F9-96EAA14DE3CB_gui">
+            <omgdc:Bounds height="69.0" width="57.0" x="540.0" y="223.0"/>
+         </bpmndi:BPMNShape>
+         <bpmndi:BPMNEdge bpmnElement="sid-3063C14D-CD51-4C9A-AD3B-689C66E80F4A" id="sid-3063C14D-CD51-4C9A-AD3B-689C66E80F4A_gui">
+            <omgdi:waypoint x="478.0" y="248.0799256505576"/>
+            <omgdi:waypoint x="540.0" y="254.53345724907064"/>
+         </bpmndi:BPMNEdge>
+      </bpmndi:BPMNPlane>
+   </bpmndi:BPMNDiagram>
+</definitions>
