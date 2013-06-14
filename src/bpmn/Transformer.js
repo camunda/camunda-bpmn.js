@@ -394,7 +394,7 @@ define([], function () {
         } else if(elementType == "laneSet") {
           bpmnObject = transformLaneSet(element, scopeActivity, bpmnDiElementIndex);
 
-        } else if(elementType == "subProcess" || elementType =="adHocSubProcess") {
+        } else if(elementType == "subProcess" || elementType =="adHocSubProcess" || "transaction") {
           bpmnObject = transformElementsContainer(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
         } else if(elementType == "ioSpecification"){
           bpmnObject = transformIoSpecification(element, scopeActivity, bpmnDiElementIndex);
@@ -502,6 +502,21 @@ define([], function () {
       return participants;
     }
 
+    function getCategoryValues (definitionsElement) {
+      var categoryValues = [];
+      var categoryElements = definitionsElement.getElementsByTagNameNS(NS_BPMN_SEMANTIC, "categoryValue");
+
+      if (categoryElements.length != 0) {
+        for (var index = 0; index < categoryElements.length; index++) {
+          var value = createBpmnObject(categoryElements[index], null, []);
+          categoryValues.push(value);
+        }
+      }
+
+      return categoryValues;
+    }
+
+
     /** transforms a <definitions ... /> element into a set of activity definitions */
     function transformDefinitions(definitionsElement) {
 
@@ -519,7 +534,9 @@ define([], function () {
       var processNames = {};
 
       var participants = getParticipants(definitionsElement, bpmnDiElementIndex);
-      generatedElements = generatedElements.concat(participants);
+      var categoryValues = getCategoryValues(definitionsElement);
+      generatedElements = categoryValues.concat(generatedElements.concat(participants));
+
 
       for (var j = 0, participant; !!(participant = participants[j]); j++) {
 
