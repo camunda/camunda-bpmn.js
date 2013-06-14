@@ -394,7 +394,7 @@ define([], function () {
         } else if(elementType == "laneSet") {
           bpmnObject = transformLaneSet(element, scopeActivity, bpmnDiElementIndex);
 
-        } else if(elementType == "subProcess" || elementType =="adHocSubProcess") {
+        } else if(elementType == "subProcess" || elementType =="adHocSubProcess" || elementType == "transaction") {
           bpmnObject = transformElementsContainer(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
         } else if(elementType == "ioSpecification"){
           bpmnObject = transformIoSpecification(element, scopeActivity, bpmnDiElementIndex);
