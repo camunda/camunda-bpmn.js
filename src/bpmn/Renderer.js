@@ -879,17 +879,24 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         collectionPath.setTransform({dx: width /2 -5 , dy: height - 15});
       }
 
+      var defaultBounds = {x: x + width/2, y: y + height / 2};
+      var dataMarkerDistance = 7;
+      var dataStoreLabelDistance = 12;
+
       switch(elementRenderer.baseElement.type) {
         case "dataInput" :
           var dataMarkerPath = dataRefGroup.createPath(eventDefinitionPaths["linkEventDefinition"]);
           dataMarkerPath.setStroke("#000");
-          dataMarkerPath.setTransform({dx: 10, dy: 10});
+          dataMarkerPath.setTransform({dx: dataMarkerDistance, dy: dataMarkerDistance});
           break;
         case "dataOutput" :
           var dataMarkerPath = dataRefGroup.createPath(eventDefinitionPaths["linkEventDefinition"]);
           dataMarkerPath.setStroke("#000");
           dataMarkerPath.setFill("#000");
-          dataMarkerPath.setTransform({dx: 10, dy: 10});
+          dataMarkerPath.setTransform({dx: dataMarkerDistance, dy: dataMarkerDistance});
+          break;
+        case "dataStoreReference":
+          defaultBounds.y = y + height + dataStoreLabelDistance;
           break;
       }
 
@@ -897,7 +904,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
       var path = dataRefGroup.createPath(pathInfo.path).setStroke(style.stroke);
 
-      renderLabel(elementRenderer, gfxGroup, {x: x + width/2, y: y + height + 10}, "middle");
+
+      renderLabel(elementRenderer, gfxGroup, defaultBounds, "middle");
       return path;
     }
   };
