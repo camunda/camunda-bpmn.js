@@ -459,10 +459,10 @@ define([], function () {
     }
 
     function getDataAssociations(definitionsElement, bpmnDiElementIndex) {
+      var associations = [];
+
       var inputAssociationElements = definitionsElement.getElementsByTagNameNS(NS_BPMN_SEMANTIC, "dataInputAssociation");
       var outputAssociationElements = definitionsElement.getElementsByTagNameNS(NS_BPMN_SEMANTIC, "dataOutputAssociation");
-
-      var associations = [];
 
       for (var j = 0, inputElement; !!(inputElement = inputAssociationElements[j]); j++) {
         associations.push(createBpmnObject(inputElement, null, bpmnDiElementIndex));
@@ -473,6 +473,18 @@ define([], function () {
       }
 
       return associations;
+    }
+
+    function getMessages(definitionsElement, bpmnDiElementIndex) {
+      var messages = [];
+      var messageElements = definitionsElement.getElementsByTagNameNS(NS_BPMN_SEMANTIC, "message");
+
+      for (var i = 0; i < messageElements.length; i++) {
+        var m = createBpmnObject(messageElements[i], null, bpmnDiElementIndex);
+        messages.push(m);
+      }
+
+      return messages;
     }
 
     /** transforms a <definitions ... /> element into a set of activity definitions */
@@ -517,8 +529,9 @@ define([], function () {
 
       var messageFlows = getMessageFlows(definitionsElement, bpmnDiElementIndex);
       var dataAssociations = getDataAssociations(definitionsElement, bpmnDiElementIndex);
+      var messages = getMessages(definitionsElement, bpmnDiElementIndex);
 
-      return generatedElements.concat(messageFlows, dataAssociations);
+      return generatedElements.concat(messageFlows, dataAssociations, messages);
     }
 
     return transformDefinitions(definitions[0]);

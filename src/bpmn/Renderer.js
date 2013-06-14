@@ -64,6 +64,8 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   };
 
   BpmnElementRenderer.labelPadding = 2;
+
+  // TODO: use element width rather than fixed width
   BpmnElementRenderer.wordWrapMaxWidth = 100 + BpmnElementRenderer.labelPadding;
 
   var regularStroke = "#444";
@@ -771,6 +773,11 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     }
   };
 
+  // messages are not directly rendered
+  var messageRenderer = {
+    render: function() {}
+  };
+
   var dataRefRenderer = {
     render : function(elementRenderer, gfxGroup) {
       var style = elementRenderer.getStyle();
@@ -867,6 +874,40 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       var circle = createDot(waypoints[0], flowGroup);
       circle.setStroke({ color : style.stroke });
       circle.setFill("white");
+
+      function findElementById(elements, id) {
+        for (var i = 0, e; !!(e = elements[i]); i++) {
+          if (e.id == id) {
+            return e;
+          }
+        }
+
+        return null;
+      }
+
+      // render envelope if present
+      var baseElement = elementRenderer.renderElement;
+
+      // TODO: render message in the correct way
+      if (baseElement.messageRef) {
+
+        var message = findElementById(elementRenderer.baseElement, baseElement.messageRef);
+        if (!message) {
+          return;
+        }
+
+        var envelopeGroup = flowGroup.createGroup();
+        var envelop = envelopeGroup.createPath(eventDefinitionPaths.messagecatch);
+
+        var position = getMidPoint(waypoints);
+
+        envelop.setStroke(style.stroke);
+        envelop.setTransform({ dx: position.x, dy: position.y, xx: 1.5, yy: 1.5 });
+
+        renderLabel({
+          renderElement: message, getLabelBounds: function() { return { x: position.x + 30, y: position.y + 10 }; }
+        }, envelopeGroup, null, "left");
+      }
     }
   };
 
@@ -919,6 +960,7 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
   RENDERER_DELEGATES["dataStoreReference"] = dataRefRenderer;
   RENDERER_DELEGATES["dataObjectReference"] = dataRefRenderer;
   RENDERER_DELEGATES["dataObject"] = dataRefRenderer;
+  RENDERER_DELEGATES["message"] = messageRenderer;
 
   var CONNECTION_DECORATORS = {};
 
