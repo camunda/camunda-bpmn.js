@@ -422,6 +422,37 @@ return describe('Basic Renderer Functionality', function() {
     });
   });
 
+  it('should render data objects', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/data-object.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      var objects = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path");
+      var lines = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "polyline");
+      var texts = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "I AM DATA" });
+
+      // two objects + arrow path
+      expect(objects.length).toBe(3);
+
+      // on text
+      expect(texts.length).toBe(1);
+
+      // one association
+      expect(lines.length).toBe(1);
+    });
+  });
+
   it('should render message flow', function() {
 
     var rendered = false;
