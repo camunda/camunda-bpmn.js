@@ -398,6 +398,80 @@ return describe('Basic Renderer Functionality', function() {
     });
   });
 
+
+  it('should render directed association with arrow', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/directed-association.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      var paths = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path");
+
+      // two associations + dataobject edge
+      expect(paths.length).toBe(3);
+    });
+  });
+
+  it('should render message flow', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/collaboration-message-flow.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      var paths = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path");
+
+      // message flow
+      expect(paths.length).toBe(1);
+    });
+  });
+
+  it('should render message flow with message attached', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/collaboration-message-flow-message.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+    });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      var paths = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path");
+      var texts = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "My Message" });
+
+      // 2x (message flow + message)
+      expect(paths.length).toBe(4);
+
+      // text exists
+      expect(texts.length).toBe(1);
+    });
+  });
+
   it('should render complex test', function() {
 
     var rendered = false;

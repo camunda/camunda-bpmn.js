@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:signavio="http://www.signavio.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="Signavio Process Editor, http://www.signavio.com" exporterVersion="7.0.0" expressionLanguage="http://www.w3.org/1999/XPath" id="sid-9bf284c7-d15d-4592-ac26-b0028c5797bc" targetNamespace="http://activiti.org/bpmn" typeLanguage="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
-   <collaboration id="sid-7de4a1ef-a269-4fa1-986b-a556cd5cae37">
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:signavio="http://www.signavio.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="Signavio Process Editor, http://www.signavio.com" exporterVersion="7.0.0" expressionLanguage="http://www.w3.org/1999/XPath" id="sid-bad28ced-6b82-4275-98b5-ba2b7ef9c68a" targetNamespace="http://activiti.org/bpmn" typeLanguage="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+   <message id="sid-D965BE83-ACF3-42C0-A9C6-55927AE897AB" name="My Message"/>
+   <message id="sid-250F9271-3935-4090-8605-D6D69DAC45B5" name="My Other Message"/>
+   <collaboration id="sid-87ddab58-b0bb-4aa5-807e-e0f9d553c860">
       <participant id="_Participant_3" name="Process A" processRef="Process_1">
          <extensionElements>
             <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
@@ -10,12 +12,20 @@
             <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
          </extensionElements>
       </participant>
-      <messageFlow id="MessageFlow_1" name="My Message" sourceRef="Task_1" targetRef="Participant_1">
+      <messageFlow id="sid-C7D50F59-FA73-41AF-BA26-CD8BEDB8D4F8" messageRef="sid-250F9271-3935-4090-8605-D6D69DAC45B5" name="" sourceRef="Participant_1" targetRef="_Participant_3">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="messageposition" metaValue="{&quot;y&quot;:295.25,&quot;x&quot;:620}"/>
+         </extensionElements>
+      </messageFlow>
+      <messageFlow id="MessageFlow_1" messageRef="sid-D965BE83-ACF3-42C0-A9C6-55927AE897AB" name="" sourceRef="Task_1" targetRef="Participant_1">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="messageposition" metaValue="{&quot;y&quot;:295.25,&quot;x&quot;:414}"/>
+         </extensionElements>
       </messageFlow>
    </collaboration>
    <process id="Process_1" isClosed="false" isExecutable="false" name="Process A" processType="None">
       <extensionElements/>
-      <laneSet id="sid-21775dd8-2b15-45a4-b8a9-a16aab6e48e1">
+      <laneSet id="sid-3cc44ff7-0aed-4ffb-b058-d373c921cc88">
          <lane id="Lane_1">
             <extensionElements>
                <signavio:signavioMetaData metaKey="bgcolor" metaValue=""/>
@@ -29,8 +39,8 @@
          </extensionElements>
       </task>
    </process>
-   <bpmndi:BPMNDiagram id="sid-5e8578e7-8be4-41cb-94d9-20f899147def">
-      <bpmndi:BPMNPlane bpmnElement="sid-7de4a1ef-a269-4fa1-986b-a556cd5cae37" id="sid-024b214e-bc40-4d2b-81ed-6832e448b570">
+   <bpmndi:BPMNDiagram id="sid-913d1219-4cc5-4fca-b727-b14f2c5a875c">
+      <bpmndi:BPMNPlane bpmnElement="sid-87ddab58-b0bb-4aa5-807e-e0f9d553c860" id="sid-c814477a-b589-4ee0-aba6-fd565e98a315">
          <bpmndi:BPMNShape bpmnElement="_Participant_3" id="_Participant_3_gui" isHorizontal="true">
             <omgdc:Bounds height="215.0" width="540.0" x="144.0" y="24.0"/>
          </bpmndi:BPMNShape>
@@ -43,6 +53,10 @@
          <bpmndi:BPMNShape bpmnElement="Task_1" id="Task_1_gui">
             <omgdc:Bounds height="80.0" width="100.0" x="436.0" y="89.0"/>
          </bpmndi:BPMNShape>
+         <bpmndi:BPMNEdge bpmnElement="sid-C7D50F59-FA73-41AF-BA26-CD8BEDB8D4F8" id="sid-C7D50F59-FA73-41AF-BA26-CD8BEDB8D4F8_gui" messageVisibleKind="initiating">
+            <omgdi:waypoint x="620.0" y="360.0"/>
+            <omgdi:waypoint x="620.0" y="239.0"/>
+         </bpmndi:BPMNEdge>
          <bpmndi:BPMNEdge bpmnElement="MessageFlow_1" id="MessageFlow_1_gui" messageVisibleKind="initiating">
             <omgdi:waypoint x="486.0" y="169.0"/>
             <omgdi:waypoint x="486.0" y="264.0"/>
