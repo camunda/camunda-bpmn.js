@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_1Io7YNIDEeKov4ozq4WEuw" targetNamespace="http://activiti.org/bpmn">
-  <bpmn2:process id="mydemo" name="Meine Demo" isExecutable="true">
-    <bpmn2:boundaryEvent id="BoundaryEvent_1" name="" attachedToRef="Task_A">
+  <bpmn2:process id="boundary-behind-task" isExecutable="true">
+    <bpmn2:boundaryEvent id="BoundaryEvent_ASDF" name="" attachedToRef="Task_ASDF">
       <bpmn2:timerEventDefinition id="TimerEventDefinition_1">
         <bpmn2:timeDuration xsi:type="bpmn2:tFormalExpression">P5S</bpmn2:timeDuration>
       </bpmn2:timerEventDefinition>
     </bpmn2:boundaryEvent>
-    <bpmn2:userTask id="Task_A" name="Task A"/>
+    <bpmn2:userTask id="Task_ASDF" name="Task A"/>
   </bpmn2:process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Meine Demo">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="mydemo">
-      <bpmndi:BPMNShape id="_BPMNShape_UserTask_8" bpmnElement="Task_A">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="boundary-behind-task">
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_8" bpmnElement="Task_ASDF">
         <dc:Bounds height="80.0" width="100.0" x="60.0" y="24.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_2" bpmnElement="BoundaryEvent_1">
+      <bpmndi:BPMNShape id="_BPMNShape_BoundaryEvent_2" bpmnElement="BoundaryEvent_ASDF">
         <dc:Bounds height="36.0" width="36.0" x="93.0" y="86.0"/>
         <bpmndi:BPMNLabel>
           <dc:Bounds height="6.0" width="6.0" x="108.0" y="127.0"/>

@@ -9,7 +9,7 @@
  * 
  */
 
-define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window", "dojo/query", "dojo/dom", "dojo/dom-class"], function (gfx, lang, domConstruct, win, query, dom, domClass) {
+define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window", "dojo/query", "dojo/dom", "dojo/dom-class", "dojo/NodeList-manipulate", "dojo/NodeList-traverse"], function (gfx, lang, domConstruct, win, query, dom, domClass) {
   // constructor
   function BpmnElementRenderer(baseElement) {
 
@@ -244,6 +244,20 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
     "dataInput" : dataObjectStyle,
     "dataOutput" : dataObjectStyle
   };
+
+  /**
+   * Moves an element to front (both visually in diagram and in overlay)
+   *
+   * @param  {object}   element   the bpmn element that should be moved to front
+   * @param  {gfxGroup} group     the graphics group the element is drawn on
+   */
+  function moveToFront(element, group) {
+    group.moveToFront();
+    var overlay = query("#" + element.id);
+    var parent = overlay.parent();
+    overlay.remove();
+    parent.append(overlay);
+  }
 
   function wordWrap (text, group, font, x, y, align, moveUp) {
     var tempText = "";
@@ -811,9 +825,11 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
       }
 
       if (element.type == "boundaryEvent") {
-        elementRenderer.postRenderParent(function() {
-          circleGroup.moveToFront();
-        });
+        (function(e, group) {
+          elementRenderer.postRenderParent(function() {
+            moveToFront(e, group);
+          });
+        })(element, circleGroup);
       }
 
       renderLabel(elementRenderer, gfxGroup, {x : x + +bounds.width / 2, y : y + +bounds.width + rad}, "middle");

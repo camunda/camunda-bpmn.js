@@ -13,7 +13,7 @@
 
 "use strict";
 
-define(["bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], function(Bpmn, Transformer, helper) {
+define(["bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper", "dojo/query"], function(Bpmn, Transformer, helper, query) {
 
 return describe('Basic Renderer Functionality', function() {
 
@@ -371,7 +371,14 @@ return describe('Basic Renderer Functionality', function() {
       var task = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect")[0];
       var boundary = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle")[0];
 
-      expect(task).toBeInFrontOf(boundary);
+      var overlays = bpmn.getOverlays();
+      var parent = overlays.parent()[0];
+
+      var taskOverlay = query("#Task_ASDF", parent);
+      var boundaryOverlay = taskOverlay.nextAll("#BoundaryEvent_ASDF");
+
+      expect(taskOverlay.length).toBe(1);
+      expect(boundaryOverlay.length).toBe(1);
     });
   });
 
@@ -571,7 +578,23 @@ return describe('Basic Renderer Functionality', function() {
       // expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(9);
     });
 
-  });  
+  });
+
+
+
+  xit('should have nice API', function() {
+
+    var diagram = new BpmnDiagram();
+
+    diagram.renderUrl("resources/BoundaryEventStack.bpmn", {
+      diagramElement : "canvas"
+    }).then(function(diagram) {
+      diagram.on('click', function(e, element) {
+
+      });
+    });
+
+  });
   });
 
 });
