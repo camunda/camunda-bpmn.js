@@ -93,7 +93,7 @@ return describe('Basic Renderer Functionality', function() {
 
   });
 
-  it('should wordwrap long single word labels', function() {
+  it('should wordwrap labels', function() {
     afterEach(function () {
 
     });
@@ -500,6 +500,26 @@ return describe('Basic Renderer Functionality', function() {
       expect(paths.length).toBe(4);
 
       // text exists
+      expect(texts.length).toBe(1);
+  it('should wrap long pool names', function() {
+
+    var rendered = false;
+
+    var bpmn = new Bpmn();
+    bpmn.renderUrl("resources/wrap-poolname.bpmn", {
+      diagramElement : "canvas"
+    }).then(function (bpmn) {
+        rendered = true;
+      });
+
+    waitsFor(function() {
+      return rendered;
+    }, "Rendering never completed", 10000);
+
+    runs(function () {
+      var texts = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "Really Long Pooooooooooooooooo" });
+
+      // wrapped text exists
       expect(texts.length).toBe(1);
     });
   });

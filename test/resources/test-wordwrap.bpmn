@@ -8,6 +8,10 @@
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
     </bpmn2:manualTask>
+    <bpmn2:manualTask id="ManualTask_2" name="Bewertung des &#10;Kommentars durchführen">
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+    </bpmn2:manualTask>
     <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="ManualTask_1"/>
     <bpmn2:endEvent id="EndEvent_1" name="End Event">
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
@@ -21,6 +25,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_ManualTask_2" bpmnElement="ManualTask_1">
         <dc:Bounds height="80.0" width="100.0" x="398.0" y="314.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ManualTask_3" bpmnElement="ManualTask_2">
+        <dc:Bounds height="80.0" width="100.0" x="398.0" y="414.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_StartEvent_2" targetElement="_BPMNShape_ManualTask_2">
         <di:waypoint xsi:type="dc:Point" x="348.0" y="354.0"/>

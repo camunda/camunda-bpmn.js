@@ -1,5 +1,53 @@
 define([], function () {
 
+  var matchElementShape = function(props) {
+    return function (element) {
+      var matchAllProps = true;
+
+      for (var prop in props) {
+        if (!element.shape[prop]) {
+          matchAllProps = false;
+        }
+
+        console.log(props[prop]);
+        console.log(element.shape[prop]);
+
+        if (!(element.shape[prop] === props[prop])) {
+          matchAllProps = false;
+        }
+      }
+
+      return matchAllProps;
+    }
+  };
+
+  var matchElementProperty = function(elementProperty, props) {
+    return function(element) {
+      var elemProp = element[elementProperty];
+
+      if(!elemProp) {
+        return false;
+      }
+
+      var matchAllProps = true;
+
+      for (var prop in props) {
+        if (!elemProp[prop]) {
+          matchAllProps = false;
+        }
+
+        console.log(props[prop]);
+        console.log(elemProp[prop]);
+
+        if (!(elemProp[prop] === props[prop])) {
+          matchAllProps = false;
+        }
+      }
+
+      return matchAllProps;
+    }
+  };
+
   var helper =  {
     matchers : {
       toHavePositions : function (expectedShapePositions) {
@@ -69,26 +117,24 @@ define([], function () {
       return this.findChildrenByProperties(group, {"type" : type});
     },
 
-    findChildrenByProperties: function (group, props) {
-      return this.findChildrenMatching(group, function(element) {
+    findChildren: function (group, shapeProps, elementProperty, propertyProps) {
+      return this.findChildrenMatching(group, function (element) {
+        var matches = true;
 
-        var matchAllProps = true;
-
-        for (var prop in props) {
-          if (!element.shape[prop]) {
-            matchAllProps = false;
-          }
-
-          console.log(props[prop]);
-          console.log(element.shape[prop]);
-
-          if (!(element.shape[prop] === props[prop])) {
-            matchAllProps = false;
-          }
+        if (shapeProps) {
+          matches = matches && matchElementShape(shapeProps)(element);
         }
 
-        return matchAllProps;
+        if (elementProperty) {
+          matches = matches && matchElementProperty(elementProperty, propertyProps)(element);
+        }
+
+        return matches;
       });
+    },
+
+    findChildrenByProperties: function (group, props) {
+      return this.findChildrenMatching(group, matchElementShape(props));
     },
 
     findChildrenMatching: function (group, matchFn) {

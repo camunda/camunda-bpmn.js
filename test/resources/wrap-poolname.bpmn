@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:signavio="http://www.signavio.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="Signavio Process Editor, http://www.signavio.com" exporterVersion="7.0.0" expressionLanguage="http://www.w3.org/1999/XPath" id="sid-3f84ef56-d0cb-45ed-95ec-a4a0fdb5bdb9" targetNamespace="http://www.signavio.com/bpmn20" typeLanguage="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+   <collaboration id="sid-e9e0de28-ea02-400f-a227-3e1238238824">
+      <participant id="sid-AD8463DB-9381-4588-9EAF-2F3CE0BAC430" name="Really Long Pooooooooooooooooooooooooooooooooooooooooooolname" processRef="process">
+         <extensionElements>
+            <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
+            <signavio:signavioMetaData metaKey="userstory" metaValue=""/>
+         </extensionElements>
+      </participant>
+     <participant id="p2" name="Normal Poolname" processRef="process2">
+     </participant>
+     <participant id="p3" name="Fullsize Poolname (near full height)" processRef="process3">
+     </participant>
+   </collaboration>
+  <process id="process">
+  </process>
+  <process id="process2">
+  </process>
+  <process id="process3">
+  </process>
+   <bpmndi:BPMNDiagram id="sid-7f439c78-23aa-4d9a-8dd0-ed683a29dbc5">
+      <bpmndi:BPMNPlane bpmnElement="sid-e9e0de28-ea02-400f-a227-3e1238238824" id="sid-0cb81906-980c-4fc1-99f0-57a4bc0df0c5">
+         <bpmndi:BPMNShape bpmnElement="sid-AD8463DB-9381-4588-9EAF-2F3CE0BAC430" id="sid-AD8463DB-9381-4588-9EAF-2F3CE0BAC430_gui">
+            <omgdc:Bounds height="200.0" width="500.0" x="150.0" y="75.0"/>
+         </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape bpmnElement="p2" id="sid-AD8463DB-9381-4588-9EAF-2F3CE0BAC431_gui">
+          <omgdc:Bounds height="200.0" width="500.0" x="150.0" y="300.0"/>
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape bpmnElement="p3" id="sid-AD8463DB-9381-4588-9EAF-2F3CE0BAC432_gui">
+          <omgdc:Bounds height="200.0" width="500.0" x="700.0" y="75.0"/>
+        </bpmndi:BPMNShape>
+      </bpmndi:BPMNPlane>
+   </bpmndi:BPMNDiagram>
+</definitions>
