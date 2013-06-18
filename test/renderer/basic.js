@@ -217,6 +217,8 @@ return describe('Basic Renderer Functionality', function() {
       // 4 transactions with inner rects
       expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(8);
       expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle").length).toBe(7);
+      // all paths including multiinstance
+      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path").length).toBe(13);
     });
 
   });
