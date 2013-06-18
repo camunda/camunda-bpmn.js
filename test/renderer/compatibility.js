@@ -33,8 +33,8 @@ return describe('Basic Renderer Functionality', function() {
 
     runs(function () {
       expect(bpmn.definitionRenderer).toBeDefined();
-      // there should be 2 rect task shapes of the participants
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(2);
+      // there should be 2 rect task shapes of the participants, and 2 for the lanes
+      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(4);
     });
 
   });
