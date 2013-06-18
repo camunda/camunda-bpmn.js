@@ -43,7 +43,7 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
     var scale = Math.min(
           (options.width || bwidth) / bwidth,
           (options.height || bheight) / bheight);
-    
+
     this.zoom(scale);
 
     return this;
@@ -64,7 +64,7 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
     var currentDimension = this.definitionRenderer.getSurface().getDimensions();
     this.definitionRenderer.getSurface().setDimensions(+currentDimension.width/xx * factor, +currentDimension.height/xx * factor);
 
-    array.forEach(query(".bpmnElement"), function(element) {
+    array.forEach(this.getOverlays(), function(element) {
       element.style.left = element.style.left.split("px")[0]/xx * factor + "px";
       element.style.top = element.style.top.split("px")[0]/yy * factor + "px";
       element.style.width = element.style.width.split("px")[0]/xx * factor + "px";
@@ -74,15 +74,23 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
     return this;
   };
 
+  Bpmn.prototype.getOverlays = function() {
+    return query(".bpmnElement");
+  };
+
+  Bpmn.prototype.getOverlay = function(id) {
+    return query("#" + id);
+  };
+
   Bpmn.prototype.annotation = function (id) {
-    var element = query(".bpmnElement" + "#"+id)[0];
+    var element = this.getOverlay(id)[0];
     if (!element) {
       throw new Error("Element " + id + " does not exist.");
     }
 
     function addClasses(el, classes) {
       domClass.add(el, (classes || []).join(" "));
-    };
+    }
 
     return {
       /**
@@ -123,7 +131,7 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
    * @deprecated use Bpmn.prototype.annotation instead
    */
   Bpmn.prototype.annotate = function (id, innerHTML, classesArray) {
-    var element = query(".bpmnElement" + "#"+id)[0];
+    var element = this.getOverlay(id)[0];
     if (!element) {
       return;
     }
@@ -135,7 +143,7 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
   };
 
   Bpmn.prototype.clearAnnotations = function (id, classesArray) {
-    var element = query(".bpmnElement" + "#"+id)[0];
+    var element = this.getOverlay(id)[0];
     if (!element) {
       return;
     }
