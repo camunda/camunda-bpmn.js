@@ -501,6 +501,17 @@ return describe('Basic Renderer Functionality', function() {
 
       // text exists
       expect(texts.length).toBe(1);
+
+      var greyFills = helper.findChildren(bpmn.definitionRenderer.gfxGroup, {type : "path"}, "fillStyle", {r: 204, g: 204,b: 204});
+      var whiteFills = helper.findChildren(bpmn.definitionRenderer.gfxGroup, {type: "path"}, "fillStyle", {r: 255, g: 255,b: 255});
+
+      // the message only
+      expect(greyFills.length).toBe(1);
+      // arrowheads and message path
+      expect(whiteFills.length).toBe(3);
+    });
+  });
+
   it('should wrap long pool names', function() {
 
     var rendered = false;

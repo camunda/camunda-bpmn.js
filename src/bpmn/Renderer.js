@@ -1058,9 +1058,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
 
       // render envelope if present
       var baseElement = elementRenderer.renderElement;
+      var visibileKind =  baseElement.bpmndi && baseElement.bpmndi[0].messageVisibleKind ? baseElement.bpmndi[0].messageVisibleKind : null;
 
       // TODO: render message in the correct way
-      if (baseElement.messageRef) {
+      if (baseElement.messageRef && visibileKind) {
 
         var message = findElementById(elementRenderer.baseElement, baseElement.messageRef);
         if (!message) {
@@ -1073,7 +1074,10 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         var position = getMidPoint(waypoints);
 
         envelop.setStroke(style.stroke);
-        envelop.setFill("white");
+
+        var nonInitiating = visibileKind.toLowerCase() == "non-initiating";
+
+        envelop.setFill(nonInitiating ? "#ccc" : "#fff");
         envelop.setTransform({ dx: position.x, dy: position.y, xx: 1.5, yy: 1.5 });
 
         renderLabel({

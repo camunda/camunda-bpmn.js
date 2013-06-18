@@ -57,7 +57,7 @@
             <omgdi:waypoint x="620.0" y="360.0"/>
             <omgdi:waypoint x="620.0" y="239.0"/>
          </bpmndi:BPMNEdge>
-         <bpmndi:BPMNEdge bpmnElement="MessageFlow_1" id="MessageFlow_1_gui" messageVisibleKind="initiating">
+         <bpmndi:BPMNEdge bpmnElement="MessageFlow_1" id="MessageFlow_1_gui" messageVisibleKind="non-initiating">
             <omgdi:waypoint x="486.0" y="169.0"/>
             <omgdi:waypoint x="486.0" y="264.0"/>
             <omgdi:waypoint x="414.0" y="264.0"/>
