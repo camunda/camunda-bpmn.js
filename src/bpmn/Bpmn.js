@@ -74,6 +74,18 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
     return this;
   };
 
+  /**
+   * Attach an event handler function for one event to the selected bpmn element.
+   * @param event One event type, such as "click".
+   * @param bpmnElement The bpmn element to be passed to the handler.
+   * @param handler A function to execute when the event is triggered.
+   */
+  Bpmn.prototype.on = function(event, bpmnElement, handler) {
+    // TODO: implement this method.
+    // the handler should get at first parameter the event, and as second parameter
+    // the passed bpmnElement.
+  };
+
   Bpmn.prototype.getOverlays = function() {
     return query(".bpmnElement");
   };
@@ -90,6 +102,10 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
 
     function addClasses(el, classes) {
       domClass.add(el, (classes || []).join(" "));
+    }
+
+    function removeClasses(el, classes) {
+      domClass.remove(el, (classes || []).join(" "));
     }
 
     return {
@@ -123,34 +139,13 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
       addClasses : function (classesArray) {
         addClasses(element, classesArray);
         return this;
+      },
+
+      removeClasses : function (classesArray) {
+        removeClasses(element, classesArray);
+        return this;
       }
     };
-  };
-
-  /**
-   * @deprecated use Bpmn.prototype.annotation instead
-   */
-  Bpmn.prototype.annotate = function (id, innerHTML, classesArray) {
-    var element = this.getOverlay(id)[0];
-    if (!element) {
-      return;
-    }
-
-    element.innerHTML = innerHTML;
-
-    domClass.add(element, (classesArray || []).join(" "));
-    return element;
-  };
-
-  Bpmn.prototype.clearAnnotations = function (id, classesArray) {
-    var element = this.getOverlay(id)[0];
-    if (!element) {
-      return;
-    }
-
-    element.innerHTML = "";
-
-    domClass.remove(element, classesArray.join(" "));
   };
 
   Bpmn.prototype.clear = function () {
