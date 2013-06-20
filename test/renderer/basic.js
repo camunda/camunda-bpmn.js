@@ -17,6 +17,16 @@ define(["bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper", "dojo/query"], 
 
 return describe('Basic Renderer Functionality', function() {
 
+  var canvas;
+  var i = 0;
+
+  beforeEach(function() {
+    canvas = document.createElement("div");
+    canvas.id = "canvas-" + i++;
+
+    document.getElementsByTagName("body")[0].appendChild(canvas);
+  });
+
   it('should render all task types', function() {
     afterEach(function () {
 
@@ -26,7 +36,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/task_types.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -52,7 +62,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/call_activity.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -77,7 +87,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/subprocess_event.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -102,7 +112,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/test-wordwrap.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
       });
@@ -127,7 +137,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/events.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -152,7 +162,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/event-based-events.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
       });
@@ -177,7 +187,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/markers.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
       });
@@ -203,7 +213,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/transaction-subprocess.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
       });
@@ -232,7 +242,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/group.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
       });
@@ -261,7 +271,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/test-labels-basic.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
       rendered = true;
     });
@@ -289,7 +299,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/test-labels-collaboration.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
       });
@@ -315,7 +325,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/boundary_events.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
       });
@@ -338,7 +348,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/collaboration-empty-label.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -360,7 +370,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/boundary-behind-task.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -390,7 +400,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/collapsed-pool.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -415,7 +425,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/directed-association.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -438,7 +448,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/data-object.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -469,7 +479,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/collaboration-message-flow.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -492,7 +502,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/collaboration-message-flow-message.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -527,7 +537,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/wrap-poolname.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
       });
@@ -550,7 +560,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/complex.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -573,7 +583,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/complex-waitstates-subprocesses.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -596,7 +606,7 @@ return describe('Basic Renderer Functionality', function() {
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/BoundaryEventStack.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
@@ -620,7 +630,7 @@ return describe('Basic Renderer Functionality', function() {
     var diagram = new BpmnDiagram();
 
     diagram.renderUrl("resources/BoundaryEventStack.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function(diagram) {
       diagram.on('click', function(e, element) {
 

@@ -75,7 +75,7 @@ define(["bpmn/Transformer", "bpmn/Renderer", "dojo/request", "dojo/Deferred", "d
   };
 
   Bpmn.prototype.getOverlays = function() {
-    return query(".bpmnElement");
+    return query("#" + this.options.diagramElement + " .bpmnElement");
   };
 
   Bpmn.prototype.getOverlay = function(id) {
