@@ -19,24 +19,24 @@
   </style>
 </head>
 <body>
-<div class="container-fluid">
   <div id="diagram">
   </div>
 
-  <script src="lib/dojo/dojo/dojo.js"
-      data-dojo-config="async: true, parseOnLoad: true, forceGfxRenderer: 'svg'">
-  </script>
+  <script src="lib/require/require.min.js"></script>
+  <script src="lib/jquery/jquery-1.7.2.min.js"></script>
+  
+  <script src="build/bpmn.min.js"></script>
+  <!---->
 
   <script>
     require({
       baseUrl: "./",
-      paths: {
-        'jquery' : 'lib/jquery/jquery-1.7.2.min'
-      },
       packages: [
         { name: "dojo", location: "lib/dojo/dojo" },
         { name: "dojox", location: "lib/dojo/dojox"},
-        { name: "bpmn", location: "src/bpmn" }]
+        // provided by optimized/cabpmn.min.js
+        // { name: "bpmn", location: "src/bpmn" }
+      ]
     });
 
     require(["bpmn/Bpmn", "dojo/domReady!"], function(Bpmn) {
@@ -50,6 +50,5 @@
       });
     });
   </script>
-</div>
 </body>
 </html>

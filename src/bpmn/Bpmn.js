@@ -95,7 +95,7 @@ define(['jquery', 'bpmn/Transformer', 'bpmn/Renderer'], function ($, Transformer
       addDiv : function (innerHTML, classesArray) {
         return $("<div></div>")
                   .html(innerHTML)
-                  .addClass((classes || []).join(" "))
+                  .addClass((classesArray || []).join(" "))
                   .appendTo(element);
       },
 
@@ -114,7 +114,7 @@ define(['jquery', 'bpmn/Transformer', 'bpmn/Renderer'], function ($, Transformer
        * @returns {*}
        */
       addClasses : function (classesArray) {
-        element.addClass((classes || []).join(" "));
+        element.addClass((classesArray || []).join(" "));
         return this;
       }
     };
