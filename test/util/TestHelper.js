@@ -9,9 +9,6 @@ define([], function () {
           matchAllProps = false;
         }
 
-        console.log(props[prop]);
-        console.log(element.shape[prop]);
-
         if (!(element.shape[prop] === props[prop])) {
           matchAllProps = false;
         }
@@ -35,9 +32,6 @@ define([], function () {
         if (!elemProp[prop]) {
           matchAllProps = false;
         }
-
-        console.log(props[prop]);
-        console.log(elemProp[prop]);
 
         if (!(elemProp[prop] === props[prop])) {
           matchAllProps = false;

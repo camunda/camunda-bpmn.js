@@ -9,14 +9,17 @@
     <script type="text/javascript" src="lib/jasmine/jasmine.js"></script>
     <script type="text/javascript" src="lib/jasmine/jasmine-html.js"></script>
 
-    <script src="../lib/dojo/dojo/dojo.js" data-dojo-config="async: true, parseOnLoad: true, forceGfxRenderer: 'svg'"></script>
+    <script src="../lib/require/require.js"></script>
 
     <script>
       (function() {
 
         require({
-          baseUrl:"../",
-          packages:[
+          baseUrl: "../",
+          paths: {
+            'jquery' : 'lib/jquery/jquery-1.7.2.min'
+          },
+          packages: [
             { name:"dojo", location:"lib/dojo/dojo" },
             { name:"dojox", location:"lib/dojo/dojox" },
             { name:"bpmn", location: "src/bpmn"}, 

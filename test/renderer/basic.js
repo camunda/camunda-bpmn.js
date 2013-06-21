@@ -11,633 +11,313 @@
  * limitations under the License.
  */
 
-"use strict";
+define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], function($, Bpmn, Transformer, helper) {
 
-define(["bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper", "dojo/query"], function(Bpmn, Transformer, helper, query) {
+  return describe('Basic Renderer Functionality', function() {
 
-return describe('Basic Renderer Functionality', function() {
+    var canvas;
+    var diagram;
+    var i = 0;
 
-  var canvas;
-  var i = 0;
+    function waitsForRenderDiagram(url) {
 
-  beforeEach(function() {
-    canvas = document.createElement("div");
-    canvas.id = "canvas-" + i++;
+      var element = $("<div></div>").attr("id", "canvas-" + i++).appendTo("body");
+      canvas = element.get(0);
+      diagram = null;
 
-    document.getElementsByTagName("body")[0].appendChild(canvas);
-  });
-
-  it('should render all task types', function() {
-    afterEach(function () {
-
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/task_types.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      // there should be 9 rect task shapes
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(9);
-    });
-
-  });
-
-  it('should render a call activity', function() {
-    afterEach(function () {
-
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/call_activity.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(1);
-    });
-
-  });
-
-  it('should render a subprocess', function() {
-    afterEach(function () {
-
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/subprocess_event.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      expect(helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "meal preparations" }).length).toBe(1);
-      expect(helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "provide meal" }).length).toBe(1);
-    });
-
-  });
-
-  it('should wordwrap labels', function() {
-    afterEach(function () {
-
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/test-wordwrap.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
+      new Bpmn().renderUrl(url, { diagramElement : canvas.id }).then(function (d) {
+        diagram = d;
       });
 
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
+      waitsFor(function() {
+        return diagram;
+      }, "Rendering never completed", 10000);
+    }
 
-    runs(function () {
-      expect(helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "dadadadadada" }).length).toBe(3);
-      expect(helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "dadadadbatman" }).length).toBe(1);
-    });
+    it('should render all task types', function() {
 
-  });
+      waitsForRenderDiagram("resources/task_types.bpmn");
 
-  it('should render all events', function() {
-    afterEach(function () {
-
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/events.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle").length).toBe(41);
-    });
-
-  });
-
-  it('should render basic event types', function() {
-    afterEach(function () {
-
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/event-based-events.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        // there should be 9 rect task shapes
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(9);
       });
 
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 5000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle").length).toBe(12);
     });
 
-  });
-
-  it('should render activity markers', function() {
-    afterEach(function () {
-
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/markers.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-      });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 5000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      // should render all marker paths
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path").length).toBe(9);
-    });
-
-  });
-
-  it('should render transactions', function() {
-    afterEach(function () {
-
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/transaction-subprocess.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-      });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 5000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      // 4 transactions with inner rects
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(8);
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle").length).toBe(7);
-      // all paths including multiinstance
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path").length).toBe(13);
-    });
-
-  });
-
-  it('should render groups', function() {
-    afterEach(function () {
-
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/group.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-      });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 5000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      // task and group
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(2);
-
-      var label = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, {"type" : "text", "text": "The Group"});
-      expect(label.length).toBe(1);
-    });
-
-  });
-
-  it('should render labels correctly', function() {
-    afterEach(function () {
-
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/test-labels-basic.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-      rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 5000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      var labels = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "text");
-      expect(labels.length).toBe(3);
-
-      // label padding is included
-      expect([labels[2]]).toHavePositions([{x : 535, y: 302}]);
-    });
-
-  });
-
-  it('should render labels in collaboration correctly', function() {
-    afterEach(function () {
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/test-labels-collaboration.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-      });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 5000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      var label = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, {"type" : "text", "text": "review"});
-      expect(label.length).toBe(1);
-      // gateway has label position
-      expect(label).toHavePositions([{x : 658, y: 119}]);
-    });
-  });
-
-  it('should render all boundary events', function() {
-    afterEach(function () {
-    });
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/boundary_events.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-      });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 5000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle").length).toBe(34);
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(17);
-    });
-
-  });
-
-  it('should not render non-existing label on pools / lanes', function() {
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/collaboration-empty-label.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      // there should be 9 rect task shapes
-      expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "text").length).toBe(0);
-    });
-  });
-
-  it('should render boundary event in front of task', function() {
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/boundary-behind-task.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      var task = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect")[0];
-      var boundary = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "circle")[0];
-
-      var overlays = bpmn.getOverlays();
-      var parent = overlays.parent()[0];
-
-      var taskOverlay = query("#Task_ASDF", parent);
-      var boundaryOverlay = taskOverlay.nextAll("#BoundaryEvent_ASDF");
-
-      expect(taskOverlay.length).toBe(1);
-      expect(boundaryOverlay.length).toBe(1);
-    });
-  });
-
-  it('should render collapsed pool', function() {
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/collapsed-pool.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      var pool = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect")[0];
-      var poolLabel = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "text")[0];
-
-      expect(pool).toBeDefined();
-      expect(poolLabel).toBeDefined();
-    });
-  });
-
-
-  it('should render directed association with arrow', function() {
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/directed-association.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      var paths = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path");
-
-      // two associations + dataobject edge
-      expect(paths.length).toBe(3);
-    });
-  });
-
-  it('should render data objects', function() {
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/data-object.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      var objects = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path");
-      var lines = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "polyline");
-      var texts = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "I AM DATA" });
-
-      // two objects + arrow path
-      expect(objects.length).toBe(3);
-
-      // on text
-      expect(texts.length).toBe(1);
-
-      // one association
-      expect(lines.length).toBe(1);
-    });
-  });
-
-  it('should render message flow', function() {
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/collaboration-message-flow.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      var paths = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path");
-
-      // message flow
-      expect(paths.length).toBe(1);
-    });
-  });
-
-  it('should render message flow with message attached', function() {
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/collaboration-message-flow-message.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      var paths = helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "path");
-      var texts = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "My Message" });
-
-      // 2x (message flow + message)
-      expect(paths.length).toBe(4);
-
-      // text exists
-      expect(texts.length).toBe(1);
-
-      var greyFills = helper.findChildren(bpmn.definitionRenderer.gfxGroup, {type : "path"}, "fillStyle", {r: 204, g: 204,b: 204});
-      var whiteFills = helper.findChildren(bpmn.definitionRenderer.gfxGroup, {type: "path"}, "fillStyle", {r: 255, g: 255,b: 255});
-
-      // the message only
-      expect(greyFills.length).toBe(1);
-      // arrowheads and message path
-      expect(whiteFills.length).toBe(3);
-    });
-  });
-
-  it('should wrap long pool names', function() {
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/wrap-poolname.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-      });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      var texts = helper.findChildrenByProperties(bpmn.definitionRenderer.gfxGroup, { type: "text", text: "Really Long Pooooooooooooooooo" });
-
-      // wrapped text exists
-      expect(texts.length).toBe(1);
-    });
-  });
-
-  it('should render complex test', function() {
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/complex.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      // there should be 9 rect task shapes
-      // expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(9);
-    });
-
-  });
-
-  it('should render complex test (waitstates, subprocesses)', function() {
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/complex-waitstates-subprocesses.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      // there should be 9 rect task shapes
-      // expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(9);
-    });
-
-  });
-
-  xit('should render two tasks with boundary events on top of each other', function() {
-
-    var rendered = false;
-
-    var bpmn = new Bpmn();
-    bpmn.renderUrl("resources/BoundaryEventStack.bpmn", {
-      diagramElement : canvas.id
-    }).then(function (bpmn) {
-        rendered = true;
-    });
-
-    waitsFor(function() {
-      return rendered;
-    }, "Rendering never completed", 10000);
-
-    runs(function () {
-      expect(bpmn.definitionRenderer).toBeDefined();
-      // there should be 9 rect task shapes
-      // expect(helper.findChildrenByType(bpmn.definitionRenderer.gfxGroup, "rect").length).toBe(9);
-    });
-
-  });
-
-
-
-  xit('should have nice API', function() {
-
-    var diagram = new BpmnDiagram();
-
-    diagram.renderUrl("resources/BoundaryEventStack.bpmn", {
-      diagramElement : canvas.id
-    }).then(function(diagram) {
-      diagram.on('click', function(e, element) {
-
+    it('should render a call activity', function() {
+      waitsForRenderDiagram("resources/call_activity.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(1);
       });
     });
 
-  });
-  });
+    it('should render a subprocess', function() {
+      waitsForRenderDiagram("resources/subprocess_event.bpmn");
 
+      runs(function () {
+        expect(helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "meal preparations" }).length).toBe(1);
+        expect(helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "provide meal" }).length).toBe(1);
+      });
+
+    });
+
+    it('should wordwrap labels', function() {
+      waitsForRenderDiagram("resources/test-wordwrap.bpmn");
+
+      runs(function () {
+        expect(helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "dadadadadada" }).length).toBe(3);
+        expect(helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "dadadadbatman" }).length).toBe(1);
+      });
+
+    });
+
+    it('should render all events', function() {
+      waitsForRenderDiagram("resources/events.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "circle").length).toBe(41);
+      });
+    });
+
+    it('should render basic event types', function() {
+      waitsForRenderDiagram("resources/event-based-events.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "circle").length).toBe(12);
+      });
+    });
+
+    it('should render activity markers', function() {
+      waitsForRenderDiagram("resources/markers.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        // should render all marker paths
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "path").length).toBe(9);
+      });
+    });
+
+    it('should render transactions', function() {
+      waitsForRenderDiagram("resources/transaction-subprocess.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        // 4 transactions with inner rects
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(8);
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "circle").length).toBe(7);
+        // all paths including multiinstance
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "path").length).toBe(13);
+      });
+    });
+
+    it('should render groups', function() {
+
+      waitsForRenderDiagram("resources/group.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        // task and group
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(2);
+
+        var label = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, {"type" : "text", "text": "The Group"});
+        expect(label.length).toBe(1);
+      });
+
+    });
+
+    it('should render labels correctly', function() {
+
+      waitsForRenderDiagram("resources/test-labels-basic.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        var labels = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "text");
+        expect(labels.length).toBe(3);
+
+        // label padding is included
+        expect([labels[2]]).toHavePositions([{x : 535, y: 302}]);
+      });
+
+    });
+
+    it('should render labels in collaboration correctly', function() {
+      waitsForRenderDiagram("resources/test-labels-collaboration.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        var label = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, {"type" : "text", "text": "review"});
+        expect(label.length).toBe(1);
+        // gateway has label position
+        expect(label).toHavePositions([{x : 658, y: 119}]);
+      });
+    });
+
+    it('should render all boundary events', function() {
+      waitsForRenderDiagram("resources/boundary_events.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "circle").length).toBe(34);
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(17);
+      });
+    });
+
+    it('should not render non-existing label on pools / lanes', function() {
+
+      waitsForRenderDiagram("resources/collaboration-empty-label.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        // there should be 9 rect task shapes
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "text").length).toBe(0);
+      });
+    });
+
+    it('should render boundary event in front of task', function() {
+
+      waitsForRenderDiagram("resources/boundary-behind-task.bpmn");
+
+      runs(function () {
+        var task = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect")[0];
+        var boundary = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "circle")[0];
+
+        var taskOverlay = $("#Task_ASDF", canvas);
+        var boundaryOverlay = taskOverlay.nextAll("#BoundaryEvent_ASDF");
+
+        expect(taskOverlay.length).toBe(1);
+        expect(boundaryOverlay.length).toBe(1);
+      });
+    });
+
+    it('should render collapsed pool', function() {
+
+      waitsForRenderDiagram("resources/collapsed-pool.bpmn");
+
+      runs(function () {
+        var pool = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect")[0];
+        var poolLabel = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "text")[0];
+
+        expect(pool).toBeDefined();
+        expect(poolLabel).toBeDefined();
+      });
+    });
+
+
+    it('should render directed association with arrow', function() {
+
+      waitsForRenderDiagram("resources/directed-association.bpmn");
+
+      runs(function () {
+        var paths = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "path");
+
+        // two associations + dataobject edge
+        expect(paths.length).toBe(3);
+      });
+    });
+
+    it('should render data objects', function() {
+
+      waitsForRenderDiagram("resources/data-object.bpmn");
+
+      runs(function () {
+        var objects = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "path");
+        var lines = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "polyline");
+        var texts = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "I AM DATA" });
+
+        // two objects + arrow path
+        expect(objects.length).toBe(3);
+
+        // on text
+        expect(texts.length).toBe(1);
+
+        // one association
+        expect(lines.length).toBe(1);
+      });
+    });
+
+    it('should render message flow', function() {
+
+      waitsForRenderDiagram("resources/collaboration-message-flow.bpmn");
+
+      runs(function () {
+        var paths = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "path");
+
+        // message flow
+        expect(paths.length).toBe(1);
+      });
+    });
+
+    it('should render message flow with message attached', function() {
+      waitsForRenderDiagram("resources/collaboration-message-flow-message.bpmn");
+
+      runs(function () {
+        var paths = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "path");
+        var texts = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "My Message" });
+
+        // 2x (message flow + message)
+        expect(paths.length).toBe(4);
+
+        // text exists
+        expect(texts.length).toBe(1);
+
+        var greyFills = helper.findChildren(diagram.definitionRenderer.gfxGroup, {type : "path"}, "fillStyle", {r: 204, g: 204,b: 204});
+        var whiteFills = helper.findChildren(diagram.definitionRenderer.gfxGroup, {type: "path"}, "fillStyle", {r: 255, g: 255,b: 255});
+
+        // the message only
+        expect(greyFills.length).toBe(1);
+        // arrowheads and message path
+        expect(whiteFills.length).toBe(3);
+      });
+    });
+
+    it('should wrap long pool names', function() {
+      waitsForRenderDiagram("resources/wrap-poolname.bpmn");
+
+      runs(function () {
+        var texts = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "Really Long Pooooooooooooooooo" });
+
+        // wrapped text exists
+        expect(texts.length).toBe(1);
+      });
+    });
+
+    it('should render complex test', function() {
+
+      waitsForRenderDiagram("resources/complex.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        // there should be 9 rect task shapes
+        // expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(9);
+      });
+
+    });
+
+    it('should render complex test (waitstates, subprocesses)', function() {
+      waitsForRenderDiagram("resources/complex-waitstates-subprocesses.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        // there should be 9 rect task shapes
+        // expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(9);
+      });
+
+    });
+
+    xit('should render two tasks with boundary events on top of each other', function() {
+      waitsForRenderDiagram("resources/BoundaryEventStack.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        // there should be 9 rect task shapes
+        // expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(9);
+      });
+    });  
+  });
 });
