@@ -17,12 +17,22 @@ define(["bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], function(Bpmn,
 
 return describe('Basic Renderer Functionality', function() {
 
+  var canvas;
+  var i = 0;
+
+  beforeEach(function() {
+    canvas = document.createElement("div");
+    canvas.id = "canvas-" + i++;
+
+    document.getElementsByTagName("body")[0].appendChild(canvas);
+  });
+
   it('should render diagram with namespace prefix', function() {
     var rendered = false;
 
     var bpmn = new Bpmn();
     bpmn.renderUrl("resources/prefixed.bpmn", {
-      diagramElement : "canvas"
+      diagramElement : canvas.id
     }).then(function (bpmn) {
         rendered = true;
     });
