@@ -86,10 +86,6 @@ define(['jquery', 'bpmn/Transformer', 'bpmn/Renderer'], function ($, Transformer
       throw new Error("Element " + id + " does not exist.");
     }
 
-    function removeClasses(el, classes) {
-      domClass.remove(el, (classes || []).join(" "));
-    }
-
     return {
       /**
        * adds child annotation div bpmn element div
@@ -124,7 +120,7 @@ define(['jquery', 'bpmn/Transformer', 'bpmn/Renderer'], function ($, Transformer
       },
 
       removeClasses : function (classesArray) {
-        removeClasses(element, classesArray);
+        element.removeClass((classesArray || []).join(" "));
         return this;
       }
     };
