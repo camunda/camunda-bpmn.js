@@ -22,19 +22,19 @@
   <div id="diagram">
   </div>
 
-  <script src="lib/require/require.min.js"></script>
-  <script src="lib/jquery/jquery-1.7.2.min.js"></script>
-  
-  <script src="build/bpmn.min.js"></script>
-  <!---->
+  <script src="lib/require/require.js"></script>
 
   <script>
     require({
       baseUrl: "./",
+      paths: {
+        'jquery' : 'lib/jquery/jquery-1.7.2.min',
+        'bpmn/Bpmn' : 'build/bpmn.min',
+      },
       packages: [
         { name: "dojo", location: "lib/dojo/dojo" },
         { name: "dojox", location: "lib/dojo/dojox"},
-        // provided by optimized/cabpmn.min.js
+        // provided by build/bpmn.min.js
         // { name: "bpmn", location: "src/bpmn" }
       ]
     });
