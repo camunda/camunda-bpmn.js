@@ -792,6 +792,24 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         path5.setStroke({color : style.stroke, width: 0.69999999});
         path5.setFill("#f0eff0");
       }
+	  
+	  
+	  function createSendTaskPath(group, style) {
+        var path1String = "M8,11 L8,21 L24,21 L24,11 L16,17z";
+        var path1 = group.createPath(path1String);
+        //path1.setStroke({color : style.stroke, width: 0.69999999});
+        path1.setFill("#000000");
+		path1.setTransform({ xx:1.2 });
+		
+        var path2String = "M7,10 L16,17 L25 10z";
+        var path2 = group.createPath(path2String);
+        path2.setFill("#000000");
+        //path2.setStroke({color : style.stroke, width: 0.69999999});
+        path2.setTransform({dx: 0, dy:-1.5, xx:1.2 });
+
+        
+      }
+	  
 
       function createTaskPath(group, style, path) {
         var path = taskGroup.createPath(path);
@@ -806,7 +824,11 @@ define(["dojox/gfx", "dojo/_base/lang", "dojo/dom-construct", "dojo/_base/window
         } else
         if (baseElement.type == 'userTask') {
           createUserTaskPath(taskGroup, style);
-        } else {
+        } else 
+		if (baseElement.type == 'sendTask') {
+          createSendTaskPath(taskGroup, style);
+        } else 
+		{
           createTaskPath(taskGroup, style, taskDefinitionPaths[baseElement.type]);
         }
       }
