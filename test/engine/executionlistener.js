@@ -12,8 +12,6 @@
  * limitations under the License.
  */
 
-"use strict";
-
 define(["bpmn/Engine"], function(Engine) {
   return describe('Execution Listener', function() {
 

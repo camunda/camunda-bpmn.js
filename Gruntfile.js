@@ -11,29 +11,28 @@ module.exports = function(grunt) {
         }
       }
     },
+    optimize: {
+      'engine': 'Engine',
+      'bpmn' : 'Bpmn'
+    },
     watch: {
       files: 'src/**/*',
-      tasks: ['requirejs']
-    },
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: 'src/<%= pkg.name %>.js',
-        dest: 'build/<%= pkg.name %>.min.js'
-      }
+      tasks: [ 'optimize' ]
     },
     requirejs: {
       compile: {
         options: {
-          name : "bpmn/Engine",
+          name : "bpmn/<%= grunt.config.get('optimizeName') %>",
           baseUrl: "./",
+          paths: {
+            "dojox/gfx": "empty:",
+            "jquery": "empty:"
+          },
           packages: [
             { name: "dojo", location: "lib/dojo/dojo" },
             { name: "dojox", location: "lib/dojo/dojox"},
             { name: "bpmn", location: "src/bpmn"}],
-          out: "optimized/engine.js"
+          out: "build/<%= grunt.config.get('optimizeName').toLowerCase() %>.min.js"
         }
       }
     }
@@ -46,6 +45,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
 
   // Default task(s).
-  grunt.registerTask( 'default', ['requirejs']);
+  grunt.registerTask( 'default', [ 'optimize' ]);
   grunt.registerTask( 'server', [ 'connect:server'] );
+
+  grunt.registerMultiTask( 'optimize', 'optimize the project', function() {
+
+    var name = this.data;
+    
+    grunt.config.set('optimizeName', name);
+    grunt.task.run('requirejs');
+  });
 };

@@ -1,52 +1,54 @@
 <html>
 <head>
-	<script src="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dojo/dojo.js"></script>
-	<script src="optimized/engine.js"></script>
-
-	<script type="text/javascript">
-	require(["dojo/dom", "bpmn/Engine", "dojo/domReady!"],
-	  function (dom, Engine) {
-	    var processXml = '<?xml version="1.0" encoding="UTF-8"?>' +
-	              '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
-	              'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
-
-	              '<process id="theProcess" isExecutable="true">' +
-
-	              '<startEvent id="theStart" />'+
-	              '<userTask id="task" />'+
-	              '<endEvent id="end" />'+
-
-	              '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="task" />'+
-	              '<sequenceFlow id="flow2" sourceRef="task" targetRef="end" />'+
-
-	              '</process>'+
-
-	              '</definitions>';
-      
-      dom.byId("trace").innerHTML = "Starting Process ..." + processXml;
-
-      var instance = Engine.startInstance(processXml, {}, [
-      	{
-	      id : "task",
-	      "start" : function (execution) {
-	         console.log(execution);
-	      	 dom.byId("trace").innerHTML += "<br/> start " + execution.activityDefinition.id;
-	      }
-        },
-      	{
-      	 id : "end",
-      	"end" : function (execution) {
-      		console.log(execution);
-      		dom.byId("trace").innerHTML += "<br/> after " + execution.activityDefinition.id;
-      	}
-      }]);
-      instance.signal("task");
-	  }
-	);
-	</script>
 </head>
 <body>
 	<div id="trace">
 	</div>
+
+  <script src="lib/require/require.min.js"></script>
+  <script src="build/engine.min.js"></script>
+  <script src="lib/jquery/jquery-1.7.2.min.js"></script>
+
+  <script type="text/javascript">
+    require([ "jquery", "bpmn/Engine" ], function ($, Engine) {
+
+        var processXml = '<?xml version="1.0" encoding="UTF-8"?>' +
+                  '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" '+
+                  'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
+
+                  '<process id="theProcess" isExecutable="true">' +
+
+                  '<startEvent id="theStart" />'+
+                  '<userTask id="task" />'+
+                  '<endEvent id="end" />'+
+
+                  '<sequenceFlow id="flow1" sourceRef="theStart" targetRef="task" />'+
+                  '<sequenceFlow id="flow2" sourceRef="task" targetRef="end" />'+
+
+                  '</process>'+
+
+                  '</definitions>';
+        
+        var trace = $("#trace");
+
+        trace.html("Starting Process ..." + processXml);
+
+        var instance = Engine.startInstance(processXml, {}, [{ 
+          id : "task",
+            "start" : function (execution) {
+               console.log(execution);
+               trace.append("<br/> start " + execution.activityDefinition.id);
+            }
+          }, {
+            id : "end",
+            "end" : function (execution) {
+              console.log(execution);
+              trace.append("<br/> after " + execution.activityDefinition.id);
+            }
+        }]);
+
+        instance.signal("task");
+      });
+  </script>
 </body>
 </html>
