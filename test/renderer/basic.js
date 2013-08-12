@@ -310,6 +310,24 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
 
     });
 
+    it('should render an annotation element with bpmn2 namespace', function() {
+      waitsForRenderDiagram("resources/process-with-annotation.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+      });
+
+    });    
+
+    it('should render data input and data output wit bpmn2 namespace', function() {
+      waitsForRenderDiagram("resources/process-with-data-input-and-data-output.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+      });
+
+    });       
+
     xit('should render two tasks with boundary events on top of each other', function() {
       waitsForRenderDiagram("resources/BoundaryEventStack.bpmn");
 
