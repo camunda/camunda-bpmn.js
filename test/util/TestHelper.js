@@ -44,6 +44,9 @@ define([], function () {
 
   var helper =  {
     matchers : {
+      toBeError: function() {
+        return this.actual.toString().indexOf('Error') == 0;
+      },
       toHavePositions : function (expectedShapePositions) {
         if (expectedShapePositions.length != this.actual.length) {
           return false;
