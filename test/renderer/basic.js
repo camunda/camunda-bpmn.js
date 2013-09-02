@@ -367,6 +367,29 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
 
     });
 
+    it('should render exclusive gateway with one default flow and one outgoing condition sequence flow', function() {
+      waitsForRenderDiagram("resources/exclusive-gateway-with-default-and-condition-flow.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+      });
+
+    });    
+
+    it('should not render exclusive gateway with a default flow and with two other outgoingflows but without condition', function() {
+      waitsForUrlProcessed("resources/exclusive-gateway-with-one-default-flow-and-two-flows-without-conditions.bpmn").then(
+
+        function(diagram) {
+          throw new Error('Expected error');
+        },
+
+        function(error) {
+          expect(error).toBeError();
+          expect(error.message).toBe("Exclusive Gateway 'ExclusiveGateway_1' has outgoing sequence flows without conditions which are not the default flow.")
+        }
+      );
+    });   
+
     it('should not render exclusive gateway with outgoing sequence flows but without conditions and any default flow', function() {
       waitsForUrlProcessed("resources/exclusive-gateway-with-outgoing-flows-without-conditions.bpmn").then(
 
