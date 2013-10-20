@@ -1,6 +1,10 @@
 {
   "name": "camunda-bpmn.js",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/camunda/camunda-bpmn.js"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-requirejs" : "~0.4.0",
