@@ -435,6 +435,24 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
 
     });       
 
+    it('should render task label with line break', function() {
+      waitsForRenderDiagram("resources/task-label-with-line-break.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+      });
+
+    });       
+
+    it('should render text annotations with line break', function() {
+      waitsForRenderDiagram("resources/text-annotations-with-line-break.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+      });
+
+    });  
+
     xit('should render two tasks with boundary events on top of each other', function() {
       waitsForRenderDiagram("resources/BoundaryEventStack.bpmn");
 
