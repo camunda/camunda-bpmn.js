@@ -453,6 +453,15 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
 
     });  
 
+    it('should render data object reference', function() {
+      waitsForRenderDiagram("resources/data-object-reference.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+      });
+
+    });  
+
     xit('should render two tasks with boundary events on top of each other', function() {
       waitsForRenderDiagram("resources/BoundaryEventStack.bpmn");
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_3HTg0EiOEeOeFv9x_X_t2w" targetNamespace="http://activiti.org/bpmn">
+  <bpmn2:process id="Process_1" isExecutable="false">
+    <bpmn2:dataObject id="DataObject_1" name="Data Object 1"/>
+    <bpmn2:task id="Task_1">
+      <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+        <bpmn2:sourceRef>DataObjectReference_1</bpmn2:sourceRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
+        <bpmn2:targetRef>DataObjectReference_1</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:dataObjectReference id="DataObjectReference_1" name="Data Object 1 Reference" dataObjectRef="DataObject_1"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_Task_3" bpmnElement="Task_1">
+        <dc:Bounds height="80.0" width="100.0" x="324.0" y="264.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_DataObjectReference_2" bpmnElement="DataObjectReference_1">
+        <dc:Bounds height="50.0" width="36.0" x="359.0" y="117.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="22.0" width="148.0" x="312.0" y="180.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_DataOutputAssociation_1" bpmnElement="DataOutputAssociation_1" sourceElement="_BPMNShape_Task_3" targetElement="_BPMNShape_DataObjectReference_2">
+        <di:waypoint xsi:type="dc:Point" x="408.0" y="264.0"/>
+        <di:waypoint xsi:type="dc:Point" x="510.0" y="142.0"/>
+        <di:waypoint xsi:type="dc:Point" x="395.0" y="142.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_DataInputAssociation_1" bpmnElement="DataInputAssociation_1" sourceElement="_BPMNShape_DataObjectReference_2" targetElement="_BPMNShape_Task_3">
+        <di:waypoint xsi:type="dc:Point" x="359.0" y="142.0"/>
+        <di:waypoint xsi:type="dc:Point" x="276.0" y="142.0"/>
+        <di:waypoint xsi:type="dc:Point" x="350.0" y="264.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
