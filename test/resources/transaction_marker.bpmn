@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_-K-boGPcEeOWF5KGooJfsw" targetNamespace="http://activiti.org/bpmn">
+  <bpmn2:process id="Process_1" isExecutable="false">
+    <bpmn2:transaction id="Transaction_1" name="missing attribute"/>
+    <bpmn2:transaction id="Transaction_2" name="attribute false"/>
+    <bpmn2:transaction id="Transaction_3" name="attribute true"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_Transaction_2" bpmnElement="Transaction_1">
+        <dc:Bounds height="80.0" width="100.0" x="72.0" y="24.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Transaction_3" bpmnElement="Transaction_2" isExpanded="false">
+        <dc:Bounds height="80.0" width="100.0" x="72.0" y="120.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Transaction_4" bpmnElement="Transaction_3" isExpanded="true">
+        <dc:Bounds height="150.0" width="200.0" x="22.0" y="228.0"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

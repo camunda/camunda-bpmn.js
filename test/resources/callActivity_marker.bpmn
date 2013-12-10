@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_K8A6sGCnEeOjtYj6b_uSlA" targetNamespace="http://activiti.org/bpmn">
+  <bpmn2:process id="Process_1" isExecutable="false">
+    <bpmn2:callActivity id="CallActivity_1" name="missing attribute" calledElement="abc"/>
+    <bpmn2:callActivity id="CallActivity_2" name="attribute false" calledElement="abc"/>
+    <bpmn2:callActivity id="CallActivity_3" name="attribute true" calledElement="abc"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_CallActivity_3" bpmnElement="CallActivity_1">
+        <dc:Bounds height="80.0" width="100.0" x="112.0" y="98.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_CallActivity_4" bpmnElement="CallActivity_2" isExpanded="false">
+        <dc:Bounds height="80.0" width="100.0" x="112.0" y="204.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_CallActivity_5" bpmnElement="CallActivity_3" isExpanded="true">
+        <dc:Bounds height="80.0" width="100.0" x="112.0" y="312.0"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

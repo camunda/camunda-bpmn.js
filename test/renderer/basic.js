@@ -76,6 +76,26 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
       });
     });
 
+    it('should render call activities with different isExpanded attributes', function() {
+      waitsForRenderDiagram("resources/callActivity_marker.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(3);
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "path").length).toBe(2);
+      });   
+    });   
+
+    it('should render sub Processes with different isExpanded attributes', function() {
+      waitsForRenderDiagram("resources/subProcess_marker.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(3);
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "path").length).toBe(2);
+      });   
+    });    
+
     it('should render a subprocess', function() {
       waitsForRenderDiagram("resources/subprocess_event.bpmn");
 
@@ -85,6 +105,26 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
       });
 
     });
+
+     it('should render transactions with different isExpanded attributes', function() {
+      waitsForRenderDiagram("resources/transaction_marker.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(6);
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "path").length).toBe(2);
+      });   
+    }); 
+    
+    it('should render ad hoc sub Processes with different isExpanded attributes', function() {
+      waitsForRenderDiagram("resources/adHoc_subProcess_marker.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect").length).toBe(3);
+        expect(helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "path").length).toBe(5);
+      });   
+    }); 
 
     it('should wordwrap labels', function() {
       waitsForRenderDiagram("resources/test-wordwrap.bpmn");
@@ -462,8 +502,7 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
 
     });  
 
-//miwg
-    it('should render data object reference', function() {
+    it('should render miwg reference A.1.0', function() {
       waitsForRenderDiagram("resources/miwg-test-suite/A.1.0.bpmn");
 
       runs(function () {
@@ -472,7 +511,7 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
 
     });  
 
-    it('should render data object reference', function() {
+    it('should render miwg reference A.2.0', function() {
       waitsForRenderDiagram("resources/miwg-test-suite/A.2.0.bpmn");
 
       runs(function () {
@@ -481,7 +520,7 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
 
     });
 
-    it('should render data object reference', function() {
+    it('should render miwg reference A.3.0', function() {
       waitsForRenderDiagram("resources/miwg-test-suite/A.3.0.bpmn");
 
       runs(function () {
@@ -490,7 +529,7 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
 
     });  
 
-    it('should render data object reference', function() {
+    it('should render miwg reference A.4.0', function() {
       waitsForRenderDiagram("resources/miwg-test-suite/A.4.0.bpmn");
 
       runs(function () {
@@ -499,7 +538,7 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
 
     });  
 
-    it('should render data object reference', function() {
+    it('should render miwg reference A.4.1', function() {
       waitsForRenderDiagram("resources/miwg-test-suite/A.4.1.bpmn");
 
       runs(function () {
@@ -508,7 +547,7 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
 
     });
 
-    it('should render data object reference', function() {
+    it('should render miwg reference B.1.0', function() {
       waitsForRenderDiagram("resources/miwg-test-suite/B.1.0.bpmn");
 
       runs(function () {
@@ -517,7 +556,7 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
 
     });
 
-    it('should render data object reference', function() {
+    it('should render miwg reference B.2.0', function() {
       waitsForRenderDiagram("resources/miwg-test-suite/B.2.0.bpmn");
 
       runs(function () {
@@ -525,7 +564,15 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
       });
 
     });    
-//miwg ende
+
+    it('should render miwg reference B.2.0', function() {
+      waitsForRenderDiagram("resources/miwg-test-suite/B.2.0.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+      });
+
+    });  
 
     xit('should render two tasks with boundary events on top of each other', function() {
       waitsForRenderDiagram("resources/BoundaryEventStack.bpmn");
