@@ -248,8 +248,8 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
         var task = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "rect")[0];
         var boundary = helper.findChildrenByType(diagram.definitionRenderer.gfxGroup, "circle")[0];
 
-        var taskOverlay = $("#Task_ASDF", canvas);
-        var boundaryOverlay = taskOverlay.nextAll("#BoundaryEvent_ASDF");
+        var taskOverlay = diagram.getOverlay('Task_ASDF');
+        var boundaryOverlay = taskOverlay.nextAll("div[data-activity-id=BoundaryEvent_ASDF]");
 
         expect(taskOverlay.length).toBe(1);
         expect(boundaryOverlay.length).toBe(1);
@@ -501,6 +501,23 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
       });
 
     });  
+
+    it('should render activities with periods in id', function() {
+      waitsForRenderDiagram("resources/activities-with-periods.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+
+        var startEventOverlay = diagram.getOverlay('start.event.1');
+        var taskOverlay = diagram.getOverlay('task.1');
+        var endEventOverlay = diagram.getOverlay('end.event.1');
+
+        expect(startEventOverlay.length).toBe(1);
+        expect(taskOverlay.length).toBe(1);
+        expect(endEventOverlay.length).toBe(1);
+      });
+
+    });      
 
     it('should render miwg reference A.1.0', function() {
       waitsForRenderDiagram("resources/miwg-test-suite/A.1.0.bpmn");
