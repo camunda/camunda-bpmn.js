@@ -350,7 +350,7 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
    *
    * @param words array of words
    */
-  function getWrappedLines (words, renderText) {
+  function getWrappedLines (words, renderText, maxWidth) {
     var lines = [];
 
     var currentLine = "";
@@ -370,7 +370,7 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
       // create temporary gfx group the check the real rendered width
       var tempTextGroup = renderText(currentLine);
 
-      if (tempTextGroup.getTextWidth() > BpmnElementRenderer.wordWrapMaxWidth) {
+      if (tempTextGroup.getTextWidth() > maxWidth) {
         if (oldLine.length != 0) lines.push(oldLine.trim());
         oldLine = words[currentWordIndex];
         if (lastWord) lines = lines.concat(words[currentWordIndex].split(" "));
@@ -386,11 +386,14 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
     return lines;
   };
 
-  function wordWrap (text, group, font, x, y, align, moveUp) {
+  function wordWrap (text, group, font, x, y, align, moveUp, maxWidth) {
     var fontSize = font.size ? font.size :  10;
     var defaultAlign = "right";
     var wrapIndicator = "<w>";
-
+	if (!maxWidth) {
+		maxWidth = BpmnElementRenderer.wordWrapMaxWidth;
+	}
+	
     var renderText = renderTextFn(group, font, align, defaultAlign);
     var renderLine = renderLineFn(x, y, renderText, fontSize, moveUp);
 
@@ -409,13 +412,13 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
       textLines = words[0].split(wrapIndicator);
     }
     else if (!hasBreaks) {
-      textLines = getWrappedLines(words, renderText);
+      textLines = getWrappedLines(words, renderText, maxWidth);
     }
     else {
       textLines = text.split(wrapIndicator);
     }
 
-    return renderLines(textLines, renderText, renderLine, BpmnElementRenderer.wordWrapMaxWidth);
+    return renderLines(textLines, renderText, renderLine, maxWidth);
   }
 
   function renderLabel(elementRenderer, group, bounds, align, moveUp) {
@@ -433,7 +436,7 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
     var x =  pos.x,
         y = pos.y;
 
-    var lineCount = wordWrap(baseElement.name, group, font, +x, +y, labelBounds ? null : align, moveUp);
+    var lineCount = wordWrap(baseElement.name, group, font, +x, +y, labelBounds ? null : align, moveUp, bounds ? bounds.width : false);
 
     return {group: group, lineCount : lineCount};
   }
@@ -470,7 +473,8 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
 
       var label = baseElement.name;
       if (label) {
-        renderLabel(elementRenderer, gfxGroup, {x: x + width / 2, y: y + height / 2}, "middle");
+		var labelWidth = height - BpmnElementRenderer.labelPadding * 2;
+        renderLabel(elementRenderer, gfxGroup, {x: x + width / 2, y: y + height / 2, width : labelWidth }, "middle");
       }
     }
   };
@@ -837,7 +841,8 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
         }
       }
 
-      renderLabel(elementRenderer, gfxGroup, {x: x + width /2 , y: y + height /2}, "middle", true);
+	  var labelWidth = width - BpmnElementRenderer.labelPadding * 2;
+      renderLabel(elementRenderer, gfxGroup, {x: x + width /2 , y: y + height /2, width: labelWidth }, "middle", true);
     }
   };
 
