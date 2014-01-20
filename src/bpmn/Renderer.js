@@ -2,16 +2,16 @@
  * The BPMN 2.0 SVG renderer module
  *
  * This module provides the functionality for rendering a BPMN 2.0 Process Model using DOJO GFX
- * 
+ *
  * @author: Andreas Drobisch
  * @author: Jakob Freund
  * @author: Daniel Meyer
  * @author: Michael Schoettes
- * 
+ * @author: Valentin Vago
+ *
  */
-
-define([ "dojox/gfx", "jquery" ], function (gfx, $) {
-
+define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], function (_lang, gfx, SVGRenderer, $) {
+  gfx.switchTo(SVGRenderer);
   var mixin = $.extend;
 
   // constructor
@@ -261,7 +261,7 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
 
     var overlay = options.overlayMap[element.id];
     if (overlay) {
-      overlay.appendTo(overlay.parent());  
+      overlay.appendTo(overlay.parent());
     }
   }
 
@@ -734,7 +734,7 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
           markerPath.setTransform({dx :width/2 + (count * 15)*sign, dy:height-10});
         }
         // always render reference marker first, so its always centered
-        if ( (baseElement.type == "callActivity" && (!baseElement.bpmndi[0].isExpanded || baseElement.bpmndi[0].isExpanded === "false")) ||             
+        if ( (baseElement.type == "callActivity" && (!baseElement.bpmndi[0].isExpanded || baseElement.bpmndi[0].isExpanded === "false")) ||
              (baseElement.type == "subProcess" && (!baseElement.bpmndi[0].isExpanded || baseElement.bpmndi[0].isExpanded === "false")) ||
              (baseElement.type == "adHocSubProcess" && (!baseElement.bpmndi[0].isExpanded || baseElement.bpmndi[0].isExpanded === "false")) ||
              (baseElement.type == "transaction" && (!baseElement.bpmndi[0].isExpanded || baseElement.bpmndi[0].isExpanded === "false")) ) {
@@ -803,17 +803,17 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
         path5.setStroke({color : style.stroke, width: 0.69999999});
         path5.setFill("#f0eff0");
       }
-    
+
       function createSendTaskPath(group, style) {
         var path1String = "M8,11 L8,21 L24,21 L24,11 L16,17z";
         var path1 = group.createPath(path1String);
         path1.setFill("#000000");
         path1.setTransform({ xx:1.2 });
-    
+
         var path2String = "M7,10 L16,17 L25 10z";
         var path2 = group.createPath(path2String);
         path2.setFill("#000000");
-        path2.setTransform({dx: 0, dy:-1.5, xx:1.2 });       
+        path2.setTransform({dx: 0, dy:-1.5, xx:1.2 });
       }
 
       function createTaskPath(group, style, path) {
@@ -829,7 +829,7 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
         } else
         if (baseElement.type == 'userTask') {
           createUserTaskPath(taskGroup, style);
-        } else 
+        } else
         if (baseElement.type == 'sendTask') {
           createSendTaskPath(taskGroup, style);
         } else {
@@ -1079,7 +1079,7 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
       var style = elementRenderer.getStyle();
 
       // render additional start / end symbol
-      var arrowPath = createArrow({ 
+      var arrowPath = createArrow({
         from: waypoints[waypoints.length - 2],
         to: waypoints[waypoints.length - 1],
         group: flowGroup });
@@ -1476,7 +1476,7 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
     var parent = this.gfxGroup.getParent();
 
     do {
-      if (parent instanceof dojox.gfx.Surface) {
+      if (parent instanceof gfx.Surface) {
         return parent;
       }
     }while (parent = parent.getParent())
@@ -1491,6 +1491,6 @@ define([ "dojox/gfx", "jquery" ], function (gfx, $) {
     //   console.log.apply(console, arguments);
     // }
   }
-  
+
   return BpmnElementRenderer;
 });
