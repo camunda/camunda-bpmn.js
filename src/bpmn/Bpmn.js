@@ -51,7 +51,8 @@ define(['jquery', 'bpmn/Transformer', 'bpmn/Renderer'], function ($, Transformer
   };
   
   Bpmn.prototype.render = function(bpmnXml, options) {
-    var processDefinition = new Transformer().transform(bpmnXml);
+    options.executable = options.executable || false;
+    var processDefinition = new Transformer().transform(bpmnXml, options.executable);
     this.bpmnXml = bpmnXml;
     this.renderDiagram(processDefinition, options);
     return this;

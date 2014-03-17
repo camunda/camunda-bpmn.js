@@ -34,7 +34,7 @@ define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
 
               '</process>'+
 
-              '</definitions>')[0];
+              '</definitions>', true)[0];
 
       var execution = new CAM.ActivityExecution(processDefinition);
       execution.start();
@@ -71,7 +71,7 @@ define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
 
             '</process>'+
 
-            '</definitions>');
+            '</definitions>', true);
       };
 
       expect(t).toThrow();
@@ -136,7 +136,7 @@ define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
 
               '</process>'+
 
-              '</definitions>')[0];
+              '</definitions>', true)[0];
 
       // case 1: input  = 10 -> the upper sequenceflow is taken
 

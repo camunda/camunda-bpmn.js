@@ -32,7 +32,7 @@ define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
 
             '</process>'+
 
-            '</definitions>');
+            '</definitions>', true);
       };
 
       expect(t).toThrow("Activity with id 'theStart' declares default flow with id 'flow1' but has no conditional flows.");

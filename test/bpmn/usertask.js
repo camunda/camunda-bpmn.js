@@ -36,7 +36,7 @@ return describe('Usertask', function() {
 
   it('should handle user tasks as wait states', function() {
 
-    var processDefinition = new Transformer().transform(processXml)[0];
+    var processDefinition = new Transformer().transform(processXml, true)[0];
 
   
     var execution = new CAM.ActivityExecution(processDefinition);    

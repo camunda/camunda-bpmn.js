@@ -19,7 +19,7 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
     var diagram;
     var i = 0;
 
-    function waitsForUrlProcessed(url) {
+    function waitsForUrlProcessed(url, options) {
 
       var finished;
 
@@ -27,7 +27,11 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
       canvas = element.get(0);
       diagram = null;
 
-      var promise = new Bpmn().renderUrl(url, { diagramElement : canvas.id });
+      options = options || {};
+
+      options.diagramElement = canvas.id;
+
+      var promise = new Bpmn().renderUrl(url, options);
 
       promise.then(function (d) {
         finished = true;
@@ -410,63 +414,274 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
     });    
 
     it('should not render exclusive gateway with a default flow and with two other outgoingflows but without condition', function() {
-      waitsForUrlProcessed("resources/exclusive-gateway-with-one-default-flow-and-two-flows-without-conditions.bpmn").then(
+      var finished, diagram, error,
+          options = { executable : true };
 
-        function(diagram) {
-          throw new Error('Expected error');
-        },
+      runs(function() {
 
-        function(error) {
-          expect(error).toBeError();
-          expect(error.message).toBe("Exclusive Gateway 'ExclusiveGateway_1' has outgoing sequence flows without conditions which are not the default flow.")
-        }
-      );
+        waitsForUrlProcessed("resources/exclusive-gateway-with-one-default-flow-and-two-flows-without-conditions.bpmn", options).then(
+
+          function(dia) {
+            finished = true;
+            diagram = dia;
+          },
+
+          function(err) {
+            finished = true;
+            error = err;
+          }
+
+        );
+
+      });
+
+      waitsFor(function() {
+        return !!finished;
+      });
+
+      runs(function() {
+        expect(diagram).not.toBeDefined();
+
+        expect(error).toBeDefined();
+        expect(error).toBeError();
+        expect(error.message).toBe("Exclusive Gateway 'ExclusiveGateway_1' has outgoing sequence flows without conditions which are not the default flow.")
+      });
     });   
 
+    it('should render exclusive gateway with a default flow and with two other outgoingflows but without condition', function() {
+      var finished, diagram, error;
+
+      runs(function() {
+
+        waitsForUrlProcessed("resources/exclusive-gateway-with-one-default-flow-and-two-flows-without-conditions.bpmn").then(
+
+          function(dia) {
+            finished = true;
+            diagram = dia;
+          },
+
+          function(err) {
+            finished = true;
+            error = err;
+          }
+
+        );
+
+      });
+
+      waitsFor(function() {
+        return !!finished;
+      });
+
+      runs(function() {
+        expect(diagram).toBeDefined();
+        expect(error).not.toBeDefined();
+      });
+    }); 
+
     it('should not render exclusive gateway with outgoing sequence flows but without conditions and any default flow', function() {
-      waitsForUrlProcessed("resources/exclusive-gateway-with-outgoing-flows-without-conditions.bpmn").then(
+      var finished, diagram, error,
+          options = { executable : true };
 
-        function(diagram) {
-          throw new Error('Expected error');
-        },
+      runs(function() {
 
-        function(error) {
-          expect(error).toBeError();
-          expect(error.message).toBe("Exclusive Gateway 'ExclusiveGateway_1' has outgoing sequence flows without conditions which are not the default flow.")
-        }
-      );
+        waitsForUrlProcessed("resources/exclusive-gateway-with-outgoing-flows-without-conditions.bpmn", options).then(
 
-    });    
+          function(dia) {
+            finished = true;
+            diagram = dia;
+          },
+
+          function(err) {
+            finished = true;
+            error = err;
+          }
+
+        );
+
+      });
+
+      waitsFor(function() {
+        return !!finished;
+      });
+
+      runs(function() {
+        expect(diagram).not.toBeDefined();
+
+        expect(error).toBeDefined();
+        expect(error).toBeError();
+        expect(error.message).toBe("Exclusive Gateway 'ExclusiveGateway_1' has outgoing sequence flows without conditions which are not the default flow.")
+      });
+
+    });
+
+    it('should render exclusive gateway with outgoing sequence flows but without conditions and any default flow', function() {
+      var finished, diagram, error;
+
+      runs(function() {
+
+        waitsForUrlProcessed("resources/exclusive-gateway-with-outgoing-flows-without-conditions.bpmn").then(
+
+          function(dia) {
+            finished = true;
+            diagram = dia;
+          },
+
+          function(err) {
+            finished = true;
+            error = err;
+          }
+
+        );
+
+      });
+
+      waitsFor(function() {
+        return !!finished;
+      });
+
+      runs(function() {
+        expect(diagram).toBeDefined();
+        expect(error).not.toBeDefined();
+      });
+
+    });  
 
     it('should not render exclusive gateway with one outgoing sequence flow, which is the default flow and has a condition', function() {
-      waitsForUrlProcessed("resources/exclusive-gateway-with-one-outgoing-flow.bpmn").then(
+      var finished, diagram, error,
+          options = { executable : true };
 
-        function(diagram) {
-          throw new Error('Expected error');
-        },
+      runs(function() {
 
-        function(error) {
-          expect(error).toBeError();
-          expect(error.message).toBe("If an exclusive Gateway has a single outgoing sequence flow, the sequence flow is not allowed to have a condition.")
-        }
-      );
+        waitsForUrlProcessed("resources/exclusive-gateway-with-one-outgoing-flow.bpmn", options).then(
+
+          function(dia) {
+            finished = true;
+            diagram = dia;
+          },
+
+          function(err) {
+            finished = true;
+            error = err;
+          }
+
+        );
+
+      });
+
+      waitsFor(function() {
+        return !!finished;
+      });
+
+      runs(function() {
+        expect(diagram).not.toBeDefined();
+
+        expect(error).toBeDefined();
+        expect(error).toBeError();
+        expect(error.message).toBe("If an exclusive Gateway has a single outgoing sequence flow, the sequence flow is not allowed to have a condition.")
+      });
 
     });     
 
+    it('should render exclusive gateway with one outgoing sequence flow, which is the default flow and has a condition', function() {
+      var finished, diagram, error;
+
+      runs(function() {
+
+        waitsForUrlProcessed("resources/exclusive-gateway-with-one-outgoing-flow.bpmn").then(
+
+          function(dia) {
+            finished = true;
+            diagram = dia;
+          },
+
+          function(err) {
+            finished = true;
+            error = err;
+          }
+
+        );
+
+      });
+
+      waitsFor(function() {
+        return !!finished;
+      });
+
+      runs(function() {
+        expect(diagram).toBeDefined();
+        expect(error).not.toBeDefined();
+      });
+
+    }); 
+
     it('should not render exclusive gateway with outgoing sequence flows, which one of them is the default flow and has a condition', function() {
-      waitsForUrlProcessed("resources/exclusive-gateway-with-outgoing-flows.bpmn").then(
+      var finished, diagram, error,
+          options = { executable : true };
 
-        function(diagram) {
-          throw new Error('Expected error');
-        },
+      runs(function() {
 
-        function(error) {
-          expect(error).toBeError();
-          expect(error.message).toBe("Sequence flow with id 'SequenceFlow_1' is configured to be the default flow but has a condition.")
-        }
-      );
+        waitsForUrlProcessed("resources/exclusive-gateway-with-outgoing-flows.bpmn", options).then(
 
-    });       
+          function(dia) {
+            finished = true;
+            diagram = dia;
+          },
+
+          function(err) {
+            finished = true;
+            error = err;
+          }
+
+        );
+
+      });
+
+      waitsFor(function() {
+        return !!finished;
+      });
+
+      runs(function() {
+        expect(diagram).not.toBeDefined();
+
+        expect(error).toBeDefined();
+        expect(error).toBeError();
+        expect(error.message).toBe("Sequence flow with id 'SequenceFlow_1' is configured to be the default flow but has a condition.")
+      });
+
+    });
+
+    it('should render exclusive gateway with outgoing sequence flows, which one of them is the default flow and has a condition', function() {
+      var finished, diagram, error;
+
+      runs(function() {
+
+        waitsForUrlProcessed("resources/exclusive-gateway-with-outgoing-flows.bpmn").then(
+
+          function(dia) {
+            finished = true;
+            diagram = dia;
+          },
+
+          function(err) {
+            finished = true;
+            error = err;
+          }
+
+        );
+
+      });
+
+      waitsFor(function() {
+        return !!finished;
+      });
+
+      runs(function() {
+        expect(diagram).toBeDefined();
+        expect(error).not.toBeDefined();
+      });
+
+    });
 
     it('should render task label with line break', function() {
       waitsForRenderDiagram("resources/task-label-with-line-break.bpmn");
@@ -582,7 +797,15 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
         expect(diagram.definitionRenderer).toBeDefined();
       });
 
-    });  
+    });
+
+    it('should render label properly', function () {
+      waitsForRenderDiagram("resources/labels.bpmn");
+
+      runs(function () {
+        expect(diagram.definitionRenderer).toBeDefined();
+      });
+    });
 
     xit('should render two tasks with boundary events on top of each other', function() {
       waitsForRenderDiagram("resources/BoundaryEventStack.bpmn");

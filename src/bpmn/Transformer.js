@@ -39,7 +39,7 @@ define([], function () {
     this.parseListeners = [];
   }
 
-  Transformer.prototype.transform =  function(source) {
+  Transformer.prototype.transform =  function(source, executable) {
 
     /** the parse listeners are callbacks that are invoked by the transformer
      * when activity definitions are created */
@@ -149,7 +149,7 @@ define([], function () {
             bpmnObject.outgoing.push(outgoingFlows[i].id);
           }
 
-          if(!!bpmnObject.default && isExecutable) {
+          if(!!bpmnObject.default && executable) {
 
             var conditionalFlowFound = false;
 
@@ -318,7 +318,7 @@ define([], function () {
       var defaultFlowId = bpmnObject.default;
 
       // custom handling of sequence flows for exclusive GW:
-      if(!!sequenceFlows && isExecutable) {
+      if(!!sequenceFlows && executable) {
 
         var outgoingFlows = sequenceFlows[bpmnObject.id];
 

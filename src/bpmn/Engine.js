@@ -24,7 +24,7 @@ define(["bpmn/Executor", "bpmn/Transformer"], function (Executor, Transformer) {
         }
       }
 
-      var processDefinition = transformer.transform(bpmnXml)[0];
+      var processDefinition = transformer.transform(bpmnXml, true)[0];
 
       var execution = new CAM.ActivityExecution(processDefinition);
       execution.variables = variables ? variables : {};

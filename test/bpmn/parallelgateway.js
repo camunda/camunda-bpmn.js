@@ -38,7 +38,7 @@ define(["bpmn/Executor", "bpmn/Transformer"], function(CAM, Transformer) {
 
         '</process>'+
 
-      '</definitions>')[0];
+      '</definitions>', true)[0];
 
       var execution = new CAM.ActivityExecution(processDefinition);
       execution.variables.input = 10;
