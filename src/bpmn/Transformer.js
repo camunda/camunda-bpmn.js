@@ -420,7 +420,7 @@ define([], function () {
           bpmnObject = transformElementsContainer(element, scopeActivity, sequenceFlows, bpmnDiElementIndex);
         } else if(elementType == "ioSpecification"){
           bpmnObject = transformIoSpecification(element, scopeActivity, bpmnDiElementIndex);
-        } else if(!!element && element.nodeName != "sequenceFlow" && element.nodeType == 1 /* (nodeType=1 => element nodes only) */ ) {
+        } else if(!!element && elementType != "sequenceFlow" && element.nodeType == 1 /* (nodeType=1 => element nodes only) */ ) {
           bpmnObject = createBpmnObject(element, scopeActivity, bpmnDiElementIndex);
         }
 

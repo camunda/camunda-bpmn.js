@@ -72,8 +72,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
 
   BpmnElementRenderer.labelPadding = 2;
 
-  // TODO: use element width rather than fixed width
-  BpmnElementRenderer.wordWrapMaxWidth = 100 + BpmnElementRenderer.labelPadding;
+  BpmnElementRenderer.wordWrapMaxWidth = 100;
 
   var categoryValues = {};
 
@@ -304,9 +303,18 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
 
   function renderLineFn(x, y, renderText, fontSize, moveUp, customTransform) {
     return function (text, lineIndex, totalLength) {
-      var rendered = renderText(text);
-      // if we habe more than two lines, move the lines up by 25 per cent, beginning with the second line, so we get impression of vertical centering
-      var dy = moveUp ? (y - (totalLength > 1 ? totalLength * fontSize * 0.25 : 0) + lineIndex*fontSize) : y + lineIndex*fontSize;
+      var rendered = renderText(text),
+          dy;
+
+      if (moveUp) {
+        // if we have more than two lines, move the
+        // lines up by 25 per cent, beginning with
+        // the second line, so we get impression of
+        // vertical centering     
+        dy = y - (totalLength > 1 ? totalLength * fontSize * 0.25 : 0) + lineIndex*fontSize;
+      } else {
+        dy = y + lineIndex*fontSize;
+      }
 
       if (customTransform) {
         customTransform(rendered, dy, lineIndex, totalLength);
@@ -350,7 +358,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
    *
    * @param words array of words
    */
-  function getWrappedLines (words, renderText) {
+  function getWrappedLines (words, renderText, maxWidth) {
     var lines = [];
 
     var currentLine = "";
@@ -370,7 +378,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
       // create temporary gfx group the check the real rendered width
       var tempTextGroup = renderText(currentLine);
 
-      if (tempTextGroup.getTextWidth() > BpmnElementRenderer.wordWrapMaxWidth) {
+      if (tempTextGroup.getTextWidth() > maxWidth) {
         if (oldLine.length != 0) lines.push(oldLine.trim());
         oldLine = words[currentWordIndex];
         if (lastWord) lines = lines.concat(words[currentWordIndex].split(" "));
@@ -386,7 +394,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
     return lines;
   };
 
-  function wordWrap (text, group, font, x, y, align, moveUp) {
+  function wordWrap (text, group, font, x, y, maxWidth, align, moveUp) {
     var fontSize = font.size ? font.size :  10;
     var defaultAlign = "right";
     var wrapIndicator = "<w>";
@@ -409,13 +417,13 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
       textLines = words[0].split(wrapIndicator);
     }
     else if (!hasBreaks) {
-      textLines = getWrappedLines(words, renderText);
+      textLines = getWrappedLines(words, renderText, maxWidth);
     }
     else {
       textLines = text.split(wrapIndicator);
     }
 
-    return renderLines(textLines, renderText, renderLine, BpmnElementRenderer.wordWrapMaxWidth);
+    return renderLines(textLines, renderText, renderLine, maxWidth);
   }
 
   function renderLabel(elementRenderer, group, bounds, align, moveUp) {
@@ -427,13 +435,49 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
 
     var font = { family: textStyle["font-family"], size: textStyle["font-size"], weight: "normal" };
 
-    var labelBounds = elementRenderer.getLabelBounds();
-    var pos = labelBounds ? {x: +labelBounds.x + BpmnElementRenderer.labelPadding, y: +labelBounds.y + BpmnElementRenderer.labelPadding} : {x: +bounds.x, y: +bounds.y};
+    var labelBounds = elementRenderer.getLabelBounds(),
+        bounds = bounds || {},
+        x, y, maxWidth, lineCount;
 
-    var x =  pos.x,
-        y = pos.y;
+    if (labelBounds) {
+      x = +labelBounds.x;
+      y = +labelBounds.y;
 
-    var lineCount = wordWrap(baseElement.name, group, font, +x, +y, labelBounds ? null : align, moveUp);
+      // prevent a move up
+      moveUp = false;
+      align = null;
+
+    } else {
+      x = +bounds.x;
+      y = +bounds.y;
+    }
+
+    if (labelBounds) {
+
+      if (labelBounds.width) {
+        // use width in label bounds
+        maxWidth = +labelBounds.width;
+
+      } else {
+        // get bounds of element
+        var originalBounds = elementRenderer.getBounds();
+
+        if (originalBounds && originalBounds.width) {
+          // use sufficient space
+          maxWidth = ((+originalBounds.x) + (+originalBounds.width)) - (+labelBounds.x) - BpmnElementRenderer.labelPadding;
+        } else {
+          // fallback use standard max width
+          maxWidth = BpmnElementRenderer.wordWrapMaxWidth;
+        }
+
+      }
+
+    } else {
+
+      maxWidth = +bounds.width || BpmnElementRenderer.wordWrapMaxWidth;
+    }
+
+    var lineCount = wordWrap(baseElement.name, group, font, +x, +y, maxWidth, align, moveUp);
 
     return {group: group, lineCount : lineCount};
   }
@@ -468,10 +512,14 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
       var rect = group.createRect({ x: 0, y: 0, width: width, height: height});
       rect.setStroke(stroke);
 
-      var label = baseElement.name;
-      if (label) {
-        renderLabel(elementRenderer, gfxGroup, {x: x + width / 2, y: y + height / 2}, "middle");
+      var labelBounds = {
+        x: x + width / 2,
+        y: y + height / 2,
+        width: width - (2*BpmnElementRenderer.labelPadding)
       }
+
+      renderLabel(elementRenderer, gfxGroup, labelBounds, 'middle');
+
     }
   };
 
@@ -540,7 +588,13 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
 
       baseElement.name = categoryValues[baseElement.categoryValueRef] ? categoryValues[baseElement.categoryValueRef] : "";
 
-      renderLabel(elementRenderer, gfxGroup, {x: x + BpmnElementRenderer.labelPadding*2 , y: y + BpmnElementRenderer.labelPadding*4+ textStyle["font-size"]}, "left", true);
+      var labelBounds = {
+        x: x + BpmnElementRenderer.labelPadding*2,
+        y: y + BpmnElementRenderer.labelPadding*4+ textStyle["font-size"],
+        width: BpmnElementRenderer.wordWrapMaxWidth
+      }
+
+      renderLabel(elementRenderer, gfxGroup, labelBounds, "left", true);
     }
   };
 
@@ -612,7 +666,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
         endPointDecorator.decorate(elementRenderer, waypoints, flowGroup);
       }
 
-      renderLabel(elementRenderer, gfxGroup, getMidPoint(waypoints), "middle");
+      renderLabel(elementRenderer, gfxGroup, getMidPoint(waypoints), 'middle');
 
       return flowGroup;
     }
@@ -686,7 +740,12 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
           break;
       }
 
-      renderLabel(elementRenderer, gfxGroup, {x: x + width/2, y: y + height + 10}, "middle");
+      var labelBounds = {
+        x: x + width/2,
+        y: y + height + 10
+      };
+
+      renderLabel(elementRenderer, gfxGroup, labelBounds, 'middle');
     }
   };
 
@@ -837,7 +896,15 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
         }
       }
 
-      renderLabel(elementRenderer, gfxGroup, {x: x + width /2 , y: y + height /2}, "middle", true);
+      var maxWidth = width - (2*BpmnElementRenderer.labelPadding);
+
+      var labelBounds = {
+        x: x + width /2,
+        y: y + height /2,
+        width: maxWidth
+      }
+
+      renderLabel(elementRenderer, gfxGroup, labelBounds, "middle", true);
     }
   };
 
@@ -922,7 +989,12 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
         })(element, circleGroup);
       }
 
-      renderLabel(elementRenderer, gfxGroup, {x : x + +bounds.width / 2, y : y + +bounds.width + rad}, "middle");
+      var labelBounds = {
+        x: x + (+bounds.width) / 2,
+        y: y + (+bounds.height) + 10
+      }
+
+      renderLabel(elementRenderer, gfxGroup, labelBounds, 'middle');
 
       return circle;
     }
@@ -941,7 +1013,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
 
 
       var annotationGroup = gfxGroup.createGroup();
-      var lineCount = wordWrap(elementRenderer.baseElement.text, annotationGroup, font, padding, font.size + padding, "left");
+      var lineCount = wordWrap(elementRenderer.baseElement.text, annotationGroup, font, padding, font.size + padding, BpmnElementRenderer.wordWrapMaxWidth,'left');
 
       var height = (lineCount+1) * font.size;
 
@@ -1014,7 +1086,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
 
       var path = dataRefGroup.createPath(pathInfo.path).setStroke(style.stroke);
 
-      renderLabel(elementRenderer, gfxGroup, defaultBounds, "middle");
+      renderLabel(elementRenderer, gfxGroup, defaultBounds, 'middle');
       return path;
     }
   };
@@ -1126,7 +1198,13 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
         envelop.setTransform({ dx: position.x, dy: position.y, xx: 1.5, yy: 1.5 });
 
         renderLabel({
-          renderElement: message, getLabelBounds: function() { return { x: position.x + 30, y: position.y + 10 }; }
+          renderElement: message,
+          getLabelBounds: function() {
+            return { x: position.x + 30, y: position.y + 10 };
+          },
+          getBounds: function () {
+            return null;
+          }
         }, envelopeGroup, null, "left");
       }
     }
@@ -1336,30 +1414,49 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
 
   BpmnElementRenderer.prototype.getLabelBounds = function () {
 
-    var element = this.renderElement;
+    var element = this.renderElement,
+        diChildren = element.bpmndi[0].children;
 
-    // first check by type
+    // first try to get label bounds from di
+    for (var index in diChildren) {
+      var diChild = diChildren[index];
+
+      if (/BPMNLabel/i.test(diChild.type)) {
+        var labelBounds = getBoundsFromChildren(diChild.children);
+
+        if (labelBounds) {
+          labelBounds.y = (+labelBounds.y) + textStyle["font-size"];
+        }
+
+        return labelBounds;
+      }
+
+    }
+
+    // if the label bounds could not be found
+    // check the type and generate custom label
+    // bounds (only for 'transaction', 'adHocSubProcess',
+    // 'subProcess')
     switch (element.type) {
       case "transaction":
       case "adHocSubProcess":
       case "subProcess":
         if (element.bpmndi[0].isExpanded === "true") {
-          return {x: element.bounds.x + textStyle["font-size"] + BpmnElementRenderer.labelPadding, y: + element.bounds.y + textStyle["font-size"] + BpmnElementRenderer.labelPadding};
+          var padding = (2*BpmnElementRenderer.labelPadding);
+
+          if (element.type === 'transaction') {
+            padding = padding + BpmnElementRenderer.labelPadding;
+          }
+
+          return {
+            x: (+element.bounds.x) + padding,
+            y: (+element.bounds.y) + textStyle["font-size"] + padding
+          };
         }
 
         break;
     }
 
-    var diChildren = element.bpmndi[0].children;
-
-    for (var index in diChildren) {
-      var diChild = diChildren[index];
-
-      if (/BPMNLabel/i.test(diChild.type)) {
-        return getBoundsFromChildren(diChild.children);
-      }
-
-    }
     return null;
   };
 
