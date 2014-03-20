@@ -13,9 +13,9 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_Task_3" bpmnElement="Task_2">
-        <omgdc:Bounds height="80.0" width="100.0" x="696.75" y="123.0"/>
+        <dc:Bounds height="80.0" width="100.0" x="696.75" y="123.0"/>
         <bpmndi:BPMNLabel labelStyle="sid-7e554a3e-0e8d-40bf-94a6-cc8d9af5d859">
-          <omgdc:Bounds height="24.0" width="54.0" x="720" y="150.0"/>
+          <dc:Bounds height="24.0" width="54.0" x="720" y="150.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
