@@ -134,8 +134,9 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
       waitsForRenderDiagram("resources/test-wordwrap.bpmn");
 
       runs(function () {
-        expect(helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "dadadadadada" }).length).toBe(3);
-        expect(helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "dadadadbatman" }).length).toBe(1);
+        expect(helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "dadadadadadad" }).length).toBe(2);
+        expect(helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "adadadadadada" }).length).toBe(1);
+        expect(helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "adadbatman" }).length).toBe(1);
       });
 
     });
@@ -204,7 +205,7 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
         expect(labels.length).toBe(3);
 
         // label padding is included
-        expect([labels[2]]).toHavePositions([{x : 533, y: 312}]);
+        expect([labels[2]]).toHavePositions([{x : 566.5, y: 312, align : 'middle'}]);
       });
 
     });
@@ -217,7 +218,7 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
         var label = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, {"type" : "text", "text": "review successful?"});
         expect(label).toBeDefined();
         // gateway has label position
-        expect(label).toHavePositions([{x : 656, y: 129}]);
+        expect(label).toHavePositions([{x : 713, y: 129, align: 'middle'}]);
       });
     });
 
@@ -338,10 +339,14 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
       waitsForRenderDiagram("resources/wrap-poolname.bpmn");
 
       runs(function () {
-        var texts = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "Really Long Pooooooooooooooooo" });
+        var text1 = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "Really Long" });
+        var text2 = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "Poooooooooooooooooooooooooo" });
+        var text3 = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, { type: "text", text: "ooooooooooooooooolname" });
 
         // wrapped text exists
-        expect(texts.length).toBe(1);
+        expect(text1.length).toBe(1);
+        expect(text2.length).toBe(1);
+        expect(text3.length).toBe(1);
       });
     });
 
@@ -779,24 +784,6 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
         expect(diagram.definitionRenderer).toBeDefined();
       });
 
-    });  
-
-    it('should render miwg reference B.2.0', function() {
-      waitsForRenderDiagram("resources/miwg-test-suite/B.2.0.bpmn");
-
-      runs(function () {
-        expect(diagram.definitionRenderer).toBeDefined();
-      });
-
-    });  
-
-    it('should render miwg reference B.2.0', function() {
-      waitsForRenderDiagram("resources/miwg-test-suite/B.2.0.bpmn");
-
-      runs(function () {
-        expect(diagram.definitionRenderer).toBeDefined();
-      });
-
     });
 
     it('should render labels inside a task', function() {
@@ -807,12 +794,12 @@ define(["jquery", "bpmn/Bpmn", "bpmn/Transformer", "test/util/TestHelper"], func
         var label = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, {"type" : "text", "text": "Post-Ident"});
         expect(label).toBeDefined();
         // gateway has label position
-        expect(label).toHavePositions([{x : 323, y: 72}]);
+        expect(label).toHavePositions([{x : 358, y: 79, align: 'middle' }]);
 
-        label = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, {"type" : "text", "text": "Assign"});
+        label = helper.findChildrenByProperties(diagram.definitionRenderer.gfxGroup, {"type" : "text", "text": "Assign Approver"});
         expect(label).toBeDefined();
         // gateway has label position
-        expect(label).toHavePositions([{x : 720, y: 162}]);
+        expect(label).toHavePositions([{x : 746.75, y: 169, align: 'middle' }]);
       });
 
     });

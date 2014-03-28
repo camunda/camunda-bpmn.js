@@ -72,7 +72,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
 
   BpmnElementRenderer.labelPadding = 2;
 
-  BpmnElementRenderer.wordWrapMaxWidth = 100;
+  BpmnElementRenderer.wordWrapMaxWidth = 150;
 
   var categoryValues = {};
 
@@ -199,14 +199,15 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
     "stroke-linejoin": "round"
   };
 
-  var textStyle = {
-    "font-size": 12,
-    "font-family": "Arial"
+  var defaultFont = {
+    family: 'Arial',
+    size: 12,
+    weight: 'normal'
   };
 
-  var textBigStyle = {
-    "font-size": 20,
-    "font-family": "Arial, Helvetica, sans-serif"
+  var textStyle = {
+    'font-size': 12,
+    'font-family': 'Arial'
   };
 
   var styleMap = {
@@ -279,78 +280,66 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
     return ret;
   };
 
-  var renderTextFn = function (group, font, align, defaultAlign) {
-    return function (text) {
-      return group.createText({text: text, align: align ? align : defaultAlign})
-        .setFont(font) //set font
-        .setFill("black");
-    }
-  };
-
-  function wrapSingleWord(word, renderText, maxWidth) {
+  function wrapSinglePart(part, renderText, maxWidth) {
     var lines = [];
-    for (var divider = 1, isFitting = false; isFitting == false; divider++) {
-      var chunkSize = word.length / divider;
-      var tempTextGroup = renderText(word.substring(0, chunkSize));
-      if (tempTextGroup.getTextWidth() <= maxWidth) {
-        lines = splitSubstring(word, chunkSize);
+
+    for (var chunkSize = part.length, isFitting = false; chunkSize > 0 && !isFitting; chunkSize--) {
+      var prefix = part.substring(0, chunkSize);
+
+      var lineGroup = renderText(prefix);
+
+      if (lineGroup.getTextWidth() <= maxWidth) {
+        lines = splitSubstring(part, chunkSize);
         isFitting = true;
       }
-      tempTextGroup.getParent().remove(tempTextGroup);
+
+      lineGroup.getParent().remove(lineGroup);
+
     }
+
     return lines;
   };
 
-  function renderLineFn(x, y, renderText, fontSize, moveUp, customTransform) {
-    return function (text, lineIndex, totalLength) {
-      var rendered = renderText(text),
-          dy;
+  function renderLines(group, position, lines, align, font, customTransform) {
+    var length = lines.length,
+        renderTextFn = renderText(group, font, align),
+        renderLineFn = renderLine(renderTextFn, position, align, font, customTransform);
 
-      if (moveUp) {
-        // if we have more than two lines, move the
-        // lines up by 25 per cent, beginning with
-        // the second line, so we get impression of
-        // vertical centering     
-        dy = y - (totalLength > 1 ? totalLength * fontSize * 0.25 : 0) + lineIndex*fontSize;
-      } else {
-        dy = y + lineIndex*fontSize;
-      }
-
-      if (customTransform) {
-        customTransform(rendered, dy, lineIndex, totalLength);
-      }else {
-        rendered.setTransform({dx: x, dy: dy});
-      }
-
+    for (var i = 0, currentLine; !!(currentLine = lines[i]); i++) {
+      renderLineFn(currentLine, i, length);
     }
   };
 
-  function renderLines(textLines, renderText, renderLine, maxWidth) {
-    var alignIndex = 0;
+  function renderLine(renderText, position, align, font, customTransform) {
 
-    for (var i= 0; i<textLines.length; i++, alignIndex++) {
-      var currentLine = textLines[i];
+    return function (text, idx, length) {
+      var renderedText = renderText(text)
+          dy = position.y + idx * font.size;
 
-      if (/^[\n\r]+$/.test(currentLine)) {
-        currentLine = '';
-      }
-
-      var tempWordGroup = renderText(currentLine);
-
-      if (tempWordGroup.getTextWidth() > maxWidth) {
-        var wrapped = wrapSingleWord(currentLine, renderText, maxWidth);
-        for (var wrappedLineIndex = 0; wrappedLineIndex < wrapped.length; wrappedLineIndex++) {
-          renderLine(wrapped[wrappedLineIndex], wrappedLineIndex+alignIndex, wrapped.length);
-        }
-        alignIndex += wrapped.length -1;
+      if (customTransform) {
+        customTransform(renderedText, dy, idx, length);
       } else {
-        renderLine(currentLine, alignIndex, textLines.length);
+        renderedText.setTransform({dx: position.x, dy: dy});
+      }
+    };
+
+  };
+
+  function renderText(group, font, align) {
+    align = align || 'middle';
+    font = font || defaultFont;
+
+    return function (text) {
+
+      if (/^[\n\r]+$/.test(text)) {
+        text = '';
       }
 
-      tempWordGroup.getParent().remove(tempWordGroup); // remove temporary gfx group
+      return group.createText({text: text, align: align})
+          .setFont(font) //set font
+          .setFill("black");
     }
 
-    return alignIndex;
   };
 
   /**
@@ -358,129 +347,268 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
    *
    * @param words array of words
    */
-  function getWrappedLines (words, renderText, maxWidth) {
-    var lines = [];
+  function getWrappedLines (parts, maxWidth, renderText) {
+    var lines = [],
+        indicator = '<w>',
+        replacement = /\s<w>|<w>/g,
+        hyphen = '-',
+        space = ' ',
+        emptyString = '';
 
-    var currentLine = "";
-    var oldLine = "";
+    var currentLine = [];
 
-    // append word for word, render the resulting line and check against the configured max width
-    // TODO check if there is a "native" way to do, for example in SVG
+    while (true) {
 
-    for (var currentWordIndex = 0; currentWordIndex < words.length; currentWordIndex++) {
-      if (words[currentWordIndex].length == 0) {
-        continue;
+      if (!parts.length) {
+        if (currentLine.length) {
+          lines.push(currentLine.join(space).replace(replacement, emptyString));
+        }
+        break;
       }
 
-      currentLine = oldLine + " " + words[currentWordIndex];
-      var lastWord = currentWordIndex == (words.length - 1);
+      var currentPart = parts.shift().trim();
+      var idx = currentPart.indexOf(hyphen);
 
-      // create temporary gfx group the check the real rendered width
-      var tempTextGroup = renderText(currentLine);
+      if (idx !== -1 && currentPart.length-1 > idx) {
+        idx += 1;
 
-      if (tempTextGroup.getTextWidth() > maxWidth) {
-        if (oldLine.length != 0) lines.push(oldLine.trim());
-        oldLine = words[currentWordIndex];
-        if (lastWord) lines = lines.concat(words[currentWordIndex].split(" "));
-      } else if (lastWord) {
-        lines.push(currentLine.trim());
-      } else { // continue with current line
-        oldLine = currentLine;
+        var suffix = currentPart.substring(idx, currentPart.length);
+
+        suffix = suffix.indexOf(space) === 0 ? suffix.trim() : indicator.concat(suffix);
+
+        parts.unshift(suffix);
+
+        currentPart = currentPart.substring(0, idx);
       }
 
-      tempTextGroup.getParent().remove(tempTextGroup); // remove temporary gfx group
+      currentLine.push(currentPart);
+
+      var line = currentLine.join(space).replace(replacement, emptyString);
+      var lineGroup = renderText(line);
+
+      if (lineGroup.getTextWidth() > maxWidth) {
+        var lastElement = currentLine.pop().replace(replacement, emptyString);
+
+        if (currentLine.length) {
+          lines.push(currentLine.join(space).replace(replacement, emptyString));
+          currentLine = [];
+          parts.unshift(lastElement);
+        } else {
+          var wrapped = wrapSinglePart(lastElement, renderText, maxWidth);
+          parts = wrapped.concat(parts);
+        }
+
+      }
+
+      lineGroup.getParent().remove(lineGroup); // remove temp group
+
     }
 
     return lines;
   };
 
-  function wordWrap (text, group, font, x, y, maxWidth, align, moveUp) {
-    var fontSize = font.size ? font.size :  10;
-    var defaultAlign = "right";
-    var wrapIndicator = "<w>";
-
-    var renderText = renderTextFn(group, font, align, defaultAlign);
-    var renderLine = renderLineFn(x, y, renderText, fontSize, moveUp);
-
-    if(!text || text.length == 0) {
-      return;
-    }
-
-    var text = text.replace(/&#xD;/g, wrapIndicator).replace(/&#xA;/g, wrapIndicator).replace(/&#10;/g, wrapIndicator).replace(/\n/g, wrapIndicator).trim();
-    var textLines = []; // the lines which will be used to render
-
-    var hasBreaks = text.indexOf(wrapIndicator) != -1;
-    var words = text.split(" ");
-
-    if (words.length == 1) {
-      // single word might still have linebreaks
-      textLines = words[0].split(wrapIndicator);
-    }
-    else if (!hasBreaks) {
-      textLines = getWrappedLines(words, renderText, maxWidth);
-    }
-    else {
-      textLines = text.split(wrapIndicator);
-    }
-
-    return renderLines(textLines, renderText, renderLine, maxWidth);
+  function hasBreaks(text, indicator) {
+    return text.indexOf(indicator) != -1;
   }
 
-  function renderLabel(elementRenderer, group, bounds, align, moveUp) {
-    var baseElement = elementRenderer.renderElement;
+  function getLargestWidth(renderText, lines) {
+    var width = 0;
 
-    if (!baseElement.name) {
-      return;
-    }
+    for (var currentLine, i = 0; !!(currentLine = lines[i]); i++) {
 
-    var font = { family: textStyle["font-family"], size: textStyle["font-size"], weight: "normal" };
+      var tempWordGroup = renderText(currentLine),
+          currentWidth = tempWordGroup.getTextWidth();
 
-    var labelBounds = elementRenderer.getLabelBounds(),
-        bounds = bounds || {},
-        x, y, maxWidth, lineCount;
-
-    if (labelBounds) {
-      x = +labelBounds.x;
-      y = +labelBounds.y;
-
-      // prevent a move up
-      moveUp = false;
-      align = null;
-
-    } else {
-      x = +bounds.x;
-      y = +bounds.y;
-    }
-
-    if (labelBounds) {
-
-      if (labelBounds.width) {
-        // use width in label bounds
-        maxWidth = +labelBounds.width;
-
-      } else {
-        // get bounds of element
-        var originalBounds = elementRenderer.getBounds();
-
-        if (originalBounds && originalBounds.width) {
-          // use sufficient space
-          maxWidth = ((+originalBounds.x) + (+originalBounds.width)) - (+labelBounds.x) - BpmnElementRenderer.labelPadding;
-        } else {
-          // fallback use standard max width
-          maxWidth = BpmnElementRenderer.wordWrapMaxWidth;
-        }
-
+      if (currentWidth > width) {
+        width = currentWidth;
       }
 
-    } else {
-
-      maxWidth = +bounds.width || BpmnElementRenderer.wordWrapMaxWidth;
+      tempWordGroup.getParent().remove(tempWordGroup); // remove temporary gfx group
     }
 
-    var lineCount = wordWrap(baseElement.name, group, font, +x, +y, maxWidth, align, moveUp);
-
-    return {group: group, lineCount : lineCount};
+    return width;
   }
+
+  function renderLabel(elementRenderer, group, customTransform) {
+    var baseElement = elementRenderer.renderElement,
+        name = baseElement.name,
+        type = baseElement.type,
+        wrapIndicator = '<w>';
+
+    // hook: if the base element is an textAnnotation,
+    // then set the text as name!
+    if (type === 'textAnnotation') {
+      name = baseElement.text;
+    }
+
+    if (!name) {
+      // nothing to do!
+      return;
+    }
+
+    name = name.replace(/&#xD;|&#xA;|&#10;|\n/g, wrapIndicator).trim();
+
+    var renderLabelDelegate = LABEL_RENDERER_DELEGATES[type];
+
+    if (renderLabelDelegate) {
+      return renderLabelDelegate(elementRenderer, group, name, type, wrapIndicator, customTransform);
+    }
+
+  }
+
+  var renderExternalLabel = function (elementRenderer, group, name, type, wrapIndicator, customTransform) {
+    var bounds = elementRenderer.renderBounds,
+        labelBounds = elementRenderer.getLabelBounds(),
+        font = defaultFont,
+        renderTextFn = renderText(group),
+        lines, x, y, maxWidth;
+
+    if (labelBounds) {
+      // use position from label bounds
+      maxWidth = +labelBounds.width || BpmnElementRenderer.wordWrapMaxWidth;
+      y = +labelBounds.y;
+      x = +labelBounds.x + (+maxWidth / 2);
+    } else {
+      // calculate position from bounds
+      maxWidth = BpmnElementRenderer.wordWrapMaxWidth;
+
+      if (type === 'textAnnotation') {
+        maxWidth = maxWidth * 2;
+      }
+
+      y = +bounds.y + (+bounds.height) + font.size;
+      x = +bounds.x + (+bounds.width / 2);
+    }
+
+    if (hasBreaks(name, wrapIndicator)) {
+      // we use the custom layout!
+      lines = name.split(wrapIndicator);
+
+    } else {
+      // ignore custom layouts
+      lines = name.split(' ');
+
+      var largestWidth = getLargestWidth(renderTextFn, lines, font);
+      maxWidth = largestWidth > maxWidth ? largestWidth : maxWidth;
+
+      lines = getWrappedLines(lines, maxWidth, renderTextFn)
+    }
+
+    renderLines(group, { x: x, y: y }, lines, null, font, customTransform);
+
+    return lines;
+  };
+
+  var renderInternalLabel = function (elementRenderer, group, name, type, wrapIndicator, customTransform) {
+    var baseElement = elementRenderer.renderElement,
+        bounds = elementRenderer.renderBounds,
+        padding = 2,
+        font = defaultFont,
+        renderTextFn = renderText(group),
+        align, lines, x, y, maxWidth;
+
+    maxWidth = +bounds.width - (padding * 2);
+    if (type === 'process' || type === 'lane') {
+      if (baseElement.bpmndi[0].isHorizontal !== 'false') {
+        maxWidth = +bounds.height - (padding * 2);
+      }
+    }
+
+    else if (type === 'callActivity' || type === 'subProcess' || type === 'adHocSubProcess' || type === 'group') {
+      maxWidth = maxWidth - (padding * 2);
+    }
+
+    else if (type === 'transaction') {
+      maxWidth = maxWidth - (padding * 4);
+    }
+
+    lines = name.split(wrapIndicator);
+
+    largestWidth = getLargestWidth(renderTextFn, lines);
+
+    if (largestWidth > maxWidth) {
+      name = lines.join(' ');
+      lines = getWrappedLines(name.split(' '), maxWidth, renderTextFn);
+    }
+
+    y = (+bounds.y + (+bounds.height / 2)) + font.size - (lines.length / 2) * font.size;
+    x = (+bounds.x) + (+bounds.width / 2);
+
+    if (((type === 'callActivity' ||
+         type === 'subProcess' ||
+         type === 'adHocSubProcess' ||
+         type === 'transaction')  &&
+         baseElement.bpmndi[0].isExpanded === 'true') ||
+         type === 'group') {
+
+      x = (+bounds.x) + padding * 2;
+      y = (+bounds.y) + font.size + padding * 2;
+
+      align = 'left';
+    }
+
+    if (type === 'transaction') {
+      x += padding;
+      y += padding;
+    }
+
+    renderLines(group, { x: x, y: y }, lines, align, font, customTransform);
+
+    return lines;
+  };
+
+  // build up the map of label renderers
+  var LABEL_RENDERER_DELEGATES = {};
+  // activities
+  LABEL_RENDERER_DELEGATES["userTask"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["task"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["subProcess"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["transaction"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["adHocSubProcess"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["serviceTask"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["callActivity"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["manualTask"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["receiveTask"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["scriptTask"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["sendTask"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["businessRuleTask"] = renderInternalLabel;
+
+  // group
+  LABEL_RENDERER_DELEGATES["group"] = renderInternalLabel;
+
+  // participant, process, lane
+  LABEL_RENDERER_DELEGATES["participant"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["process"] = renderInternalLabel;
+  LABEL_RENDERER_DELEGATES["lane"] = renderInternalLabel;
+  
+  // gateways
+  LABEL_RENDERER_DELEGATES["exclusiveGateway"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["inclusiveGateway"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["parallelGateway"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["eventBasedGateway"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["complexGateway"] = renderExternalLabel;
+
+  // events
+  LABEL_RENDERER_DELEGATES["startEvent"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["endEvent"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["boundaryEvent"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["intermediateCatchEvent"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["intermediateThrowEvent"] = renderExternalLabel;
+
+  // floes
+  LABEL_RENDERER_DELEGATES["sequenceFlow"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["messageFlow"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["message"] = renderExternalLabel;
+
+  // data
+  LABEL_RENDERER_DELEGATES["dataStoreReference"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["dataObjectReference"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["dataObject"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["dataInput"] = renderExternalLabel;
+  LABEL_RENDERER_DELEGATES["dataOutput"] = renderExternalLabel;
+
+  // annotation
+  LABEL_RENDERER_DELEGATES["textAnnotation"] = renderExternalLabel;
 
   var collapsedPoolRenderer = {
     render: function(elementRenderer, gfxGroup) {
@@ -512,13 +640,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
       var rect = group.createRect({ x: 0, y: 0, width: width, height: height});
       rect.setStroke(stroke);
 
-      var labelBounds = {
-        x: x + width / 2,
-        y: y + height / 2,
-        width: width - (2*BpmnElementRenderer.labelPadding)
-      }
-
-      renderLabel(elementRenderer, gfxGroup, labelBounds, 'middle');
+      renderLabel(elementRenderer, gfxGroup);
 
     }
   };
@@ -528,7 +650,6 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
       var baseElement = elementRenderer.renderElement;
       var style = elementRenderer.getStyle(baseElement);
       var bounds = elementRenderer.renderBounds;
-      var font = { family: "Arial", size: 12, weight: "normal", align: "left"};
 
       // no participant bounds
       if (!bounds) {
@@ -547,20 +668,27 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
       var rect = processGroup.createRect({ x: 0, y: 0, width: width, height: height});
       rect.setStroke(style.stroke);
 
-      var label = baseElement.name;
+      renderLabel(elementRenderer, gfxGroup, function (element, dy, lineIndex, totalLines) {
+        var textWidth = element.getTextWidth();
 
-      if (label) {
-        var renderText = renderTextFn(gfxGroup, font, "left");
-        var renderLine = renderLineFn(x, y, renderText, font.size, true, function (element, dy, lineIndex, totalLines) {
-          var textWidth = element.getTextWidth();
-          var offsetY = (totalLines > 1 ?  height : height/2 + textWidth/2);
+        if (baseElement.bpmndi[0].isHorizontal !== 'false') {
+          var labelX = x + BpmnElementRenderer.labelPadding,
+              labelY = y + (height/2);
+          
+          element.applyTransform(gfx.matrix.translate(labelX + (lineIndex+1) * defaultFont.size, labelY));
+          element.applyTransform(gfx.matrix.rotateg(-90));
+        } else {
+          element.applyTransform(gfx.matrix.translate(x + (width/2), y + (lineIndex+1) * defaultFont.size ));
+        }
+        
+      });
 
-          element.applyTransform(gfx.matrix.translate(BpmnElementRenderer.labelPadding+x + (lineIndex+1) * font.size, dy + offsetY)).applyTransform(gfx.matrix.rotateg(-90));
-        });
-        renderLines([label], renderText, renderLine, height);
+      var separator;
+      if (baseElement.bpmndi[0].isHorizontal !== 'false') {
+        separator = processGroup.createLine({ x1: 30, y1: 0, x2: 30, y2: height});
+      } else {
+        separator = processGroup.createLine({ x1: 0, y1: 30, x2: width, y2: 30});
       }
-
-      var separator = processGroup.createLine({ x1: 30, y1: 0, x2: 30, y2: height});
       separator.setStroke(style.stroke);
     }
   };
@@ -588,13 +716,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
 
       baseElement.name = categoryValues[baseElement.categoryValueRef] ? categoryValues[baseElement.categoryValueRef] : "";
 
-      var labelBounds = {
-        x: x + BpmnElementRenderer.labelPadding*2,
-        y: y + BpmnElementRenderer.labelPadding*4+ textStyle["font-size"],
-        width: BpmnElementRenderer.wordWrapMaxWidth
-      }
-
-      renderLabel(elementRenderer, gfxGroup, labelBounds, "left", true);
+      renderLabel(elementRenderer, gfxGroup);
     }
   };
 
@@ -615,15 +737,20 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
       var rect = laneGroup.createRect({ x: 0, y: 0, width: width, height: height});
       rect.setStroke(style.stroke);
 
-      var label = elementRenderer.baseElement.name;
-      if (label) {
-        var text = laneGroup.createText({ x: 0, y: 0, text: label });
+      renderLabel(elementRenderer, gfxGroup, function (element, dy, lineIndex, totalLines) {
+        var textWidth = element.getTextWidth();
 
-        text.setFont({ family: "Arial", size: "9pt", weight: "normal", align: "middle"}); //set font
-        text.setFill("black");
-
-        text.setTransform([gfx.matrix.translate(15, height/2 + 30), gfx.matrix.rotateg(-90) ]);
-      }
+        if (baseElement.bpmndi[0].isHorizontal !== 'false') {
+          var labelX = x + BpmnElementRenderer.labelPadding,
+              labelY = y + (height/2);
+          
+          element.applyTransform(gfx.matrix.translate(labelX + (lineIndex+1) * defaultFont.size, labelY));
+          element.applyTransform(gfx.matrix.rotateg(-90));
+        } else {
+          element.applyTransform(gfx.matrix.translate(x + (width/2), y + (lineIndex+1) * defaultFont.size ));
+        }
+        
+      });
     }
   };
 
@@ -646,7 +773,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
       count+= factor;
     }
 
-    return { x: sumx / count, y: sumy / count };
+    return { x: sumx / count, y: sumy / count, width: 0, height: 0 };
   }
 
   var connectionRenderer = {
@@ -666,7 +793,10 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
         endPointDecorator.decorate(elementRenderer, waypoints, flowGroup);
       }
 
-      renderLabel(elementRenderer, gfxGroup, getMidPoint(waypoints), 'middle');
+      var bounds = getMidPoint(waypoints);
+      elementRenderer.renderBounds = bounds;
+
+      renderLabel(elementRenderer, gfxGroup);
 
       return flowGroup;
     }
@@ -740,12 +870,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
           break;
       }
 
-      var labelBounds = {
-        x: x + width/2,
-        y: y + height + 10
-      };
-
-      renderLabel(elementRenderer, gfxGroup, labelBounds, 'middle');
+      renderLabel(elementRenderer, gfxGroup);
     }
   };
 
@@ -896,15 +1021,8 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
         }
       }
 
-      var maxWidth = width - (2*BpmnElementRenderer.labelPadding);
+      renderLabel(elementRenderer, gfxGroup);
 
-      var labelBounds = {
-        x: x + width /2,
-        y: y + height /2,
-        width: maxWidth
-      }
-
-      renderLabel(elementRenderer, gfxGroup, labelBounds, "middle", true);
     }
   };
 
@@ -989,12 +1107,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
         })(element, circleGroup);
       }
 
-      var labelBounds = {
-        x: x + (+bounds.width) / 2,
-        y: y + (+bounds.height) + 10
-      }
-
-      renderLabel(elementRenderer, gfxGroup, labelBounds, 'middle');
+      renderLabel(elementRenderer, gfxGroup);
 
       return circle;
     }
@@ -1010,14 +1123,18 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
 
       var x = +bounds.x;
       var y = +bounds.y;
-
+      var width = +bounds.width;
 
       var annotationGroup = gfxGroup.createGroup();
-      var lineCount = wordWrap(elementRenderer.baseElement.text, annotationGroup, font, padding, font.size + padding, BpmnElementRenderer.wordWrapMaxWidth,'left');
 
-      var height = (lineCount+1) * font.size;
+      var lines = renderLabel(elementRenderer, gfxGroup, function (element, dy, lineIndex, totalLines) {
+        var textWidth = element.getTextWidth();
+        element.applyTransform(gfx.matrix.translate(x + (textWidth/2) + 4, y + (lineIndex+1) * font.size + 4));
+      });
 
-      annotationGroup.setTransform({dx :x ,dy: y});
+      var height = (lines.length+1) * font.size;
+
+      annotationGroup.setTransform({dx :x, dy: y});
 
       annotationGroup.createPolyline([
         {x: 10, y: 0},
@@ -1061,9 +1178,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
         collectionPath.setTransform({dx: width /2 -5 , dy: height - 15});
       }
 
-      var defaultBounds = {x: x + width/2, y: y + height / 2};
       var dataMarkerDistance = 7;
-      var dataStoreLabelDistance = 12;
 
       switch(elementRenderer.baseElement.type) {
         case "dataInput" :
@@ -1077,16 +1192,14 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
           dataMarkerPath.setFill("#000");
           dataMarkerPath.setTransform({dx: dataMarkerDistance, dy: dataMarkerDistance});
           break;
-        case "dataStoreReference":
-          defaultBounds.y = y + height + dataStoreLabelDistance;
-          break;
       }
 
       var font = { family: textStyle["font-family"], size: textStyle["font-size"], weight: "normal" };
 
       var path = dataRefGroup.createPath(pathInfo.path).setStroke(style.stroke);
 
-      renderLabel(elementRenderer, gfxGroup, defaultBounds, 'middle');
+      renderLabel(elementRenderer, gfxGroup);
+
       return path;
     }
   };
@@ -1197,15 +1310,25 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
         envelop.setFill(nonInitiating ? "#ccc" : "#fff");
         envelop.setTransform({ dx: position.x, dy: position.y, xx: 1.5, yy: 1.5 });
 
+
+
         renderLabel({
           renderElement: message,
-          getLabelBounds: function() {
-            return { x: position.x + 30, y: position.y + 10 };
+          renderBounds: {
+            x: position.x + 30,
+            y: position.y,
+            width: BpmnElementRenderer.wordWrapMaxWidth,
+            height: 0
           },
-          getBounds: function () {
+          getLabelBounds: function() {
             return null;
           }
-        }, envelopeGroup, null, "left");
+        },
+        envelopeGroup,
+        function (element, dy, lineIndex, totalLines){
+          var textWidth = element.getTextWidth();
+          element.applyTransform(gfx.matrix.translate(position.x + 30 + (textWidth/2), dy));
+        });
       }
     }
   };
