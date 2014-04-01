@@ -294,7 +294,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
       }
 
       lineGroup.getParent().remove(lineGroup);
-
+      lineGroup.destroy();
     }
 
     return lines;
@@ -401,7 +401,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
       }
 
       lineGroup.getParent().remove(lineGroup); // remove temp group
-
+      lineGroup.destroy();
     }
 
     return lines;
@@ -424,6 +424,7 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
       }
 
       tempWordGroup.getParent().remove(tempWordGroup); // remove temporary gfx group
+      tempWordGroup.destroy();
     }
 
     return width;
@@ -1441,6 +1442,24 @@ define([ "dojo/_base/lang", "dojox/gfx/_base", "dojox/gfx/svg", "jquery" ], func
 
   BpmnElementRenderer.prototype.postRenderParent = function(callback) {
     this.options.postRenderCallbacks.push(callback);
+  };
+
+  BpmnElementRenderer.prototype.destroy = function() {
+
+    var gfxGroup = this.gfxGroup,
+        svgElement = this.svgElement;
+
+    if (gfxGroup) {
+      gfxGroup.destroy();
+    }
+
+    if (svgElement) {
+      svgElement.destroy();
+    }
+
+    delete this.gfxGroup;
+    delete this.svgElement;
+    delete this.options;
   };
 
   BpmnElementRenderer.prototype.render = function(options, gfxGroup) {

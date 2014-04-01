@@ -148,7 +148,8 @@ define(['jquery', 'bpmn/Transformer', 'bpmn/Renderer'], function ($, Transformer
   };
 
   Bpmn.prototype.clear = function () {
-    this.definitionRenderer.gfxGroup.destroy();
+    this.definitionRenderer.destroy();
+    
     $("#"+this.options.diagramElement).empty();
   };
 
