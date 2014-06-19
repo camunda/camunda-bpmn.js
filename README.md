@@ -1,3 +1,7 @@
+> This project is still maintained but not actively developed anymore.
+> Checkout [bpmn-io/bpmn-js](https://github.com/bpmn-io/bpmn-js).
+
+
 camunda-bpmn.js
 ===============
 
