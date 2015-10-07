@@ -11,6 +11,7 @@
     "grunt-contrib-watch": "~0.2.0",
     "grunt-contrib-connect": "~0.2.0"
   },
+  "bugs": "https://app.camunda.com/jira/browse/CAM/component/11950",
   "licenses": [
     {
       "type": "Apache License, Version 2.0",
